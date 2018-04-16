@@ -1,0 +1,25 @@
+.f7c-button {
+  background: none;
+  color: #f6711c;
+  border-color: #f6711c;
+  text-transform: none;
+  border-radius: 5px;
+}
+
+.f7c-button.button-big {
+  border-radius: 5px;
+  font-size: 17px
+}
+
+.f7c-button.button-round {
+  border-radius: 27px;
+}
+
+.f7c-button.button-fill {
+  background: #f6711c;
+}
+
+.f7c-button.button-fill.active-state {
+  opacity: .8;
+  background: #f6711c;
+}

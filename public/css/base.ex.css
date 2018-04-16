@@ -1,0 +1,140 @@
+/* === 长度高度 === */
+.w20 { width: 20px; }
+.w25 { width: 25px; }
+.w30 { width: 30px; }
+.w70 { width: 70px; }
+
+.mt0{margin-top: 0 !important;}
+.mt4 { margin-top: 4px !important; }
+.mt10 { margin-top: 10px !important; }
+.mb10{margin-bottom: 10px !important}
+.mb0{margin-bottom: 0px !important}
+.ml10{margin-left: 10px !important;}
+.ml8{margin-left: 8px !important;}
+.mb8{margin-bottom: 8px !important;}
+.mr8{margin-right: 8px !important;}
+.mr5{margin-right: 5px !important;}
+.mb5{margin-bottom: 5px !important;}
+.m20{margin:20px 0 !important;}
+.mb20{margin-bottom: 20px !important}
+
+.pl10 { padding-left: 10px !important; }
+.pl12 { padding-left: 12px !important; }
+.pl15 { padding-left: 15px !important; }
+.pl100{padding-left: 100px !important;}
+.pr15 { padding-right: 15px !important; }
+.pr8{padding-right: 8px;}
+.ptb10{padding:10px 0 !important;}
+
+.pos-t8{top:8px !important;}
+.pos-r42{right:42px !important;}
+
+/* === 颜色 === */
+.orange { color: #f6711c; }
+.gray{color:#646464 !important;}
+.red{color:#A73439;}
+.black{color:#333;}
+
+/* === 背景 === */
+.white-bg { background: #fff; }
+.gray-bg {background:#DFDFDF;}
+
+/* === 隐藏 === */
+.hidden{display: none !important;}
+
+/* === 按钮 === */
+.button-org{background: #FF823F;color:#fff;font-size: 14px;}
+
+/* === 定位 === */
+.tc { text-align: center; }
+.tl { text-align: left; }
+.tr { text-align: right; }
+.fl { float: left; }
+.fr { float: right; }
+.pr { position: relative; }
+.pa { position: absolute; }
+
+/* fix, a simple method of clearfix */
+.fix,dl.fieldset dd,.form-btn{zoom:1;}
+.fix:after,dl.fieldset dd:after,.form-btn:after{content:'\0020';display:block;clear:both;height:0;}
+
+/* === common === */
+table { border-collapse: collapse; border-spacing: 0; width: 100%; }
+td, th { padding: 0; }
+img { border:0; vertical-align: top; }
+ul, li{margin:0;padding:0;list-style: none;}
+p{margin: 0;padding: 0}
+
+/* === base === */
+body { font-size: 13px; line-height: 1.4; color:#555; }
+.page{background: #f3f3f3;}
+
+.navbar{background: #fff;color:#555555;}
+.navbar::after{ background-color: #c4c4c4;bottom: 0; content: ""; display: block; height: 1px; left: 0; position: absolute; right: auto; top: auto; -webkit-transform-origin: 50% 100% 0; transform-origin: 50% 100% 0; width: 100%; z-index: 15;}
+.navbar a{color:#555555;}
+.navbar i.icon.icon-back {background-image: url("../img/navbar-arrow.png") !important;background-size: auto 16px;background-position:left center;}
+.navbar .navbar-inner {-webkit-box-pack: justify;-webkit-justify-content: space-between;-ms-flex-pack: justify;justify-content: space-between;}
+.navbar .navbar-inner .center {width:100%;-webkit-box-flex: 3.0;-moz-flex-shrink: 3;-webkit-flex-shrink: 3;flex-shrink: 3;text-align: center;}
+.navbar .navbar-inner .right {-webkit-box-pack: end;-webkit-justify-content: flex-end;-ms-flex-pack: end;justify-content: flex-end;min-width: 48px;min-height: 48px}
+.navbar .navbar-inner .right .back-app{padding-right: 16px;font-size: 14px;}
+.navbar .navbar-inner a {color: #000;margin-right: 0;}
+.navbar .navbar-inner .sliding{margin:0;}
+.navbar .navbar-inner .right .button{border:1px solid #fff;border-radius: 6px;margin-right: 16px;}
+
+/* === button === */
+.button{border:1px solid #FF823F;background: #FF823F;color:#fff;}
+
+/* === icon === */
+.icon.icon-right-arrow{background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%2060%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpath%20d%3D'm60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z'%20fill%3D'%23c7c7cc'%2F%3E%3C%2Fsvg%3E");
+  background-size: cover;
+  background-repeat: no-repeat;
+  width:10px;height:20px;
+}
+.icon.icon-sex{width:16px;height:16px;margin-top:2px;margin-right:8px;display: inline-block;}
+.icon.icon-sex.man{background: url(../img/car_man_icon.png) no-repeat 0 0;background-size: cover;}
+.icon.icon-sex.women{background: url(../img/car_woman_icon.png) no-repeat 0 0;background-size: cover;}
+.icon.icon-insurance{width:16px;height:16px;margin-left:8px;display: inline-block;background: url(../img/car_protect_icon.png) no-repeat 0 0;background-size: cover;}
+
+/* === content-block style color === */
+.content-white-block{background: #fff;margin-top:10px;margin-bottom: 10px;}
+.content-white-block .content-block-inner{padding:15px;}
+.content-white-block.inset-title .content-block-inner{padding:0 15px 15px 15px;}
+.content-white-block.inset-title .content-title{display: -webkit-box;display: -ms-flexbox; display: -webkit-flex; display: flex;-webkit-box-direction: normal;-webkit-box-orient: horizontal;-moz-flex-direction: row;-webkit-flex-direction: row;flex-direction: row;font-size:16px;padding:0;line-height: 48px;min-height:48px;border-bottom:1px solid #DEDEDE;margin-bottom: 15px;color:#333;}
+.content-white-block.inset-title .content-title .left{-webkit-box-flex:3;-webkit-flex:3;-ms-flex:3;flex:3;}
+
+/* === toast === */
+.toast{position: fixed; width: 150px; left: 50%; top: 80%; padding: 5px 10px; background-color: rgba(0, 0, 0, 0.7); border-radius: 5px; z-index: 13511; color: #fff; font-weight: normal; font-family: 'Helvetica-Neue', 'HelveticaNeue', arial, sans-serif; display: none; opacity: 0; -webkit-transition: opacity 0.8s; transition: opacity 0.8s; text-align:center; font-weight:normal; }
+.toast.show{display: block;}
+.toast.fadein{opacity: 1;}
+
+/* === tag === */
+.tag {display: inline-block; height: 18px; line-height: 18px; margin: 0 4px 0 4px; padding: 0 5px; border: 1px solid #F5711C; border-radius: 3px; background: #F5711C; font-size: 10px; vertical-align: middle; opacity: 1; overflow: hidden; cursor: pointer;color:#fff;}
+
+/* === switch other style === */
+.switch {display: inline-block; vertical-align: middle; width: 52px; border-radius: 16px; -webkit-box-sizing: border-box; box-sizing: border-box; height: 32px; position: relative; cursor: pointer; -ms-flex-item-align: center; -webkit-align-self: center; align-self: center; }
+.switch .checkbox {width: 52px; border-radius: 16px; -webkit-box-sizing: border-box; box-sizing: border-box; height: 32px; background: #e5e5e5; z-index: 0; margin: 0; padding: 0; -webkit-appearance: none; -moz-appearance: none; -ms-appearance: none; appearance: none; border: none; cursor: pointer; position: relative; -webkit-transition-duration: 300ms; transition-duration: 300ms; }
+.switch .checkbox:before {content: ' '; position: absolute; left: 2px; top: 2px; width: 48px; border-radius: 16px; -webkit-box-sizing: border-box; box-sizing: border-box; height: 28px; background: #fff; z-index: 1; -webkit-transition-duration: 300ms; transition-duration: 300ms; -webkit-transform: scale(1); transform: scale(1); }
+.switch .checkbox:after {content: ' '; height: 28px; width: 28px; border-radius: 28px; background: #fff; position: absolute; z-index: 2; top: 2px; left: 2px; -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); -webkit-transform: translateX(0px); transform: translateX(0px); -webkit-transition-duration: 300ms; transition-duration: 300ms; }
+.switch input[type="checkbox"] {display: none; }
+.switch input[type="checkbox"]:checked + .checkbox {background: #4cd964; }
+.switch input[type="checkbox"]:checked + .checkbox:before {-webkit-transform: scale(0); transform: scale(0); }
+.switch input[type="checkbox"]:checked + .checkbox:after {-webkit-transform: translateX(20px); transform: translateX(20px); }
+html.android .switch input[type="checkbox"] + .checkbox {-webkit-transition-duration: 0; transition-duration: 0; }
+html.android .switch input[type="checkbox"] + .checkbox:after, html.android .switch input[type="checkbox"] + .checkbox:before {-webkit-transition-duration: 0; transition-duration: 0; }
+
+/* switch不加input */
+.switch.checked .checkbox {background: #4cd964; }
+.switch.checked .checkbox:before {-webkit-transform: scale(0); transform: scale(0); }
+.switch.checked .checkbox:after {-webkit-transform: translateX(20px); transform: translateX(20px); }
+
+/* === star === */
+.rate {display: inline-block; margin: 0; padding: 0; font-size: 18px; font-weight: 400; font-style: normal;}
+.rate-star {display:inline-block; width:18px;height:18px;margin:0; padding:0; position:relative; -webkit-transition:all .3s ease; transition:all .3s ease}
+.rate-star:hover {-webkit-transform:scale(1.1);transform:scale(1.1)}
+.rate-star-content {position:absolute; left:0; top:0; width:100%; height:100%; overflow:hidden;background: url(../img/car_evalu_icon2.png) no-repeat 0 0;background-size: cover;}
+.rate-star-full{background: url(../img/car_evalu_icon.png) no-repeat 0 0;background-size: cover;}
+.rate-text {margin-right:8px; vertical-align:middle; display:inline-block; font-size:12px }
+
+/* scroll-preloader */
+.infinite-scroll-preloader {margin-top:10px; margin-bottom: 10px; text-align: center; }
+.infinite-scroll-preloader .preloader {width:20px; height:20px; }
