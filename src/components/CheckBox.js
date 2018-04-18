@@ -1,34 +1,34 @@
+// eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
+// eslint-disable-next-line
 import { Icon } from './Icon'
 
-export const CheckBox = (
+export const Checkbox = (
   {
-    icon = false,
+    media,
+    title,
     disabled = false,
     checked = false,
-    onchange = () => { },
-    title = '',
+    value,
+    name,
+    onCheckChange = () => { },
     ...r
   },
   children
 ) => {
   return (
-    <label
-      class={cc('label-checkbox item-content', r.class)}
-      {...r}
-    >
+    <label {...r} class={cc('label-checkbox item-content', r.class)}>
       <input
+        {...{ name, disabled, value, checked }}
         type="checkbox"
-        disabled={disabled}
-        checked={checked}
-        onchange={e => onchange(e.target.checked)}
+        onchange={e => onCheckChange(e.target.checked, e)}
       />
       <div class="item-media">
-        {icon || <Icon name="form-checkbox" />}
+        {media || <Icon name="form-checkbox" />}
       </div>
       <div class="item-inner">
-        <div class="item-title">{title}</div>
+        <div class="item-title">{title || children}</div>
       </div>
     </label>
   )

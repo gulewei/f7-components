@@ -1,82 +1,108 @@
 // eslint-disable-next-line
-import { h } from 'hyperapp'
+import { h, app } from 'hyperapp'
 // eslint-disable-next-line
 import { Mask } from './Mask'
-import { $ } from '../utils'
+// eslint-disable-next-line
+import { PickerView } from './PickerView'
+import { $, noop, install } from '../utils'
+import '../css/picker.css'
 
 const transitionEntry = el => {
-  $(el).show()
-
-  requestAnimationFrame(_ => $(el).addClass('modal-in'))
+  setTimeout(_ => $(el).addClass('modal-in'), 1000 / 60)
 }
 
-// eslint-disable-next-line
-const PickerToolbar = props => {
+const renderToolbar = (hide, format, onChange, value) => {
   return (
-    <div class="toolbar eapp-toolbar">
+    <div class="toolbar f7c-picker-toolbar">
       <div class="toolbar-inner">
         <div class="left">
-          <a href="#" class="link close-picker">取消</a>
+          <a href="#" class="link" onclick={hide}>取消</a>
         </div>
         <div class="right">
-          <a href="#" class="link close-picker picker-done">完成</a>
+          <a href="#" class="link" onclick={e => {
+            onChange(format(value))
+            hide()
+          }}>完成</a>
         </div>
-      </div>
-    </div>
-  )
-}
-
-// eslint-disable-next-line
-const PickerCol = props => {
-  return (
-    <div class="picker-items-col">
-      <div class="picker-items-col-wrapper">
-        {props.col.map(item => (
-          <div class="picker-item">{item}</div>
-        ))
-        }
       </div>
     </div>
   )
 }
 
 /**
- * @typedef {Object} PickerColProps
- * @prop {}
- * @typedef {Object} PickerProps
- * @prop {boolean} [show=false]
- * @prop {Object[]} [data=[]]
+ * @typedef {Object} PopoverPickerProps
+ * @prop {boolean} show
  * @prop {() => void} hide
- * @prop {() => void} updatePickerData
+ * @prop {(values) => void} update
+ * @prop {Object[]} data
+ * @prop {string[]} value
  * @prop {(values: string[]) => string} [format]
- * @prop {(value) => void} [onPickerChange]
+ * @prop {(value) => void} [onChange]
  * @prop {() => void} [onColChange]
  * @prop {JSX.Element} [toolbar]
+ * @prop {boolean} [cascade=false]
  * @param {PickerProps} props
  * @param {JSX.Element[]} children
  */
-export const Picker = (props) => {
+export const PopoverPicker = (props) => {
   const {
-    show = false,
+    show,
     hide,
-    data = [],
-    toolbar
+    data,
+    value,
+    update,
+    format = vals => vals,
+    onChange = noop,
+    onColChange = noop,
+    toolbar,
+    cascade = false
   } = props
 
   return show && (
     <div>
-      <div class="picker-modal" oncreate={transitionEntry}>
-        {toolbar || <PickerToolbar />}
-        <div class="picker-modal-inner picker-items">
-          {data.map(col => (
-            <PickerCol col={col} />
-          ))
-          }
-          <div class="picker-center-highlight"></div>
-        </div>
-        <div class="picker-bottom"></div>
+      <div class="picker-modal f7c-picker" style={{ display: 'block' }} oncreate={transitionEntry}>
+        {toolbar || renderToolbar(hide, format, onChange, value)}
+        <PickerView {...{ data, value, cascade }} onColChange={values => {
+          onColChange(values)
+          update(values)
+        }} />
       </div>
       <Mask show click={hide} />
     </div>
   )
+}
+
+const openPicker = install(
+  { show: false },
+  {
+    open: props => ({ ...props, show: true }),
+    hide: () => ({ show: false }),
+    update: value => ({ value })
+  },
+  (state, { hide, update }) => <PopoverPicker {...state} {...{ hide, update }} />,
+  ({ open }) => open
+)
+
+/**
+ * @typedef {Object} PickerProps
+ * @prop {Object[]} data
+ * @prop {string[]} value
+ * @prop {(values: string[]) => string} [format]
+ * @prop {(value) => void} [onChange]
+ * @prop {() => void} [onColChange]
+ * @prop {JSX.Element} [toolbar]
+ * @prop {boolean} [cascade=false]
+ * @param {PickerProps} props
+ * @param {JSX.Element[]} children
+ */
+export const Picker = (props, children) => {
+  if (!children[0]) {
+    return false
+  }
+
+  children[0].attributes.onclick = e => {
+    openPicker(props)
+  }
+
+  return children.slice(0, 1)
 }

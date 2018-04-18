@@ -1,20 +1,11 @@
 <!-- - ## Loading  -->
 
-- ## Picker
+<!-- - ## Picker -->
+- ### Picker style fix
 
-- ## Navbar
+- ### Form items fix
 
-- ## PageContent
-
-- ## ListBlock
-
-- ## ListItem
-
-- ## CheckBox
-
-- ## Input
-
-- ## Radio
+- ## PullToRefresh
 
 - ## Pannel
 

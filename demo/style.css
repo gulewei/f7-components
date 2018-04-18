@@ -1,3 +1,9 @@
 .area {
   padding: 10px;
 }
+
+.mock-container {
+  height: 300px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}

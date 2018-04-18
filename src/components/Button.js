@@ -32,6 +32,6 @@ export const Button = (props, children) => {
       disabled={disabled}
       class={cc('button f7c-button', { 'button-big': big, 'button-fill': fill, 'button-round': round }, r.class)}
       onclick={onclick}
-    >{children.length === 0 ? text : children}</a>
+    >{text || children}</a>
   )
 }
