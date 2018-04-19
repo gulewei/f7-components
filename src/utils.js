@@ -1,7 +1,7 @@
-import f7app from '@module/f7app'
+import '@f7';
 import { app } from 'hyperapp'
 
-export { f7app }
+export const f7app = new window.Framework7()
 
 export const $ = window.Dom7
 

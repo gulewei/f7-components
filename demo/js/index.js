@@ -1,4 +1,6 @@
-import app from '@js/app'
+import '@f7';
 import demo from './demo'
 
-app(demo)
+new Framework7()
+
+demo()

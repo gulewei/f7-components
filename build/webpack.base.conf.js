@@ -10,7 +10,8 @@ function resolve (dir) {
 let webpackConfig = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './demo/index.js'
+    demo: './demo/js',
+    lib: './src'
   },
   output: {
     path: config.build.assetsRoot,
@@ -22,8 +23,8 @@ let webpackConfig = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      '@f7': resolve('static/f7.js'),
-      '@css': resolve('static/css/app.css'),
+      '@f7': 'framework7',
+      '@css': resolve('public/css/app.css'),
       '@c': resolve('src')
     }
   },

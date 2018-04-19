@@ -11,7 +11,7 @@ import {
   alert, confirm, dialog, setDialog,
   toast, setToast,
   loading
-} from '@module/f7-components'
+} from '@c'
 import '../style.css'
 
 const state = {
