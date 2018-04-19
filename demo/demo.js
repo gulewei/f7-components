@@ -57,8 +57,8 @@ const ButtonArea = (props) => (state, actions) => {
 }
 
 const ModalArea = (props) => (state, actions) => {
-  return props.hidden ? false : (
-    <div>
+  return (
+    <div style={{ display: props.hidden ? 'none' : 'block' }}>
       {/* dialog */}
       <Area title="Dialogs">
         <div class="row">

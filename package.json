@@ -4,11 +4,7 @@
   "description": "framework7 components with hyperapp",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --coverage",
-    "test": "npm run unit",
-    "build": "node build/build.js"
+    "demo": "parcel demo/index.html"
   },
   "repository": {
     "type": "git",
