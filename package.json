@@ -26,7 +26,8 @@
     "base.css": "^1.0.0",
     "classnames": "^2.2.5",
     "framework7": "^1.6.5",
-    "hyperapp": "^1.2.5"
+    "hyperapp": "^1.2.5",
+    "zscroller": "^0.4.7"
   },
   "engines": {
     "node": ">= 4.0.0",

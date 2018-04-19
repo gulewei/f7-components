@@ -198,7 +198,7 @@ const view = (state, actions) => {
         {/* button */}
         <ButtonArea hidden />
 
-        <ModalArea hidden />
+        <ModalArea hidden={false} />
 
         <PickerArea hidden />
 

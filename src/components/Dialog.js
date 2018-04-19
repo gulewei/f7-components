@@ -2,7 +2,7 @@
 import { h } from 'hyperapp'
 // eslint-disable-next-line
 import { Mask } from './Mask'
-import { $, noop } from '../utils'
+import { noop, addClass, css } from '../utils'
 import cc from 'classnames'
 import '../css/dialog.css'
 
@@ -16,9 +16,16 @@ const DialogButton = ({ text, click = noop, close }) => {
   )
 }
 
+/**
+ * 
+ * @param {HTMLElement} el
+ */
 const transitionEl = el => {
-  const $el = $(el).show().css({ 'margin-top': `-${$(el).outerHeight() / 2}px` })
-  requestAnimationFrame(_ => $el.addClass('modal-in'))
+  requestAnimationFrame(_ => {
+    css(el, { display: 'block' })
+    css(el, { 'margin-top': `-${el.offsetHeight / 2}px` })
+    addClass(el, 'modal-in')
+  })
 }
 
 /**
