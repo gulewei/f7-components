@@ -72,7 +72,7 @@ body { font-size: 13px; line-height: 1.4; color:#555; }
 .navbar{background: #fff;color:#555555;}
 .navbar::after{ background-color: #c4c4c4;bottom: 0; content: ""; display: block; height: 1px; left: 0; position: absolute; right: auto; top: auto; -webkit-transform-origin: 50% 100% 0; transform-origin: 50% 100% 0; width: 100%; z-index: 15;}
 .navbar a{color:#555555;}
-.navbar i.icon.icon-back {background-image: url("../img/navbar-arrow.png") !important;background-size: auto 16px;background-position:left center;}
+/* .navbar i.icon.icon-back {background-image: url("../img/navbar-arrow.png") !important;background-size: auto 16px;background-position:left center;} */
 .navbar .navbar-inner {-webkit-box-pack: justify;-webkit-justify-content: space-between;-ms-flex-pack: justify;justify-content: space-between;}
 .navbar .navbar-inner .center {width:100%;-webkit-box-flex: 3.0;-moz-flex-shrink: 3;-webkit-flex-shrink: 3;flex-shrink: 3;text-align: center;}
 .navbar .navbar-inner .right {-webkit-box-pack: end;-webkit-justify-content: flex-end;-ms-flex-pack: end;justify-content: flex-end;min-width: 48px;min-height: 48px}
@@ -90,10 +90,7 @@ body { font-size: 13px; line-height: 1.4; color:#555; }
   background-repeat: no-repeat;
   width:10px;height:20px;
 }
-.icon.icon-sex{width:16px;height:16px;margin-top:2px;margin-right:8px;display: inline-block;}
-.icon.icon-sex.man{background: url(../img/car_man_icon.png) no-repeat 0 0;background-size: cover;}
-.icon.icon-sex.women{background: url(../img/car_woman_icon.png) no-repeat 0 0;background-size: cover;}
-.icon.icon-insurance{width:16px;height:16px;margin-left:8px;display: inline-block;background: url(../img/car_protect_icon.png) no-repeat 0 0;background-size: cover;}
+
 
 /* === content-block style color === */
 .content-white-block{background: #fff;margin-top:10px;margin-bottom: 10px;}
@@ -126,14 +123,6 @@ html.android .switch input[type="checkbox"] + .checkbox:after, html.android .swi
 .switch.checked .checkbox {background: #4cd964; }
 .switch.checked .checkbox:before {-webkit-transform: scale(0); transform: scale(0); }
 .switch.checked .checkbox:after {-webkit-transform: translateX(20px); transform: translateX(20px); }
-
-/* === star === */
-.rate {display: inline-block; margin: 0; padding: 0; font-size: 18px; font-weight: 400; font-style: normal;}
-.rate-star {display:inline-block; width:18px;height:18px;margin:0; padding:0; position:relative; -webkit-transition:all .3s ease; transition:all .3s ease}
-.rate-star:hover {-webkit-transform:scale(1.1);transform:scale(1.1)}
-.rate-star-content {position:absolute; left:0; top:0; width:100%; height:100%; overflow:hidden;background: url(../img/car_evalu_icon2.png) no-repeat 0 0;background-size: cover;}
-.rate-star-full{background: url(../img/car_evalu_icon.png) no-repeat 0 0;background-size: cover;}
-.rate-text {margin-right:8px; vertical-align:middle; display:inline-block; font-size:12px }
 
 /* scroll-preloader */
 .infinite-scroll-preloader {margin-top:10px; margin-bottom: 10px; text-align: center; }

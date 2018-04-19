@@ -12,7 +12,6 @@ import {
   toast, setToast,
   loading
 } from '@c'
-import '../style.css'
 
 const state = {
   checked: false,

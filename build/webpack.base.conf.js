@@ -10,7 +10,7 @@ function resolve (dir) {
 let webpackConfig = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    demo: './demo/js',
+    demo: './demo',
     lib: './src'
   },
   output: {
@@ -62,6 +62,5 @@ let webpackConfig = {
     ]
   }
 }
-
 
 module.exports = webpackConfig
