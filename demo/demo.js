@@ -11,7 +11,7 @@ import {
   alert, confirm, dialog, setDialog,
   toast, setToast,
   loading
-} from '@c'
+} from '../src'
 
 const state = {
   checked: false,

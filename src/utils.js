@@ -1,4 +1,4 @@
-import '@f7';
+import 'framework7';
 import { app } from 'hyperapp'
 
 export const f7app = new window.Framework7()

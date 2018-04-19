@@ -1,6 +1,6 @@
 import './style.css'
-import '@f7'
-import '@css'
+import 'framework7'
+import '../public/css/app.css'
 
 import demo from './demo'
 
