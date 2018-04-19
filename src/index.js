@@ -1,3 +1,4 @@
+import './css/base/app.css';
 import { Button } from './components/Button'
 import { Icon } from './components/Icon'
 import { Navbar } from './components/Navbar'
