@@ -2,61 +2,72 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 import { f7app, $ } from '../utils'
+import '../css/pull-to-refresh.css'
 
 // eslint-disable-next-line
 const PullToRefreshLayer = () => {
   return (
     <div class="pull-to-refresh-layer" key='pull-to-refresh-layer'>
-      {/* <div class="preloader"></div> */}
+      <div class="preloader"></div>
       <div class="pull-to-refresh-arrow"></div>
     </div>
   )
 }
 
 // eslint-disable-next-line
-const InfinitePreloader = (props) => {
-  const {
-    show,
-    visible
-  } = props
-
+const InfinitePreloader = () => {
   return (
     <div
       key='infinite-scroll-preloader'
       class="infinite-scroll-preloader"
-      style={{ display: show ? 'block' : 'none' }}
+      style={{ display: 'none' }}
     >
-      <div class="preloader" style={{ visibility: visible ? 'visible' : 'hidden' }}></div>
+      <div class="preloader"></div>
     </div>
   )
 }
 
+/**
+ * 增加onRefresh, onInfinite对闭包支持
+ */
+const EVENT_REFRESH = 'f7refresh'
+const EVENT_INFINITE = 'f7infinite'
+
+/**
+ * @typedef {Object} PullToRefreshProps
+ * @prop {(done: Function) => void} [onRefresh]
+ * @prop {boolean} [triggerRefreshOnCreate=false]
+ * @prop {(done: Function, end: Function) => void} [onInfinite]
+ * @prop {boolean} [triggerInfiniteOnCreate=false]
+ * @param {PullToRefreshProps} props 
+ * @param {JSX.Element[]} children 
+ */
 export const PullToRefresh = (props, children) => {
   const {
     // refresh
-    onRefresh,
-
+    onRefresh, triggerRefreshOnCreate = false,
     // infinit
-    onInfinite,
-    loading,
-    toggleLoading,
-    preloaderVisible = true,
-
+    onInfinite, triggerInfiniteOnCreate = false,
     // other
-    oncreate,
-    ondestroy,
-    ...r
+    oncreate, ondestroy, ...r
   } = props
 
   return (
-    <div {...r} class={cc('f7c-pull-to-refresh', { 'pull-to-refresh-content': onRefresh })}
+    <div
+      {...r}
+      class={cc('f7c-pull-to-refresh', {
+        'pull-to-refresh-content': onRefresh,
+        'infinite-scroll': onInfinite
+      })}
+      onf7refresh={e => onRefresh && onRefresh(e.detail.done)}
+      onf7infinite={e => onInfinite && onInfinite(e.detail.done, e.detail.end)}
       oncreate={el => {
         if (onRefresh) {
-          attchPullToRefresh(el, onRefresh)
+          attchPullToRefresh(el, triggerRefreshOnCreate)
         }
 
         if (onInfinite) {
-          attchInfiniteScroll(el, onInfinite, loading, toggleLoading)
+          attchInfiniteScroll(el, triggerInfiniteOnCreate)
         }
 
         if (oncreate) {
@@ -79,31 +90,47 @@ export const PullToRefresh = (props, children) => {
     >
       {onRefresh && <PullToRefreshLayer />}
       {children}
-      {onInfinite && <InfinitePreloader show={loading} visible={preloaderVisible} />}
+      {onInfinite && <InfinitePreloader />}
     </div>
   )
 }
 
-function attchPullToRefresh (el, onRefresh) {
+function attchPullToRefresh (el, triggerRefresh) {
   f7app.initPullToRefresh(el)
-  const done = () => f7app.pullToRefreshDone(el)
-  $(el).on('refresh', e => {
-    onRefresh(done)
-    console.log('attach refresh, done')
-  })
+
+  const done = () => f7app.pullToRefreshDone()
+  const $el = $(el)
+
+  $el.on('refresh', e => $el.trigger(EVENT_REFRESH, { done }))
+
+  if (triggerRefresh) {
+    $el.trigger(EVENT_REFRESH, { done })
+  }
 }
 
-function attchInfiniteScroll (el, onInfinite, loading, toggleLoading) {
+function attchInfiniteScroll (el, triggerInfinite) {
   f7app.attachInfiniteScroll(el)
-  const start = () => toggleLoading(true)
-  const end = () => toggleLoading(false)
 
-  $(el).on('infinite', e => {
-    console.log('attach infinit >>>>>>>>>')
-    if (!loading) {
-      onInfinite(start, end)
-    }
-  })
+  const $el = $(el)
+  const $preloader = $el.find('.infinite-scroll-preloader')
 
-  console.log('attach infinit')
+  let loading = false
+
+  const done = () => {
+    loading = false
+    $preloader.hide()
+  }
+  const end = () => f7app.detachInfiniteScroll(el)
+
+  const triggerF7Event = () => {
+    loading = true
+    $preloader.show()
+    $el.trigger(EVENT_INFINITE, { done, end })
+  }
+
+  $el.on('infinite', e => !loading && triggerF7Event())
+
+  if (triggerInfinite) {
+    triggerF7Event()
+  }
 }
