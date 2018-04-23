@@ -72,7 +72,7 @@ const InfiniteScroll = (props, children) => {
   return (
     <div
       {...r} style={{ height: height ? `${height}px` : 'auto' }}
-      class={cc('f7c-infinite', r.class, { 'infinite-scroll': onInfinite })}
+      class={cc('f7c-ptr', r.class, { 'infinite-scroll': onInfinite })}
       onf7infinite={e => onInfinite && onInfinite(e.detail.done, e.detail.end)}
       oncreate={el => {
         if (onInfinite) {
