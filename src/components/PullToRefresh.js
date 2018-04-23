@@ -35,6 +35,7 @@ const EVENT_INFINITE = 'f7infinite'
 
 /**
  * @typedef {Object} PullToRefreshProps
+ * @prop {number} height
  * @prop {(done: Function) => void} [onRefresh]
  * @prop {boolean} [triggerRefreshOnCreate=false]
  * @prop {(done: Function, end: Function) => void} [onInfinite]
@@ -44,53 +45,47 @@ const EVENT_INFINITE = 'f7infinite'
  */
 export const PullToRefresh = (props, children) => {
   const {
+    height,
     // refresh
     onRefresh, triggerRefreshOnCreate = false,
     // infinit
     onInfinite, triggerInfiniteOnCreate = false,
     // other
-    oncreate, ondestroy, ...r
+    ...r
   } = props
 
   return (
-    <div
-      {...r}
-      class={cc('f7c-pull-to-refresh', {
-        'pull-to-refresh-content': onRefresh,
-        'infinite-scroll': onInfinite
-      })}
-      onf7refresh={e => onRefresh && onRefresh(e.detail.done)}
-      onf7infinite={e => onInfinite && onInfinite(e.detail.done, e.detail.end)}
-      oncreate={el => {
-        if (onRefresh) {
-          attchPullToRefresh(el, triggerRefreshOnCreate)
-        }
+    <div {...r} class={cc('f7c-pull-to-refresh', r.class)} style={{ height: height ? `${height}px` : 'auto' }}>
+      <div
+        class={cc('f7c-pull-to-refresh-el', {
+          'pull-to-refresh-content': onRefresh,
+          'infinite-scroll': onInfinite
+        })}
+        onf7refresh={e => onRefresh && onRefresh(e.detail.done)}
+        onf7infinite={e => onInfinite && onInfinite(e.detail.done, e.detail.end)}
+        oncreate={el => {
+          if (onRefresh) {
+            attchPullToRefresh(el, triggerRefreshOnCreate)
+          }
 
-        if (onInfinite) {
-          attchInfiniteScroll(el, triggerInfiniteOnCreate)
-        }
+          if (onInfinite) {
+            attchInfiniteScroll(el, triggerInfiniteOnCreate)
+          }
+        }}
+        ondestroy={el => {
+          if (onRefresh) {
+            f7app.destroyPullToRefresh(el)
+          }
 
-        if (oncreate) {
-          oncreate(el)
-        }
-      }}
-      ondestroy={el => {
-        if (onRefresh) {
-          f7app.destroyPullToRefresh(el)
-        }
-
-        if (onInfinite) {
-          f7app.detachInfiniteScroll(el)
-        }
-
-        if (ondestroy) {
-          ondestroy(el)
-        }
-      }}
-    >
-      {onRefresh && <PullToRefreshLayer />}
-      {children}
-      {onInfinite && <InfinitePreloader />}
+          if (onInfinite) {
+            f7app.detachInfiniteScroll(el)
+          }
+        }}
+      >
+        {onRefresh && <PullToRefreshLayer />}
+        {children}
+        {onInfinite && <InfinitePreloader />}
+      </div>
     </div>
   )
 }

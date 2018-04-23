@@ -13,6 +13,7 @@ import { Loading } from './components/Loading'
 import { Toast } from './components/Toast'
 import { Picker } from './components/Picker'
 import { PickerView } from './components/PickerView'
+import { PickerView as PickerView2 } from './components/_PickerView';
 import { PullToRefresh } from './components/PullToRefresh'
 import { alert, confirm, dialog, setDialog } from './plugins/dialog'
 import { toast, setToast } from './plugins/toast'
@@ -26,7 +27,7 @@ export {
   List, Item,
   InputItem, Checkbox, Radio,
   Mask,
-  Picker, PickerView,
+  Picker, PickerView, PickerView2,
   Dialog, Loading, Toast,
   PullToRefresh,
   alert, confirm, dialog, setDialog,
