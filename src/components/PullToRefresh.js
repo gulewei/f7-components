@@ -27,15 +27,11 @@ const InfinitePreloader = () => {
   )
 }
 
-
 /**
- * @typedef {Object} PullToRefreshProps
- * @prop {(done: Function) => void} [onRefresh]
- * @prop {boolean} [triggerRefreshOnCreate=false]
  * @param {PullToRefreshProps} props 
  * @param {JSX.Element[]} children 
  */
-const Ptr = (props, children) => {
+const PullToRefreshInner = (props, children) => {
   const {
     onRefresh, triggerRefreshOnCreate = false, ...r
   } = props
@@ -53,13 +49,8 @@ const Ptr = (props, children) => {
   )
 }
 
-
 /**
- * @typedef {Object} InfiniteScrollProps
- * @prop {number} height
- * @prop {(done: Function, end: Function) => void} [onInfinite]
- * @prop {boolean} [triggerInfiniteOnCreate=false]
- * @param {InfiniteScrollProps} props 
+ * @param {PullToRefreshProps} props 
  * @param {JSX.Element[]} children 
  */
 const InfiniteScroll = (props, children) => {
@@ -97,17 +88,25 @@ const InfiniteScroll = (props, children) => {
   )
 }
 
+/**
+ * @typedef {Object} PullToRefreshProps
+ * @prop {(done: Function) => void} [onRefresh]
+ * @prop {boolean} [triggerRefreshOnCreate=false]
+ * @prop {number} height
+ * @prop {(done: Function, end: Function) => void} [onInfinite]
+ * @prop {boolean} [triggerInfiniteOnCreate=false]
+ * @param {PullToRefreshProps} props 
+ * @param {JSX.Element[]} children 
+ */
 export const PullToRefresh = (props, children) => {
   const {
-    onInfinite, triggerInfiniteOnCreate = false,
-    onRefresh, triggerRefreshOnCreate = false,
-    ...r
+    onRefresh, triggerRefreshOnCreate = false, ...r
   } = props
 
   return (
-    <InfiniteScroll {...{ ...r, onInfinite, triggerInfiniteOnCreate }}>
+    <InfiniteScroll {...r}>
       {onRefresh
-        ? <Ptr {...{ onRefresh, triggerRefreshOnCreate }}>{children}</Ptr>
+        ? <PullToRefreshInner {...{ onRefresh, triggerRefreshOnCreate }}>{children}</PullToRefreshInner>
         : children
       }
     </InfiniteScroll>
