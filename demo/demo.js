@@ -180,12 +180,12 @@ const PullToRefreshArea = (props) => (state, actions) => {
   return !props.hidden && (
     <Area title="Pull to Refresh">
       <PullToRefresh
-        height={280}
-        triggerRefreshOnCreate={true}
-        triggerInfiniteOnCreate={false}
+        triggerRefreshOnCreate={false}
         onRefresh={done => mocker.async(mocks => {
           actions.resetMocks({ mocks, effect: done })
         })}
+        height={280}
+        triggerInfiniteOnCreate={true}
         onInfinite={(done, end) => mocker.async(mocks => {
           actions.nextMocks({
             mocks, effect: (state) => {

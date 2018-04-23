@@ -1,3 +1,3 @@
-.f7c-pull-to-refresh { max-height: 100%; overflow: hidden; } 
+.f7c-infinite { max-height: 100%; overflow: auto; } 
 
-.f7c-pull-to-refresh-el { height: 100%; overflow: auto; } 
+/* .f7c-ptr { overflow: hidden; }  */
