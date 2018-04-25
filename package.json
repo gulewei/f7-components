@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/venecy/f7-components#readme",
   "dependencies": {
+    "@gulw/scroller": "^1.0.0",
     "base.css": "^1.0.0",
     "classnames": "^2.2.5",
     "framework7": "^1.6.5",
