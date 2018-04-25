@@ -172,7 +172,7 @@ const mocker = {
   },
 
   async: callback => {
-    setTimeout(() => callback(mocker.next()), 500);
+    setTimeout(() => callback(mocker.next()), 500)
   }
 }
 
@@ -188,7 +188,8 @@ const PullToRefreshArea = (props) => (state, actions) => {
         triggerInfiniteOnCreate={true}
         onInfinite={(done, end) => mocker.async(mocks => {
           actions.nextMocks({
-            mocks, effect: (state) => {
+            mocks,
+            effect: (state) => {
               done()
               if (state.mocks.length > 100) {
                 end()
@@ -214,11 +215,11 @@ const view = (state, actions) => {
       <PageContent>
 
         {/* button */}
-        <ButtonArea />
+        <ButtonArea hidden />
 
-        <ModalArea />
+        <ModalArea hidden />
 
-        <PickerArea />
+        <PickerArea hidden />
 
         {/* list form */}
         <Area title="list form">
@@ -230,7 +231,7 @@ const view = (state, actions) => {
           </List>
         </Area>
 
-        <PullToRefreshArea hidden />
+        <PullToRefreshArea />
 
       </PageContent>
     </Page>

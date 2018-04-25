@@ -2,6 +2,7 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 import { f7app, $ } from '../utils'
+import EasyScroller from '../scroller'
 import '../css/pull-to-refresh.css'
 
 // eslint-disable-next-line
@@ -28,12 +29,12 @@ const InfinitePreloader = () => {
 }
 
 /**
- * @param {PullToRefreshProps} props 
- * @param {JSX.Element[]} children 
+ * @param {PullToRefreshProps} props
+ * @param {JSX.Element[]} children
  */
 const PullToRefreshInner = (props, children) => {
   const {
-    onRefresh, triggerRefreshOnCreate = false, ...r
+    onRefresh, triggerRefreshOnCreate = false
   } = props
 
   return (
@@ -50,8 +51,8 @@ const PullToRefreshInner = (props, children) => {
 }
 
 /**
- * @param {PullToRefreshProps} props 
- * @param {JSX.Element[]} children 
+ * @param {PullToRefreshProps} props
+ * @param {JSX.Element[]} children
  */
 const InfiniteScroll = (props, children) => {
   const {
@@ -95,8 +96,8 @@ const InfiniteScroll = (props, children) => {
  * @prop {number} height
  * @prop {(done: Function, end: Function) => void} [onInfinite]
  * @prop {boolean} [triggerInfiniteOnCreate=false]
- * @param {PullToRefreshProps} props 
- * @param {JSX.Element[]} children 
+ * @param {PullToRefreshProps} props
+ * @param {JSX.Element[]} children
  */
 export const PullToRefresh = (props, children) => {
   const {
@@ -116,20 +117,21 @@ export const PullToRefresh = (props, children) => {
 /**
  * 增加onRefresh, onInfinite对闭包支持
  */
-const EVENT_REFRESH = 'f7refresh'
 const EVENT_INFINITE = 'f7infinite'
 
 function attchPullToRefresh (el, triggerRefresh) {
-  f7app.initPullToRefresh(el)
+  // f7app.initPullToRefresh(el)
 
-  const done = () => f7app.pullToRefreshDone()
-  const $el = $(el)
+  // const done = () => f7app.pullToRefreshDone()
+  // const $el = $(el)
 
-  $el.on('refresh', e => $el.trigger(EVENT_REFRESH, { done }))
+  // $el.on('refresh', e => $el.trigger(EVENT_REFRESH, { done }))
 
-  if (triggerRefresh) {
-    $el.trigger(EVENT_REFRESH, { done })
-  }
+  // if (triggerRefresh) {
+  //   $el.trigger(EVENT_REFRESH, { done })
+  // }
+
+  el.__scroller = new EasyScroller(el, (x, y, z) => { }, {})
 }
 
 function attchInfiniteScroll (el, triggerInfinite) {
