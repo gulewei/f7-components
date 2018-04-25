@@ -30,14 +30,19 @@ const actions = {
   input: input => ({ input }),
   onPickerChange: picker => ({ picker }),
   onPickerChange2: picker => ({ picker }),
-  _resetMocks: mocks => ({ mocks }),
+
   resetMocks: ({ mocks, effect }) => (state, actions) => {
-    actions._resetMocks(mocks)
-    effect(state, actions)
+    actions.set({ mocks })
+    actions.effect(effect)
   },
-  _nextMocks: mocks => state => ({ mocks: state.mocks.concat(mocks) }),
+
   nextMocks: ({ mocks, effect }) => (state, actions) => {
-    actions._nextMocks(mocks)
+    actions.set({ mocks: state.mocks.concat(mocks) })
+    actions.effect(effect)
+  },
+
+  set: data => data,
+  effect: effect => (state, actions) => {
     effect(state, actions)
   }
 }
@@ -174,29 +179,28 @@ const mocker = {
 const PullToRefreshArea = (props) => (state, actions) => {
   return !props.hidden && (
     <Area title="Pull to Refresh">
-      <div class="mock-container">
-        <PullToRefresh
-          onRefresh={done => mocker.async(mocks => {
-            actions.resetMocks({ mocks, effect: done })
-          })}
-          triggerRefreshOnCreate={true}
-          onInfinite={(done, end) => mocker.async(mocks => {
-            actions.nextMocks({
-              mocks, effect: (state) => {
-                done()
-                if (state.mocks.length > 100) {
-                  end()
-                }
+      <PullToRefresh
+        triggerRefreshOnCreate={false}
+        onRefresh={done => mocker.async(mocks => {
+          actions.resetMocks({ mocks, effect: done })
+        })}
+        height={280}
+        triggerInfiniteOnCreate={true}
+        onInfinite={(done, end) => mocker.async(mocks => {
+          actions.nextMocks({
+            mocks, effect: (state) => {
+              done()
+              if (state.mocks.length > 100) {
+                end()
               }
-            })
-          })}
-          triggerInfiniteOnCreate={false}
-        >
-          <List whiteBg margins="mt0 mb0" key="list">
-            {state.mocks.map((t, i) => <Item key={i}>{i + 1} : {t}</Item>)}
-          </List>
-        </PullToRefresh>
-      </div>
+            }
+          })
+        })}
+      >
+        <List whiteBg margins="mt0 mb0" key="list">
+          {state.mocks.map((t, i) => <Item key={i}>{i + 1} : {t}</Item>)}
+        </List>
+      </PullToRefresh>
     </Area>
   )
 }
@@ -210,11 +214,11 @@ const view = (state, actions) => {
       <PageContent>
 
         {/* button */}
-        <ButtonArea hidden={false} />
+        <ButtonArea />
 
-        <ModalArea hidden={false} />
+        <ModalArea />
 
-        <PickerArea hidden={false} />
+        <PickerArea />
 
         {/* list form */}
         <Area title="list form">
@@ -237,9 +241,9 @@ export default function () {
   app(state, actions, view, document.getElementById('InitPageContainer'))
 }
 
-function withEffect (actionName) {
+function effect (action) {
   return ({ data, effect }) => (state, actions) => {
-    actions[actionName](data)
-    effect(state, actions)
+    actions.set(action(data, state))
+    actions.effect(effect)
   }
 }

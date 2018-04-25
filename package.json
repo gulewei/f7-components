@@ -4,7 +4,8 @@
   "description": "framework7 components with hyperapp",
   "main": "index.js",
   "scripts": {
-    "demo": "parcel demo/index.html"
+    "demo": "parcel demo/index.html",
+    "ks": "parcel build demo/index.html -d kitchen-sink"
   },
   "repository": {
     "type": "git",

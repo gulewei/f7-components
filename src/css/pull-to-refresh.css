@@ -1,4 +1,1 @@
-.f7c-pull-to-refresh {
-  max-height: 100%;
-  overflow: auto;
-}
+.f7c-ptr { max-height: 100%; overflow: auto; } 
