@@ -19,7 +19,6 @@ const state = {
   input: '123',
   picker: ['c', 'f'],
   picker2: ['e', 'f'],
-  loading: true,
   mocks: []
 }
 
@@ -31,9 +30,16 @@ const actions = {
   input: input => ({ input }),
   onPickerChange: picker => ({ picker }),
   onPickerChange2: picker => ({ picker }),
-  appendMocks: mocks => state => ({ mocks: state.mocks.concat(mocks) }),
-  resetMocks: mocks => ({ mocks }),
-  toggleLoading: loading => ({ loading })
+  _resetMocks: mocks => ({ mocks }),
+  resetMocks: ({ mocks, effect }) => (state, actions) => {
+    actions._resetMocks(mocks)
+    effect(state, actions)
+  },
+  _nextMocks: mocks => state => ({ mocks: state.mocks.concat(mocks) }),
+  nextMocks: ({ mocks, effect }) => (state, actions) => {
+    actions._nextMocks(mocks)
+    effect(state, actions)
+  }
 }
 
 const Area = (props, children) => {
@@ -158,28 +164,36 @@ const mocker = {
     }
 
     return m
+  },
+
+  async: callback => {
+    setTimeout(() => callback(mocker.next()), 500);
   }
 }
 
 const PullToRefreshArea = (props) => (state, actions) => {
   return !props.hidden && (
     <Area title="Pull to Refresh">
-      <div className="mock-container">
+      <div class="mock-container">
         <PullToRefresh
-          oncreate={el => { actions.appendMocks(mocker.next()) }}
-          loading={state.loading}
-          toggleLoading={actions.toggleLoading}
-          onRefresh={done => actions.resetMocks(mocker.next())}
-          onInfinite={(start, end) => {
-            start()
-            setTimeout(() => {
-              actions.appendMocks(mocker.next())
-              end()
-            }, 1000)
-          }}
+          onRefresh={done => mocker.async(mocks => {
+            actions.resetMocks({ mocks, effect: done })
+          })}
+          triggerRefreshOnCreate={true}
+          onInfinite={(done, end) => mocker.async(mocks => {
+            actions.nextMocks({
+              mocks, effect: (state) => {
+                done()
+                if (state.mocks.length > 100) {
+                  end()
+                }
+              }
+            })
+          })}
+          triggerInfiniteOnCreate={false}
         >
-          <List whiteBg margins="mt0">
-            {state.mocks.map(t => <Item>{t}</Item>)}
+          <List whiteBg margins="mt0 mb0" key="list">
+            {state.mocks.map((t, i) => <Item key={i}>{i + 1} : {t}</Item>)}
           </List>
         </PullToRefresh>
       </div>
@@ -221,4 +235,11 @@ const view = (state, actions) => {
 
 export default function () {
   app(state, actions, view, document.getElementById('InitPageContainer'))
+}
+
+function withEffect (actionName) {
+  return ({ data, effect }) => (state, actions) => {
+    actions[actionName](data)
+    effect(state, actions)
+  }
 }
