@@ -2,10 +2,10 @@
 import { h } from 'hyperapp'
 // eslint-disable-next-line
 import cc from 'classnames'
-import { $ } from '../utils'
+import { addClass } from '../utils'
 
 const transitionEl = el => {
-  requestAnimationFrame(_ => $(el).addClass('modal-overlay-visible'))
+  requestAnimationFrame(_ => addClass(el, 'modal-overlay-visible'))
 }
 
 /**

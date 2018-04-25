@@ -210,11 +210,11 @@ const view = (state, actions) => {
       <PageContent>
 
         {/* button */}
-        <ButtonArea hidden />
+        <ButtonArea hidden={false} />
 
-        <ModalArea hidden />
+        <ModalArea hidden={false} />
 
-        <PickerArea hidden />
+        <PickerArea hidden={false} />
 
         {/* list form */}
         <Area title="list form">
@@ -226,7 +226,7 @@ const view = (state, actions) => {
           </List>
         </Area>
 
-        <PullToRefreshArea />
+        <PullToRefreshArea hidden />
 
       </PageContent>
     </Page>

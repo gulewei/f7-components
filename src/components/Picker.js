@@ -4,11 +4,13 @@ import { h, app } from 'hyperapp'
 import { Mask } from './Mask'
 // eslint-disable-next-line
 import { PickerView } from './PickerView'
-import { $, noop, install } from '../utils'
+import { noop, install, addClass } from '../utils'
 import '../css/picker.css'
 
+const frame = 1000 / 60
+
 const transitionEntry = el => {
-  setTimeout(_ => $(el).addClass('modal-in'), 1000 / 60)
+  setTimeout(_ => addClass(el, 'modal-in'), frame)
 }
 
 const renderToolbar = (hide, format, onChange, value) => {

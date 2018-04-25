@@ -1,19 +1,24 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-import { $ } from '../utils'
+import { $, addClass, removeClass, css, on } from '../utils'
 
+/**
+ * 
+ * @param {HTMLElement} el
+ */
 const transitionEl = el => {
-  const $box = $(el)
+  css(el, {
+    'margin-top': `${el.offsetHeight / -2}px`,
+    'margin-left': `${el.offsetWidth / -2}px`
+  })
 
-  $box.css('margin-top', $box.outerHeight() / -2 + 'px')
-    .css('margin-left', $box.outerWidth() / -2 + 'px')
-    .addClass('fadein')
-
-  // requestAnimationFrame(_ => $box.addClass('fadein'))
+  addClass(el, 'fadein')
 }
 
 const removeEl = (el, done) => {
-  $(el).removeClass('fadein').transitionEnd(done)
+  on(el, 'transitionend', done)
+  on(el, 'webkitTransitionEnd', done)
+  removeClass(el, 'fadein')
 }
 
 /**
