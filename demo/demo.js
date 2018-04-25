@@ -214,11 +214,11 @@ const view = (state, actions) => {
       <PageContent>
 
         {/* button */}
-        <ButtonArea hidden />
+        <ButtonArea />
 
-        <ModalArea hidden />
+        <ModalArea />
 
-        <PickerArea hidden />
+        <PickerArea />
 
         {/* list form */}
         <Area title="list form">
