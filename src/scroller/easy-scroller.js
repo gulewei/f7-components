@@ -1,4 +1,4 @@
-import Scroller from './scroller'
+import Scroller from '@gulw/scroller'
 
 var EasyScroller = function (content, render, options) {
   this.content = content
