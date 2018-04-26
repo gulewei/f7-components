@@ -26,9 +26,10 @@ function attacthPullToRefresh (el, render, startCallback) {
   el.__scroller = new EasyScroller(
     el,
     (x, y, z) => {
-      console.log({x, y, z})
-      if (y < 0) {
+      if (y <= 0) {
         render(y)
+      } else {
+        console.log({ x, y, z })
       }
     },
     { scrollingX: false }

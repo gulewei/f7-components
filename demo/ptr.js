@@ -12,7 +12,7 @@ const mocker = {
   },
 
   async: callback => {
-    setTimeout(() => callback(mocker.next()), 500)
+    setTimeout(() => callback(mocker.next()), 1500)
   }
 }
 
@@ -52,5 +52,5 @@ const view = (state, actions) => {
 app(state, actions, view, document.getElementById('root'))
 
 function renderTransForm (y) {
-  return `translate3d(0px, ${-y}px, 0px) scale(1)`
+  return `translate3d(0px, ${(-y)}px, 0px) scale(1)`
 }
