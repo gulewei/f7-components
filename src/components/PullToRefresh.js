@@ -1,162 +1,160 @@
-// eslint-disable-next-line
+// eslint-disable-next-line no-unused-vars
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import { f7app, $ } from '../utils'
-import EasyScroller from '../scroller'
 import '../css/pull-to-refresh.css'
 
-// eslint-disable-next-line
-const PullToRefreshLayer = () => {
-  return (
-    <div class="pull-to-refresh-layer" key='pull-to-refresh-layer'>
-      <div class="preloader"></div>
-      <div class="pull-to-refresh-arrow"></div>
-    </div>
-  )
+/**
+ * State of refreshing
+ * @typedef {('deactivate' | 'activate' | 'release' | 'finish')} Refreshing
+ */
+
+/**
+ * Pull-to-Refresh indicator
+ * @typedef {Object} PtrIndicator
+ * @prop {JSX.Element | string} [deactivate]
+ * @prop {JSX.Element | string} [activate]
+ * @prop {JSX.Element | string} [release]
+ * @prop {JSX.Element | string} [finish]
+ */
+
+/**
+ * Pull-to-Refresh state
+ * @typedef {Object} PtrState
+ * @prop {Refreshing} refreshing
+ * @prop {number} startY
+ * @prop {number} translateY
+ * @prop {boolean} isTracking
+ * @prop {boolean} isScrolling
+ */
+
+const enumRefreshing = {
+  deactivate: 'deactivate',
+  activate: 'activate',
+  release: 'release',
+  finish: 'finish'
 }
 
-// eslint-disable-next-line
-const InfinitePreloader = () => {
-  return (
-    <div
-      key='infinite-scroll-preloader'
-      class="infinite-scroll-preloader"
-      style={{ display: 'none' }}
-    >
-      <div class="preloader"></div>
-    </div>
-  )
+const defaultIndiacotr = {
+  deactivate: '下拉刷新',
+  activate: '松开立即刷新',
+  release: '加载中...',
+  finish: '完成刷新'
+}
+
+/** @type {PtrState} */
+const state = {
+  refreshing: enumRefreshing.deactivate,
+  startY: 0,
+  translateY: 0,
+  isTracking: false,
+  isScrolling: false
+}
+
+const actions = {
+  doTouchStart: (touches) => ({ isTracking, isScrolling }) => {
+    if (isTracking || isScrolling) {
+      return
+    }
+
+    return {
+      isTracking: true,
+      startY: touches.item(0).pageY
+    }
+  },
+  doTouchMove: ({ touches, distance }) => ({ startY, isTracking }) => {
+    if (!isTracking) {
+      return
+    }
+
+    const pageY = touches.item(0).pageY
+    const translateY = Math.max(Math.pow((pageY - startY), 0.85), 0)
+
+    return {
+      translateY,
+      refreshing: translateY > distance ? enumRefreshing.activate : enumRefreshing.deactivate
+    }
+  },
+  doTouchEnd: (distance) => ({ isTracking, refreshing }) => {
+    if (!isTracking) {
+      return
+    }
+
+    const isActivate = refreshing === enumRefreshing.activate
+
+    return {
+      isTracking: false,
+      translateY: isActivate ? distance : 0,
+      refreshing: isActivate ? enumRefreshing.release : enumRefreshing.deactivate
+    }
+  },
+  doScroll: (scrollTop) => ({ isScrolling }) => {
+    const scroll = scrollTop !== 0
+    if (scroll !== isScrolling) {
+      return { isScrolling: scroll }
+    }
+  },
+  doDeactivate: () => ({ refreshing }) => {
+    if (refreshing === enumRefreshing.finish) {
+      return { refreshing: enumRefreshing.deactivate }
+    }
+  },
+  finish: () => ({ refreshing: enumRefreshing.finish, translateY: 0 })
 }
 
 /**
- * @param {PullToRefreshProps} props
- * @param {JSX.Element[]} children
+ * Pull-to-Refresh props
+ * @typedef {Object} PtrProps
+ * @prop {number} distance
+ * @prop {PtrIndicator} indicator
  */
-const PullToRefreshInner = (props, children) => {
+const view = (props, children) => {
   const {
-    onRefresh, triggerRefreshOnCreate = false
+    distance,
+    indicator,
+    onRefresh,
+
+    // state
+    isTracking,
+    translateY,
+    refreshing,
+
+    // actions
+    doTouchStart,
+    doTouchMove,
+    doTouchEnd,
+    doScroll,
+    doDeactivate,
+    finish
   } = props
 
+  const realIndicator = {
+    ...defaultIndiacotr,
+    ...indicator
+  }
+
+  if (refreshing === enumRefreshing.release) {
+    onRefresh && onRefresh(finish)
+  }
+
   return (
-    <div
-      class={cc({ 'pull-to-refresh-content': onRefresh })}
-      onf7refresh={e => onRefresh && onRefresh(e.detail.done)}
-      oncreate={el => onRefresh && attchPullToRefresh(el, triggerRefreshOnCreate)}
-      ondestroy={el => onRefresh && f7app.destroyPullToRefresh(el)}
-    >
-      {onRefresh && <PullToRefreshLayer />}
-      {children}
+    <div style={{overflow: 'hidden', height: '100%'}}>
+      <div
+        class={cc('content', `ptr-state-${refreshing}`, { 'ptr-is-tracking': isTracking })}
+        style={{ transform: `translate3d(0, ${translateY}px, 0)` }}
+        ontouchstart={e => doTouchStart(e.touches)}
+        ontouchmove={e => doTouchMove({ touches: e.touches, distance })}
+        ontouchend={e => doTouchEnd(distance)}
+        onanimationend={doDeactivate}
+      >
+        <div key="layer" class="ptr-layer">{realIndicator[refreshing]}</div>
+        <div key="inner" class="content-inner" onscroll={e => doScroll(e.target.scrollTop)}>{children}</div>
+      </div>
     </div>
   )
 }
 
-/**
- * @param {PullToRefreshProps} props
- * @param {JSX.Element[]} children
- */
-const InfiniteScroll = (props, children) => {
-  const {
-    height,
-    onInfinite, triggerInfiniteOnCreate = false,
-    oncreate, ondestroy, ...r
-  } = props
-
-  return (
-    <div
-      {...r} style={{ height: height ? `${height}px` : 'auto' }}
-      class={cc('f7c-ptr', r.class, { 'infinite-scroll': onInfinite })}
-      onf7infinite={e => onInfinite && onInfinite(e.detail.done, e.detail.end)}
-      oncreate={el => {
-        if (onInfinite) {
-          attchInfiniteScroll(el, triggerInfiniteOnCreate)
-        }
-        if (oncreate) {
-          oncreate(el)
-        }
-      }}
-      ondestroy={el => {
-        if (onInfinite) {
-          f7app.detachInfiniteScroll(el)
-        }
-        if (ondestroy) {
-          ondestroy(el)
-        }
-      }}
-    >
-      {children}
-      {onInfinite && <InfinitePreloader />}
-    </div>
-  )
-}
-
-/**
- * @typedef {Object} PullToRefreshProps
- * @prop {(done: Function) => void} [onRefresh]
- * @prop {boolean} [triggerRefreshOnCreate=false]
- * @prop {number} height
- * @prop {(done: Function, end: Function) => void} [onInfinite]
- * @prop {boolean} [triggerInfiniteOnCreate=false]
- * @param {PullToRefreshProps} props
- * @param {JSX.Element[]} children
- */
-export const PullToRefresh = (props, children) => {
-  const {
-    onRefresh, triggerRefreshOnCreate = false, ...r
-  } = props
-
-  return (
-    <InfiniteScroll {...r}>
-      {onRefresh
-        ? <PullToRefreshInner {...{ onRefresh, triggerRefreshOnCreate }}>{children}</PullToRefreshInner>
-        : children
-      }
-    </InfiniteScroll>
-  )
-}
-
-/**
- * 增加onRefresh, onInfinite对闭包支持
- */
-const EVENT_INFINITE = 'f7infinite'
-
-function attchPullToRefresh (el, triggerRefresh) {
-  // f7app.initPullToRefresh(el)
-
-  // const done = () => f7app.pullToRefreshDone()
-  // const $el = $(el)
-
-  // $el.on('refresh', e => $el.trigger(EVENT_REFRESH, { done }))
-
-  // if (triggerRefresh) {
-  //   $el.trigger(EVENT_REFRESH, { done })
-  // }
-
-  el.__scroller = new EasyScroller(el, (x, y, z) => { }, {})
-}
-
-function attchInfiniteScroll (el, triggerInfinite) {
-  f7app.attachInfiniteScroll(el)
-
-  const $el = $(el)
-  const $preloader = $el.find('.infinite-scroll-preloader')
-
-  let loading = false
-
-  const done = () => {
-    loading = false
-    $preloader.hide()
-  }
-  const end = () => f7app.detachInfiniteScroll(el)
-
-  const triggerF7Event = () => {
-    loading = true
-    $preloader.show()
-    $el.trigger(EVENT_INFINITE, { done, end })
-  }
-
-  $el.on('infinite', e => !loading && triggerF7Event())
-
-  if (triggerInfinite) {
-    triggerF7Event()
-  }
+export default {
+  state,
+  actions,
+  view
 }

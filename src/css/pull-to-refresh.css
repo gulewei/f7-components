@@ -1,1 +1,34 @@
-.f7c-ptr { max-height: 100%; overflow: auto; } 
+.content {
+  height: 100%;
+  transition: .4s ease transform;
+}
+
+.content.ptr-is-tracking {
+  transition: none;
+}
+
+.ptr-state-deactivate .ptr-layer {
+  background-color: skyblue;
+}
+
+.ptr-state-activate .ptr-layer {
+  background-color: firebrick;
+}
+
+.ptr-state-release .ptr-layer {
+  background-color: hotpink;
+}
+
+.ptr-layer {
+  margin-top: -50px;
+  height: 50px;
+  line-height: 50px;
+  color: #fff;
+  text-align: center;
+  transition: 200ms linear background-color
+}
+
+.content-inner {
+  height: 100%;
+  overflow: auto;
+}
