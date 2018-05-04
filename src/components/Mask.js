@@ -5,7 +5,7 @@ import cc from 'classnames'
 import { addClass } from '../utils'
 
 const transitionEl = el => {
-  requestAnimationFrame(_ => addClass(el, 'modal-overlay-visible'))
+  window.requestAnimationFrame(_ => addClass(el, 'modal-overlay-visible'))
 }
 
 /**

@@ -1,15 +1,13 @@
 import Scroller from '@gulw/scroller'
 
-var EasyScroller = function (content, render, options) {
+var EasyScroller = function (content, callback, options) {
   this.content = content
   this.container = content.parentNode
   this.options = options || {}
-  this.render = render
 
   // create Scroller instance
-  var that = this
-  this.scroller = new Scroller(function (left, top, zoom) {
-    that.render(left, top, zoom)
+  this.scroller = new Scroller((left, top, zoom) => {
+    callback(left, top, zoom, this.render.bind(this))
   }, options)
 
   // bind events
@@ -21,6 +19,51 @@ var EasyScroller = function (content, render, options) {
   // reflow for the first time
   this.reflow()
 }
+
+EasyScroller.prototype.render = (function () {
+  var docStyle = document.documentElement.style
+
+  var engine
+  // eslint-disable-next-line
+  if (window.opera && Object.prototype.toString.call(opera) === '[object Opera]') {
+    engine = 'presto'
+  } else if ('MozAppearance' in docStyle) {
+    engine = 'gecko'
+  } else if ('WebkitAppearance' in docStyle) {
+    engine = 'webkit'
+  } else if (typeof navigator.cpuClass === 'string') {
+    engine = 'trident'
+  }
+
+  var vendorPrefix = EasyScroller.vendorPrefix = {
+    trident: 'ms',
+    gecko: 'Moz',
+    webkit: 'Webkit',
+    presto: 'O'
+  }[engine]
+
+  var helperElem = document.createElement('div')
+  var undef
+
+  var perspectiveProperty = vendorPrefix + 'Perspective'
+  var transformProperty = vendorPrefix + 'Transform'
+
+  if (helperElem.style[perspectiveProperty] !== undef) {
+    return function (left, top, zoom) {
+      this.content.style[transformProperty] = 'translate3d(' + (-left) + 'px,' + (-top) + 'px,0) scale(' + zoom + ')'
+    }
+  } else if (helperElem.style[transformProperty] !== undef) {
+    return function (left, top, zoom) {
+      this.content.style[transformProperty] = 'translate(' + (-left) + 'px,' + (-top) + 'px) scale(' + zoom + ')'
+    }
+  } else {
+    return function (left, top, zoom) {
+      this.content.style.marginLeft = left ? (-left / zoom) + 'px' : ''
+      this.content.style.marginTop = top ? (-top / zoom) + 'px' : ''
+      this.content.style.zoom = zoom || ''
+    }
+  }
+})()
 
 EasyScroller.prototype.reflow = function () {
   // set the right scroller dimensions

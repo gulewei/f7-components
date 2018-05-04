@@ -1,44 +1,49 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import EasyScroller from '../scroller/easy-scroller'
-// import cc from 'classnames'
+// import cc from 'classs'
 
 export const Ptr = (props, children) => {
   const {
-    startCallback,
-    transform,
-    render
+    startCallback
   } = props
   return (
-    <div className="ptr" style={{ height: '300px', overflow: 'auto', border: '1px solid #555' }}>
-      <div className="ptr-inner"
-        style={{ transform }}
-        oncreate={el => attacthPullToRefresh(el, render, startCallback)}
-      >
-        <div className="ptr-layer" style={{ height: '50px', 'margin-top': '-50px', 'background-color': 'skyblue' }}></div>
-        {children}
+    <div class="ptr" style={{ height: '300px', overflow: 'auto', border: '1px solid #555' }}>
+      <div>
+        <div class="ptr-container">
+          <div class="ptr-content" oncreate={el => attacthPullToRefresh(el, startCallback)}>
+            <div class="ptr-layer" style={{ height: '50px', 'margin-top': '-50px', 'background-color': 'skyblue' }}></div>
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   )
 }
 
-function attacthPullToRefresh (el, render, startCallback) {
-  el.__scroller = new EasyScroller(
+function attacthPullToRefresh (el, startCallback) {
+  const es = new EasyScroller(
     el,
-    (x, y, z) => {
+    (x, y, z, render) => {
       if (y <= 0) {
-        render(y)
-      } else {
-        console.log({ x, y, z })
+        render(x, y, z)
       }
     },
-    { scrollingX: false }
-  ).scroller
+    {
+      scrollingX: false,
+      animating: true,
+      penetrationAcceleration: 0.08
+    }
+  )
 
-  const done = _ => el.__scroller.finishPullToRefresh()
-  el.__scroller.activatePullToRefresh(50,
+  const scroller = es.scroller
+  const done = _ => scroller.finishPullToRefresh()
+
+  scroller.activatePullToRefresh(80,
     _ => console.log('active ...'),
     _ => console.log('deactive ...'),
     _ => startCallback(done)
   )
+
+  el.__scroller = scroller
 }

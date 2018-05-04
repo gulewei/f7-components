@@ -1,4 +1,4 @@
-import 'framework7';
+import 'framework7'
 import { app } from 'hyperapp'
 
 export const f7app = new window.Framework7()
@@ -32,7 +32,7 @@ export function addClass (el, className) {
 /**
  * 去除类名
  * @param {HTMLElement} el
- * @param {string} className 
+ * @param {string} className
  */
 export function removeClass (el, className) {
   // http://caniuse.com/#search=classList
@@ -42,7 +42,7 @@ export function removeClass (el, className) {
 /**
  * 修改样式
  * @param {HTMLElement} el
- * @param {object<string>} obj 
+ * @param {object<string>} obj
  */
 export function css (el, obj) {
   for (let key in obj) {
@@ -53,8 +53,8 @@ export function css (el, obj) {
 /**
  * 添加事件
  * @param {HTMLElement} el
- * @param {string} type 
- * @param {EventListener} fn 
+ * @param {string} type
+ * @param {EventListener} fn
  * @param {boolean} options
  * @returns {Function}
  */
@@ -62,4 +62,3 @@ export function on (el, type, fn, options) {
   el.addEventListener(type, fn, options)
   return () => el.removeEventListener(type, fn, options)
 }
-

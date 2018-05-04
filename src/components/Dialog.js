@@ -17,11 +17,11 @@ const DialogButton = ({ text, click = noop, close }) => {
 }
 
 /**
- * 
+ *
  * @param {HTMLElement} el
  */
 const transitionEl = el => {
-  requestAnimationFrame(_ => {
+  window.requestAnimationFrame(_ => {
     css(el, { display: 'block' })
     css(el, { 'margin-top': `-${el.offsetHeight / 2}px` })
     addClass(el, 'modal-in')
