@@ -1,14 +1,13 @@
-import Scroller from './scroller'
+import Scroller from '@gulw/scroller'
 
-var EasyScroller = function (content, options) {
+var EasyScroller = function (content, callback, options) {
   this.content = content
   this.container = content.parentNode
   this.options = options || {}
 
   // create Scroller instance
-  var that = this
-  this.scroller = new Scroller(function (left, top, zoom) {
-    that.render(left, top, zoom)
+  this.scroller = new Scroller((left, top, zoom) => {
+    callback(left, top, zoom, this.render.bind(this))
   }, options)
 
   // bind events
@@ -25,7 +24,8 @@ EasyScroller.prototype.render = (function () {
   var docStyle = document.documentElement.style
 
   var engine
-  if (window.opera && Object.prototype.toString.call(window.opera) === '[object Opera]') {
+  // eslint-disable-next-line
+  if (window.opera && Object.prototype.toString.call(opera) === '[object Opera]') {
     engine = 'presto'
   } else if ('MozAppearance' in docStyle) {
     engine = 'gecko'
@@ -163,25 +163,4 @@ EasyScroller.prototype.bindEvents = function () {
   }
 }
 
-// automatically attach an EasyScroller to elements found with the right data attributes
-document.addEventListener('DOMContentLoaded', function () {
-  var elements = document.querySelectorAll('[data-scrollable],[data-zoomable]')
-  var element
-  for (var i = 0; i < elements.length; i++) {
-    element = elements[i]
-    var scrollable = element.attributes.getNamedItem('data-scrollable') ? element.attributes.getNamedItem('data-scrollable').value : null
-    var zoomable = element.attributes.getNamedItem('data-zoomable') ? element.attributes.getNamedItem('data-zoomable').value : ''
-    var zoomOptions = zoomable.split('-')
-    var minZoom = zoomOptions.length > 1 && parseFloat(zoomOptions[0])
-    var maxZoom = zoomOptions.length > 1 && parseFloat(zoomOptions[1])
-
-    // eslint-disable-next-line
-    new EasyScroller(element, {
-      scrollingX: scrollable === 'true' || scrollable === 'x',
-      scrollingY: scrollable === 'true' || scrollable === 'y',
-      zooming: zoomable === 'true' || zoomOptions.length > 1,
-      minZoom: minZoom,
-      maxZoom: maxZoom
-    })
-  };
-}, false)
+export default EasyScroller

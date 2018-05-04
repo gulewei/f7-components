@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Pull to Refresh</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html,
+    body,
+    #root {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .mock-item {
+      padding-left: 35px;
+      height: 50px;
+      line-height: 50px;
+    }
+
+    .mock-item:nth-child(even) {
+      background-color: #efefef;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="index.js"></script>
+</body>
+
+</html>

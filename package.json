@@ -4,7 +4,8 @@
   "description": "framework7 components with hyperapp",
   "main": "index.js",
   "scripts": {
-    "demo": "parcel demo/index.html"
+    "demo": "parcel demo/index.html",
+    "ks": "parcel build demo/index.html -d kitchen-sink"
   },
   "repository": {
     "type": "git",
@@ -12,6 +13,7 @@
   },
   "keywords": [
     "ui",
+    "mobile",
     "components",
     "framewrok7",
     "hyperapp"
@@ -23,11 +25,11 @@
   },
   "homepage": "https://github.com/venecy/f7-components#readme",
   "dependencies": {
+    "@gulw/scroller": "^1.0.2",
     "base.css": "^1.0.0",
     "classnames": "^2.2.5",
     "framework7": "^1.6.5",
-    "hyperapp": "^1.2.5",
-    "zscroller": "^0.4.7"
+    "hyperapp": "^1.2.5"
   },
   "engines": {
     "node": ">= 4.0.0",

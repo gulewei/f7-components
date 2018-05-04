@@ -1,9 +1,9 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-import { $, addClass, removeClass, css, on } from '../utils'
+import { addClass, removeClass, css, on } from '../utils'
 
 /**
- * 
+ *
  * @param {HTMLElement} el
  */
 const transitionEl = el => {

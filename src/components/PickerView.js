@@ -47,6 +47,8 @@ export const PickerView = props => {
   )
 }
 
+// #region helper function
+
 /**
  * 转换级联数据
  * @typedef {Object} CascadeProps
@@ -118,3 +120,5 @@ function applyDiff (diff, f7Cols, cols) {
     )
   })
 }
+
+// #endregion
