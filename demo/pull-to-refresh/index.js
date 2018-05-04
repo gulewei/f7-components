@@ -5,6 +5,8 @@ import pullToRefresh from '../../src/components/PullToRefresh'
 const mocker = {
   length: 30,
 
+  deffer: 50000,
+
   next: () => {
     let m = []
     for (let i = 0; i < mocker.length; i++) {
@@ -15,7 +17,7 @@ const mocker = {
   },
 
   async: callback => {
-    setTimeout(() => callback(mocker.next()), 1500)
+    setTimeout(() => callback(mocker.next()), mocker.deffer)
   }
 }
 
@@ -34,21 +36,16 @@ app(
 
   // view
   (state, actions) => {
-    window.$app = { state, actions }
-
-    const { mocks } = state
-    const { resetMocks } = actions
-
     return (
       <pullToRefresh.view
         {...state.ptr}
         {...actions.ptr}
-        distance={50}
+        indicator={{ deactivate: 'pull down' }}
         onRefresh={finish => mocker.async(mocks => {
-          resetMocks(mocks)
+          actions.resetMocks(mocks)
           finish()
         })}>
-        <MockList mocks={mocks} />
+        <MockList mocks={state.mocks} />
       </pullToRefresh.view >
     )
   },

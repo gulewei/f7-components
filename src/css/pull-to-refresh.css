@@ -1,34 +1,9 @@
-.content {
-  height: 100%;
-  transition: .4s ease transform;
-}
+.f7c-pull-to-refresh { height: 100%; overflow: auto; } 
 
-.content.ptr-is-tracking {
-  transition: none;
-}
+.f7c-pull-to-refresh-wraper { overflow: hidden; } 
 
-.ptr-state-deactivate .ptr-layer {
-  background-color: skyblue;
-}
+.f7c-pull-to-refresh-content { transform-origin: left top 0px; } 
 
-.ptr-state-activate .ptr-layer {
-  background-color: firebrick;
-}
+.f7c-pull-to-refresh-transition { transition: transform .4s ease; } 
 
-.ptr-state-release .ptr-layer {
-  background-color: hotpink;
-}
-
-.ptr-layer {
-  margin-top: -50px;
-  height: 50px;
-  line-height: 50px;
-  color: #fff;
-  text-align: center;
-  transition: 200ms linear background-color
-}
-
-.content-inner {
-  height: 100%;
-  overflow: auto;
-}
+.f7c-pull-to-refresh-indicator { margin-top: -25px; height: 25px; text-align: center; } 
