@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/venecy/f7-components.git"
+    "url": "git+https://github.com/venecy/f7c.git"
   },
   "keywords": [
     "ui",
@@ -21,13 +21,13 @@
   "author": "gulewei",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/venecy/f7-components/issues"
+    "url": "https://github.com/venecy/f7c/issues"
   },
-  "homepage": "https://github.com/venecy/f7-components#readme",
+  "homepage": "https://github.com/venecy/f7c#readme",
   "dependencies": {
     "@gulw/scroller": "^1.0.2",
-    "base.css": "^1.0.0",
     "classnames": "^2.2.5",
+    "dom-helpers": "^3.3.1",
     "framework7": "^1.6.5",
     "hyperapp": "^1.2.5"
   },

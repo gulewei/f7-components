@@ -1,9 +1,4 @@
-import 'framework7'
 import { app } from 'hyperapp'
-
-export const f7app = new window.Framework7()
-
-export const $ = window.Dom7
 
 export const noop = () => { }
 

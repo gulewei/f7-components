@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import { on } from '../utils'
+import on from 'dom-helpers/events/on'
 import '../css/pull-to-refresh.css'
 
 /**
@@ -43,12 +43,60 @@ const defaultIndiacotr = {
 }
 
 export default {
-  state: {
-    refreshing: enumRefreshing.deactivate,
-    startY: 0,
-    translateY: 0,
-    isTracking: false,
-    isScrolling: false
+  /**
+   * Pull-to-Refresh view
+   * @typedef {Object} PtrProps
+   * @prop {number} [distance=25]
+   * @prop {PtrIndicator} [indicator={}]
+   * @prop {(finish: Function) => void} onRefresh
+   * @param {PtrProps} props
+   */
+  view: (props, children) => {
+    const {
+      distance = 25,
+      indicator = {},
+      onRefresh,
+
+      // state
+      isTracking,
+      translateY,
+      refreshing,
+
+      // actions
+      doTouchStart,
+      doTouchMove,
+      doTouchEnd,
+      doScroll,
+      doDeactivate,
+      finish,
+
+      // rest
+      ...rests
+    } = props
+
+    const realIndicator = {
+      ...defaultIndiacotr,
+      ...indicator
+    }
+
+    if (refreshing === enumRefreshing.release) {
+      onRefresh && onRefresh(finish)
+    }
+
+    return (
+      <div {...rests} class={cc('f7c-pull-to-refresh', rests.class)} onscroll={e => doScroll(e.target.scrollTop)}>
+        <div class="f7c-pull-to-refresh-wraper">
+          <div
+            class={cc('f7c-pull-to-refresh-content', { 'f7c-pull-to-refresh-transition': !isTracking })}
+            style={{ ...getTransformObj(translateY) }}
+            oncreate={el => attachPullToRefresh(el, { doTouchStart, doTouchMove, doTouchEnd, doDeactivate }, distance)}
+          >
+            <div key="indicator" class="f7c-pull-to-refresh-indicator">{realIndicator[refreshing]}</div>
+            <div key="inner">{children}</div>
+          </div>
+        </div>
+      </div>
+    )
   },
 
   actions: {
@@ -102,57 +150,12 @@ export default {
     finish: () => ({ refreshing: enumRefreshing.finish, translateY: 0 })
   },
 
-  /**
-   * Pull-to-Refresh view
-   * @typedef {Object} PtrProps
-   * @prop {number} [distance=25]
-   * @prop {PtrIndicator} [indicator={}]
-   * @prop {(finish: Function) => void} onRefresh
-   * @param {PtrProps} props
-   */
-  view: (props, children) => {
-    const {
-      distance = 25,
-      indicator = {},
-      onRefresh,
-
-      // state
-      isTracking,
-      translateY,
-      refreshing,
-
-      // actions
-      doTouchStart,
-      doTouchMove,
-      doTouchEnd,
-      doScroll,
-      doDeactivate,
-      finish
-    } = props
-
-    const realIndicator = {
-      ...defaultIndiacotr,
-      ...indicator
-    }
-
-    if (refreshing === enumRefreshing.release) {
-      onRefresh && onRefresh(finish)
-    }
-
-    return (
-      <div class="f7c-pull-to-refresh" onscroll={e => doScroll(e.target.scrollTop)}>
-        <div class="f7c-pull-to-refresh-wraper">
-          <div
-            class={cc('f7c-pull-to-refresh-content', { 'f7c-pull-to-refresh-transition': !isTracking })}
-            style={{ ...getTransformObj(translateY) }}
-            oncreate={el => attachPullToRefresh(el, { doTouchStart, doTouchMove, doTouchEnd, doDeactivate }, distance)}
-          >
-            <div key="indicator" class="f7c-pull-to-refresh-indicator">{realIndicator[refreshing]}</div>
-            <div key="inner">{children}</div>
-          </div>
-        </div>
-      </div>
-    )
+  state: {
+    refreshing: enumRefreshing.deactivate,
+    startY: 0,
+    translateY: 0,
+    isTracking: false,
+    isScrolling: false
   }
 }
 
