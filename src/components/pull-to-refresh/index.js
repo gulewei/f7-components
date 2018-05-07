@@ -2,7 +2,7 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 import on from 'dom-helpers/events/on'
-import '../css/pull-to-refresh.css'
+import './index.less'
 
 /**
  * State of refreshing
@@ -84,14 +84,14 @@ export default {
     }
 
     return (
-      <div {...rests} class={cc('f7c-pull-to-refresh', rests.class)} onscroll={e => doScroll(e.target.scrollTop)}>
-        <div class="f7c-pull-to-refresh-wraper">
+      <div {...rests} class={cc('pull-to-refresh', rests.class)} onscroll={e => doScroll(e.target.scrollTop)}>
+        <div class="pull-to-refresh-wraper">
           <div
-            class={cc('f7c-pull-to-refresh-content', { 'f7c-pull-to-refresh-transition': !isTracking })}
+            class={cc('pull-to-refresh-content', { 'pull-to-refresh-transition': !isTracking })}
             style={{ ...getTransformObj(translateY) }}
             oncreate={el => attachPullToRefresh(el, { doTouchStart, doTouchMove, doTouchEnd, doDeactivate }, distance)}
           >
-            <div key="indicator" class="f7c-pull-to-refresh-indicator">{realIndicator[refreshing]}</div>
+            <div key="indicator" class="pull-to-refresh-indicator">{realIndicator[refreshing]}</div>
             <div key="inner">{children}</div>
           </div>
         </div>

@@ -1,11 +1,11 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import '../css/navbar.css'
+import './index.less'
 
-export const Navbar = ({ left, right, title, ...r }, children) => {
+const Navbar = ({ left, right, title, ...r }, children) => {
   return (
-    <div class={cc('navbar f7c-navbar', r.classs)} {...r}>
+    <div {...r} class={cc('navbar', r.classs)}>
       <div class="navbar-inner">
         <div class="left">{left}</div>
         <div class="center">{title || children}</div>
@@ -14,3 +14,5 @@ export const Navbar = ({ left, right, title, ...r }, children) => {
     </div>
   )
 }
+
+export default Navbar

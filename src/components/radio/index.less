@@ -1,0 +1,54 @@
+@import url('../_styles/index.less');
+
+// Radios
+.form-radio {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  i {
+      width: 22px;
+      height: 22px;
+      position: relative;
+      border-radius: 4px;
+      border: 1px solid #c7c7cc;
+      box-sizing: border-box;
+      display: block;
+  }
+}
+label.label-radio, .form-radio {
+  cursor: pointer;
+  input[type="checkbox"], input[type="radio"] {
+      display: none;
+  }
+}
+.form-radio input[type="radio"]:checked ~ i,
+label.label-radio input[type="checkbox"]:checked ~ .item-inner,
+label.label-radio input[type="radio"]:checked ~ .item-inner {
+  background: no-repeat center;
+  .encoded-svg-background("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 10'><polygon fill='@{themeColor}' points='11.6,0 4.4,7.2 1.4,4.2 0,5.6 4.4,10 4.4,10 4.4,10 13,1.4 '/></svg>");
+  -webkit-background-size: 13px 10px;
+  background-size: 13px 10px;
+}
+label.label-radio {
+  input[type="checkbox"], input[type="radio"] {
+      display: none;
+      ~ .item-inner {
+          padding-right: 35px;
+      }
+      &:checked ~ .item-inner{
+          background-position: 90% center;
+          background-position: ~"-webkit-calc(100% - 15px)" center;
+          background-position: ~"calc(100% - 15px)" center;
+      }
+  }
+}
+label.label-checkbox, label.label-radio {
+  .transition(300ms);
+  html:not(.watch-active-state) &:active, &.active-state {
+      .transition(0ms);
+      background-color: #d9d9d9;
+      .item-inner {
+          .hairline-color(bottom, transparent);
+      }
+  }
+}

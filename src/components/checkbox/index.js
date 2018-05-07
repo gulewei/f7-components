@@ -2,9 +2,10 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 // eslint-disable-next-line
-import { Icon } from './Icon'
+import { Icon } from '../Icon'
+import './index.less'
 
-export const Radio = (
+const Checkbox = (
   {
     media,
     title,
@@ -18,14 +19,14 @@ export const Radio = (
   children
 ) => {
   return (
-    <label {...r} class={cc('label-radio item-content', r.class)}>
+    <label {...r} class={cc('label-checkbox item-content', r.class)}>
       <input
         {...{ name, disabled, value, checked }}
-        type="radio"
-        onchange={e => onCheckChange(e.target.value, e)}
+        type="checkbox"
+        onchange={e => onCheckChange(e.target.checked, e)}
       />
       <div class="item-media">
-        {media || <Icon name="form-radio" />}
+        {media || <Icon name="form-checkbox" />}
       </div>
       <div class="item-inner">
         <div class="item-title">{title || children}</div>
@@ -33,3 +34,5 @@ export const Radio = (
     </label>
   )
 }
+
+export default Checkbox
