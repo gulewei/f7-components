@@ -100,6 +100,7 @@ app(
           <Item
             media={F7Icon}
             title={text.name}
+            alignTop
             input={
               <textarea
                 placeholder={text.placeholder}

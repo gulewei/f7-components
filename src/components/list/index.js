@@ -42,6 +42,7 @@ function renderListChildren (children) {
 /**
  * @typedef {Object} ItemProps
  * @prop {boolean} [isLink=false]
+ * @prop {boolean} [alignTop]
  * @prop {JSX.Element} [media]
  * @prop {JSX.Element} title
  * @prop {JSX.Element} [after]
@@ -52,6 +53,7 @@ function renderListChildren (children) {
 const Item = (props) => {
   const {
     isLink,
+    alignTop,
     media,
     title,
     after,
@@ -64,7 +66,8 @@ const Item = (props) => {
   const multipleLine = subTitle || text
   const cls = cc(rests.class, 'item-content', {
     'item-link': isLink,
-    [MEDIA_ITEM_CLASS]: multipleLine
+    [MEDIA_ITEM_CLASS]: multipleLine,
+    'align-top': alignTop
   })
 
   return (
