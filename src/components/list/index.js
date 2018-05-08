@@ -45,7 +45,6 @@ function renderListChildren (children) {
  * @prop {JSX.Element} [media]
  * @prop {JSX.Element} title
  * @prop {JSX.Element} [after]
- * @prop {JSX.Element} [input]
  * @prop {JSX.Element} [subTitle]
  * @prop {JSX.Element} [text]
  * @param {ItemProps} props
@@ -56,7 +55,7 @@ const Item = (props) => {
     media,
     title,
     after,
-    input,
+    input, // used in input-item
     subTitle,
     text,
     ...rests
