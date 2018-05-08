@@ -2,6 +2,14 @@ import { h } from 'hyperapp'
 import cc from 'classnames'
 import './index.less'
 
+/**
+ * @typedef {Object} ContentBlockProps
+ * @prop {boolean} [inner=false]
+ * @prop {boolean} [inset=false]
+ * @prop {string} [title]
+ * @param {ContentBlockProps} props
+ * @param {JSX.Element[]} children
+ */
 const ContentBlock = (props, children) => {
   const {
     inner = false,
