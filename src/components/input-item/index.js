@@ -13,18 +13,9 @@ import './index.less'
  * @param {InputItemProps} props
  */
 const InputItem = (props) => {
-  const {
-    input,
-    subTitle,
-    text,
-    ...rests
-  } = props
-
   return (
     <Item
-      {...rests}
-      class={rests.class}
-      input={input}
+      {...props}
       // no multiple line
       subTitle=''
       text=''
@@ -32,4 +23,14 @@ const InputItem = (props) => {
   )
 }
 
+const Input = props => {
+  return (
+    <input {...props} type={props.type || 'text'} />
+  )
+}
+
 export default InputItem
+
+export {
+  Input
+}
