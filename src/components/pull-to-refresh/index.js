@@ -80,7 +80,8 @@ export default {
     }
 
     if (refreshing === enumRefreshing.release) {
-      onRefresh && onRefresh(finish)
+      // trigger refresh after render done
+      onRefresh && setTimeout(() => onRefresh(finish), 0)
     }
 
     return (
