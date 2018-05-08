@@ -1,0 +1,63 @@
+@import url('../_styles/index.less');
+
+.button {
+  border: 1px solid @themeColor;
+  color: @themeColor;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  border-radius: 5px;
+  line-height: 27px;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  background: none;
+  padding: 0 10px;
+  margin: 0;
+  height: 29px;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  outline: 0;
+  input[type="submit"]&, input[type="button"]&{
+      width: 100%;
+  }
+
+  &:active, &.active-state {
+      background: rgba(red(@themeColor), green(@themeColor), blue(@themeColor), .15);
+  }
+  &.button-round {
+      border-radius: 27px;
+  }
+  &.button-big {
+      font-size: 17px;
+      height: 44px;
+      line-height: 42px;
+  }
+  &.button-fill {
+      color:#fff;
+      background: @themeColor;
+      border-color: transparent;
+    &:active, &.active-state {
+          opacity: 0.8;
+      }
+  }
+  i.icon {
+      &:first-child {
+          margin-right: 10px;
+      }
+      &:last-child {
+          margin-left: 10px;
+      }
+      &:first-child:last-child {
+          margin-left: 0;
+          margin-right: 0;
+      }
+  }
+}

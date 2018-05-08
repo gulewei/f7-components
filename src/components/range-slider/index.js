@@ -1,0 +1,20 @@
+import { h } from 'hyperapp'
+import './index.less'
+
+/**
+ * @typedef {Object} RangeSliderProps
+ * @prop {number} min
+ * @prop {number} max
+ * @prop {number} step
+ * @prop {number} value
+ * @param {RangeSliderProps} props
+ */
+const RangeSlider = props => {
+  return (
+    <div class="range-slider">
+      <input {...props} type="range" />
+    </div>
+  )
+}
+
+export default RangeSlider

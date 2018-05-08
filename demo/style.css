@@ -1,3 +1,18 @@
-.area {
-  padding: 10px;
+* {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+i.icon.icon-f7 {
+  height: 29px;
+  width: 29px;
+  background-image: url("./i-f7-ios.png");
+  border-radius: 6px;
 }
