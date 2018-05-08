@@ -112,30 +112,7 @@
         .flexbox();
         max-height: 28px;
     }
-    .item-actions {
-        margin-left: auto;
-        padding-left: 15px;
-        .flexbox();
-        .align-items(center);
-        .justify-content(space-between);
-        a {
-            min-width: 23px;
-            .flexbox();
-            .align-items(center);
-            .justify-content(center);
-            .transition(300ms);
-            html:not(.watch-active-state) &:active, &.active-state {
-                opacity: 0.3;
-                .transition(0ms);
-            }
-            + a {
-                margin-left: 8px;
-            }
-        }
-    }
-    .item-after + .item-actions {
-        margin-left: 0;
-    }
+
     .item-link, .list-button {
         .transition(300ms);
         display: block;
@@ -166,6 +143,7 @@
         .hairline(bottom, @listBlockBorderColor);
         line-height: 43px;
     }
+
     .item-content {
         box-sizing: border-box;
         padding-left: 15px;
@@ -174,6 +152,7 @@
         .justify-content(space-between);
         .align-items(center);
     }
+    
     // Label after List block
     .list-block-label {
         margin: 10px 0 35px;
@@ -241,6 +220,7 @@
             margin-left: 15px;
         }
     }
+
     .list-group {
         ul {
             &:after, &:before {
