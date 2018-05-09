@@ -5,7 +5,7 @@ import cc from 'classnames'
 import { Icon } from '../Icon'
 import './index.less'
 
-const Radio = (
+const RadioItem = (
   {
     media,
     title,
@@ -35,4 +35,4 @@ const Radio = (
   )
 }
 
-export default Radio
+export default RadioItem
