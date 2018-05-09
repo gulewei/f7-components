@@ -2,36 +2,45 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 // eslint-disable-next-line
-import { Icon } from '../Icon'
+import { Item } from '../list'
+// eslint-disable-next-line
+import Icon from '../icon'
 import './index.less'
 
-const RadioItem = (
-  {
-    media,
-    title,
-    disabled = false,
-    checked = false,
-    value,
+const radioIcon = <Icon name="form-radio" />
+
+/**
+ * @typedef {Object} RadioItemProps
+ * @prop {boolean} checked
+ * @prop {string} [name]
+ * @prop {boolean} [disabled]
+ * @prop {(checked: boolean) => void} [onchange]
+ * @prop {JSX.Element} [media]
+ * @param {RadioItemProps} props
+ * @param {JSX.Element[]} children
+ */
+const RadioItem = (props, children) => {
+  const {
+    checked,
     name,
-    onCheckChange = () => { },
-    ...r
-  },
-  children
-) => {
+    disabled,
+    onchange,
+    media,
+    ...itemProps
+  } = props
+
   return (
-    <label {...r} class={cc('label-radio item-content', r.class)}>
-      <input
-        {...{ name, disabled, value, checked }}
-        type="radio"
-        onchange={e => onCheckChange(e.target.value, e)}
-      />
-      <div class="item-media">
-        {media || <Icon name="form-radio" />}
-      </div>
-      <div class="item-inner">
-        <div class="item-title">{title || children}</div>
-      </div>
-    </label>
+    <Item
+      {...itemProps}
+      class={cc(itemProps.class, 'label-radio')}
+      media={media || radioIcon}
+      extraMedia={
+        <input
+          key="radio" type="radio"
+          {...{ name, disabled, checked, onchange }}
+        />
+      }
+    > {children}</Item >
   )
 }
 

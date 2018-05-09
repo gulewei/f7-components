@@ -40,6 +40,7 @@ const CustomInput = props => {
   return (
     <input
       {...{ type, name, value, disabled, readonly, placeholder }}
+      key='f7c-custom-input'
       class="f7c-custom-input"
       oninput={oninput && (e => oninput(e.target.value))}
       onchange={onchange && (e => onchange(e.target.value))}

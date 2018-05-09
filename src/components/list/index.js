@@ -40,7 +40,14 @@ const List = (props, children) => {
  * @prop {JSX.Element} [text]
  * @prop {JSX.Element} [input]
  * @prop {JSX.Element} [extraMedia]
+ * @prop {string} key
+ * @prop {Function} [onclick]
+ * @prop {(el: HTMLElement) => void} oncreate
+ * @prop {(el: HTMLElement, done: Function) => void} onremove
+ * @prop {(el: HTMLElement) => void} ondestroy
+ * @prop {(el: HTMLElement, oldAttr: Object) => void} onupdate
  * @param {ItemProps} props
+ * @param {JSX.Element[]} children
  */
 const Item = (props, children) => {
   const {
@@ -61,7 +68,7 @@ const Item = (props, children) => {
     onclick,
     oncreate,
     onremove,
-    ondestory,
+    ondestroy,
     onupdate
   } = props
 
@@ -74,7 +81,7 @@ const Item = (props, children) => {
 
   return h(
     extraMedia ? 'label' : 'div',
-    { class: cls, key, onclick, oncreate, onremove, ondestory, onupdate },
+    { class: cls, key, onclick, oncreate, onremove, ondestroy, onupdate },
     [
       extraMedia,
       media && <div key="media" class="item-media">{media}</div>,

@@ -7,6 +7,7 @@ import InputItem from '../../src/components/input-item'
 import Icon from '../../src/components/icon'
 import RangeSlider from '../../src/components/range-slider'
 import CheckboxItem from '../../src/components/checkbox-item'
+import RadioItem from '../../src/components/radio-item'
 
 const F7Icon = <Icon name='f7' />
 
@@ -24,6 +25,7 @@ const InputElements = ({ elements, inputAction }) => {
   return items.map(({ name, filed, ...item }, i) => {
     return (
       <InputItem
+        key={filed}
         media={F7Icon}
         title={name}
         {...item}
@@ -40,14 +42,35 @@ const CheckboxItemGroup = ({ checks, checkAction }) => {
     <div>
       <ContentBlock title="Checkbox Group" />
       <List>
-        {items.map(({ checked, name, filed }) => (
+        {items.map(({ checked, name, filed }, i) => (
           <CheckboxItem
+            key={filed}
             title={name}
             checked={checked}
             onchange={checked => checkAction({ filed, checked })}
             after={
               <span>123</span>
             }
+          />
+        ))}
+      </List>
+    </div>
+  )
+}
+
+const RadioItemGrop = ({ radioValue, radios, selectActon }) => {
+  const items = toArray(radios)
+  return (
+    <div>
+      <ContentBlock title="Radio Group" />
+      <List>
+        {items.map(({ filed, value }) => (
+          <RadioItem
+            key={filed}
+            title={value}
+            checked={value === radioValue}
+            name="radio"
+            onchange={() => selectActon(value)}
           />
         ))}
       </List>
@@ -77,7 +100,15 @@ app(
     book: { checked: false, name: 'Book', filed: 'book' },
     movie: { checked: false, name: 'Movie', filed: 'movie' },
     food: { checked: false, name: 'Food', filed: 'food' },
-    drinks: { checked: false, name: 'Drinks', filed: 'drinks' }
+    drinks: { checked: false, name: 'Drinks', filed: 'drinks' },
+    // radio
+    radioValue: 'Drinks',
+    radios: {
+      book: { value: 'Book', filed: 'book' },
+      movie: { value: 'Movie', filed: 'movie' },
+      food: { value: 'Food', filed: 'food' },
+      drinks: { value: 'Drinks', filed: 'drinks' }
+    }
   },
   {
     input: ({ filed, value }) => state => {
@@ -88,6 +119,11 @@ app(
     check: ({ filed, checked }) => state => {
       return {
         [filed]: { ...state[filed], checked }
+      }
+    },
+    select: (value) => {
+      return {
+        radioValue: value
       }
     }
   },
@@ -103,6 +139,9 @@ app(
       food,
       drinks,
 
+      radioValue,
+      radios,
+
       ...elements
     } = state
 
@@ -114,6 +153,7 @@ app(
         <List>
           <InputElements elements={elements} inputAction={actions.input} />
           <Item
+            key={gender.filed}
             media={F7Icon}
             title={gender.name}
             input={
@@ -127,6 +167,7 @@ app(
             }
           />
           <Item
+            key={range.filed}
             media={F7Icon}
             title={range.name}
             input={
@@ -140,6 +181,7 @@ app(
             }
           />
           <Item
+            key={text.filed}
             media={F7Icon}
             title={text.name}
             alignTop
@@ -153,6 +195,8 @@ app(
         </List>
 
         <CheckboxItemGroup checks={{ book, movie, food, drinks }} checkAction={actions.check} />
+
+        <RadioItemGrop radioValue={radioValue} radios={radios} selectActon={actions.select} />
       </Page>
     )
   },
