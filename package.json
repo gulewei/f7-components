@@ -27,8 +27,6 @@
   "dependencies": {
     "@gulw/scroller": "^1.0.2",
     "classnames": "^2.2.5",
-    "dom-helpers": "^3.3.1",
-    "framework7": "^1.6.5",
     "hyperapp": "^1.2.5"
   },
   "engines": {

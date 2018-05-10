@@ -1,7 +1,5 @@
 import { app } from 'hyperapp'
 
-export const noop = () => { }
-
 export function install (state, actions, view, api) {
   const el = document.createElement('div')
   const appActions = app(state, actions, view, el)
@@ -14,46 +12,26 @@ export function isarray (arr) {
   return toString.call(arr) === '[object Array]'
 }
 
-/**
- * 添加类名
- * @param {HTMLElement} el
- * @param {string} className
- */
-export function addClass (el, className) {
-  // http://caniuse.com/#search=classList
-  el.classList.add(className)
-}
-
-/**
- * 去除类名
- * @param {HTMLElement} el
- * @param {string} className
- */
-export function removeClass (el, className) {
-  // http://caniuse.com/#search=classList
-  el.classList.remove(className)
-}
-
-/**
- * 修改样式
- * @param {HTMLElement} el
- * @param {object<string>} obj
- */
-export function css (el, obj) {
-  for (let key in obj) {
-    el.style[key] = obj[key]
+function modularApp (ownState, ownActions, connector) {
+  return function getContaienr (key) {
+    // auto generate key if not provided
+    if (!key) {
+      key = modularApp.prefix + (modularApp.modulars.length + 1)
+      modularApp.modulars.push(key)
+    }
+    return {
+      state: { [key]: ownState },
+      actions: { [key]: ownActions },
+      connector: (props, children) => (state, actions) => {
+        return connector(state[key], actions[key], props, children)
+      }
+    }
   }
 }
 
-/**
- * 添加事件
- * @param {HTMLElement} el
- * @param {string} type
- * @param {EventListener} fn
- * @param {boolean} options
- * @returns {Function}
- */
-export function on (el, type, fn, options) {
-  el.addEventListener(type, fn, options)
-  return () => el.removeEventListener(type, fn, options)
+modularApp.modulars = []
+modularApp.prefix = '_modular_'
+
+export {
+  modularApp
 }

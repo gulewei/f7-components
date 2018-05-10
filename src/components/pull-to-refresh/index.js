@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import on from 'dom-helpers/events/on'
+import { on } from '../_utils'
 import './index.less'
 
 /**
