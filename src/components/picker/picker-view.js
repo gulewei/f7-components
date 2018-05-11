@@ -1,51 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import { f7app, noop, isarray } from '../utils'
-
-/**
- * @typedef {Object} PickerViewProps
- * @prop {Object[]} data
- * @prop {string[]} value
- * @prop {() => void} [onColChange]
- * @prop {boolean} [cascade=false]
- * @param {PickerViewProps} props
- */
-export const PickerView = props => {
-  const {
-    data,
-    value,
-    onColChange = noop,
-    cascade = false
-  } = props
-
-  const cols = compatData(cascade ? getCascadeData(data, value) : data)
-
-  return (
-    <div class="f7c-picker-view"
-      cols={cols}
-      oncreate={el => {
-        el._f7c_picker = f7app.picker({
-          container: el,
-          cssClass: 'f7c-picker-view-column',
-          value,
-          cols: mapF7Cols(cols),
-          toolbar: false,
-          onChange: (p, values, displayValues) => onColChange(values)
-        })
-      }}
-      onupdate={(el, oldAttr) => {
-        const diff = diffCols(oldAttr.cols, cols)
-        if (diff.length > 0) {
-          console.log('update picker cols')
-          applyDiff(diff, el._f7c_picker.cols, cols)
-        }
-      }}
-      ondestroy={(el) => {
-        el._f7c_picker.destroy()
-      }}
-    ></div>
-  )
-}
+import './picker-view.less'
 
 // #region helper function
 
@@ -122,3 +78,50 @@ function applyDiff (diff, f7Cols, cols) {
 }
 
 // #endregion
+
+/**
+ * @typedef {Object} PickerViewProps
+ * @prop {Object[]} data
+ * @prop {string[]} value
+ * @prop {() => void} [onColChange]
+ * @prop {boolean} [cascade=false]
+ * @param {PickerViewProps} props
+ */
+const PickerView = props => {
+  const {
+    data,
+    value,
+    onColChange = noop,
+    cascade = false
+  } = props
+
+  const cols = compatData(cascade ? getCascadeData(data, value) : data)
+
+  return (
+    <div class="f7c-picker-view"
+      cols={cols}
+      oncreate={el => {
+        el._f7c_picker = f7app.picker({
+          container: el,
+          cssClass: 'f7c-picker-view-column',
+          value,
+          cols: mapF7Cols(cols),
+          toolbar: false,
+          onChange: (p, values, displayValues) => onColChange(values)
+        })
+      }}
+      onupdate={(el, oldAttr) => {
+        const diff = diffCols(oldAttr.cols, cols)
+        if (diff.length > 0) {
+          console.log('update picker cols')
+          applyDiff(diff, el._f7c_picker.cols, cols)
+        }
+      }}
+      ondestroy={(el) => {
+        el._f7c_picker.destroy()
+      }}
+    ></div>
+  )
+}
+
+export default PickerView
