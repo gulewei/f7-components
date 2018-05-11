@@ -1,6 +1,8 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-import { addClass, removeClass, css, on } from '../utils'
+import { addClass, removeClass, css, on } from '../_utils'
+import cc from 'classnames'
+import './index.css'
 
 /**
  *
@@ -29,18 +31,29 @@ const removeEl = (el, done) => {
  * @prop {number} [duration]
  * @param {ToastProps} props
  */
-export const Toast = (props) => {
+const Toast = (props) => {
   const {
     show = false,
-    close,
     msg,
-    duration
+    oncreate,
+    onremove,
+    ...rest
   } = props
 
   return show && (
-    <div class="toast show" oncreate={el => {
-      transitionEl(el)
-      setTimeout(close, duration)
-    }} onremove={removeEl}>{msg}</div>
+    <div
+      {...rest}
+      class={cc('toast show', rest.class)}
+      oncreate={el => {
+        transitionEl(el)
+        oncreate && oncreate(el)
+      }}
+      onremove={(el, done) => {
+        removeEl(el, done)
+        onremove && onremove(el, done)
+      }}
+    >{msg}</div>
   )
 }
+
+export default Toast

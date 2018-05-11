@@ -3,7 +3,8 @@ import { h, app } from 'hyperapp'
 import Page from '../../src/components/page'
 import Mask from '../../src/components/mask'
 import ContentBlock from '../../src/components/content-block'
-import modals from '../../src/plugins/dialog'
+import modals from '../../src/plugins/modals'
+import toast from '../../src/plugins/toast'
 
 function deffer (fn, ...args) {
   return () => {
@@ -76,6 +77,16 @@ app(
             })
           }}>
             <a>Modal With Vertical Buttons</a>
+          </p>
+        </ContentBlock>
+
+        <ContentBlock title="Toast">
+          <p onclick={e => toast(`It's a toast`)}>
+            <a>Toast</a>
+          </p>
+
+          <p onclick={e => toast(`It's a 2s toast`, 2000)}>
+            <a>Toast with 2s duration</a>
           </p>
         </ContentBlock>
       </Page >
