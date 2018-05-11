@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import { addClass, removeClass, css, on } from '../_utils'
+import Mask from '../mask'
 import cc from 'classnames'
 import './index.css'
 
@@ -26,9 +27,7 @@ const removeEl = (el, done) => {
 /**
  * @typedef {Object} ToastProps
  * @prop {boolean} [show=false]
- * @prop {() => void} close
  * @prop {string} msg
- * @prop {number} [duration]
  * @param {ToastProps} props
  */
 const Toast = (props) => {
@@ -40,19 +39,23 @@ const Toast = (props) => {
     ...rest
   } = props
 
-  return show && (
-    <div
-      {...rest}
-      class={cc('toast show', rest.class)}
-      oncreate={el => {
-        transitionEl(el)
-        oncreate && oncreate(el)
-      }}
-      onremove={(el, done) => {
-        removeEl(el, done)
-        onremove && onremove(el, done)
-      }}
-    >{msg}</div>
+  return (
+    <div>
+      {show && [
+        <div {...rest}
+          class={cc('toast show', rest.class)}
+          oncreate={el => {
+            transitionEl(el)
+            oncreate && oncreate(el)
+          }}
+          onremove={(el, done) => {
+            removeEl(el, done)
+            onremove && onremove(el, done)
+          }}
+        >{msg}</div>,
+        <Mask type="preloader-indicator" show invisible />
+      ]}
+    </div>
   )
 }
 

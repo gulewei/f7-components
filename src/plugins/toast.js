@@ -6,35 +6,35 @@ import { install } from '../utils'
 
 const defaultDuration = 1500
 
-const state = {
+const defaultState = {
   show: false,
   msg: '',
   duration: defaultDuration
 }
 
 const actions = {
-  toast ({ msg, duration = defaultDuration }) {
-    return { show: true, msg, duration }
+  toast: ({ msg, duration = defaultDuration }) => (state, actions) => {
+    actions.set({ show: true, msg, duration })
+    actions.scheduleClose()
   },
 
-  close () {
-    return { show: false, msg: '' }
+  scheduleClose: () => (state, actions) => {
+    setTimeout(() => {
+      actions.set(defaultState)
+    }, state.duration)
   },
 
-  scheduleToast: (toast) => (state, actions) => {
-    actions.toast(toast)
-    setTimeout(actions.close, state.duration)
-  }
+  set: state => state
 }
 
 const view = (state, actions) => (
-  <Toast {...state} close={actions.close} />
+  <Toast show={state.show} msg={state.msg} />
 )
 
-const api = ({ scheduleToast }) => {
-  return (msg, duration) => scheduleToast({ msg, duration })
+const api = ({ toast }) => {
+  return (msg, duration) => toast({ msg, duration })
 }
 
-const toast = install(state, actions, view, api)
+const toast = install(defaultState, actions, view, api)
 
 export default toast

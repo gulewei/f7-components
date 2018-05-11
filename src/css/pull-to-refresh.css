@@ -1,9 +1,0 @@
-.f7c-pull-to-refresh { height: 100%; overflow: auto; } 
-
-.f7c-pull-to-refresh-wraper { overflow: hidden; } 
-
-.f7c-pull-to-refresh-content { transform-origin: left top 0px; } 
-
-.f7c-pull-to-refresh-transition { transition: transform .4s ease; } 
-
-.f7c-pull-to-refresh-indicator { margin-top: -25px; height: 25px; text-align: center; } 

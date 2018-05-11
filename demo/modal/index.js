@@ -3,19 +3,23 @@ import { h, app } from 'hyperapp'
 import Page from '../../src/components/page'
 import Mask from '../../src/components/mask'
 import ContentBlock from '../../src/components/content-block'
+import Preloader from '../../src/components/preloader'
 import modals from '../../src/plugins/modals'
 import toast from '../../src/plugins/toast'
+import loading from '../../src/plugins/loading'
 
-function deffer (fn, ...args) {
-  return () => {
-    setTimeout(() => fn.apply(undefined, args), 0)
-  }
-}
+window.$loading = loading
 
 app(
   {
+    masker: {
+      show: false
+    }
   },
   {
+    masker: {
+      show: show => ({ show })
+    }
   },
   (state, actions) => {
     window.$modal = { state, actions }
@@ -89,6 +93,31 @@ app(
             <a>Toast with 2s duration</a>
           </p>
         </ContentBlock>
+
+        <ContentBlock title="Mask">
+          <p onclick={e => actions.masker.show(true)}>
+            <a>Mask</a>
+          </p>
+        </ContentBlock>
+
+        <ContentBlock title="Preloader">
+          <Preloader />
+        </ContentBlock>
+
+        <ContentBlock title="Loading">
+          <p onclick={e => {
+            loading.show()
+            setTimeout(() => loading.hide(), 2000)
+          }}
+          ><a>loading</a></p>
+        </ContentBlock>
+
+        <Mask
+          // key="mask"
+          show={state.masker.show}
+          onclick={e => actions.masker.show(false)}
+        ></Mask>
+
       </Page >
     )
   },
