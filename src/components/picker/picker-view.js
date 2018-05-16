@@ -1,7 +1,47 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-import { f7app, noop, isarray } from '../utils'
+import { isarray } from '../../utils'
+import { noop } from '../_utils'
+import cc from 'classnames'
+import EasyScroller from '../../scroller/easy-scroller'
 import './picker-view.less'
+
+/**
+ * @typedef {Object} PickerItemsColsProps
+ * @prop {{value: string, label: string}[]} data
+ * @prop {Function} [onValueChange]
+ * @prop {'left' | 'center'} [align]
+ * @param {PickerItemsColsProps} props
+ */
+export const PickerItemsCol = (props) => {
+  const {
+    data,
+    // onValueChange,
+    align
+  } = props
+
+  return (
+    <div class={cc('picker-items-col', { [`picker-items-col-${align}`]: align })}>
+      <div class="picker-items-col-wrapper"
+        oncreate={el => {
+          el.__scroller = new EasyScroller(el, {
+            scrollingX: false
+          })
+        }}
+      >
+        {
+          data.map(({ label }) => {
+            return (
+              <div class="picker-item">
+                <span>{label}</span>
+              </div>
+            )
+          })
+        }
+      </div>
+    </div>
+  )
+}
 
 /**
  * @typedef {Object} PickerViewProps
@@ -24,26 +64,6 @@ const PickerView = props => {
   return (
     <div class="f7c-picker-view"
       cols={cols}
-      oncreate={el => {
-        el._f7c_picker = f7app.picker({
-          container: el,
-          cssClass: 'f7c-picker-view-column',
-          value,
-          cols: mapF7Cols(cols),
-          toolbar: false,
-          onChange: (p, values, displayValues) => onColChange(values)
-        })
-      }}
-      onupdate={(el, oldAttr) => {
-        const diff = diffCols(oldAttr.cols, cols)
-        if (diff.length > 0) {
-          console.log('update picker cols')
-          applyDiff(diff, el._f7c_picker.cols, cols)
-        }
-      }}
-      ondestroy={(el) => {
-        el._f7c_picker.destroy()
-      }}
     ></div>
   )
 }

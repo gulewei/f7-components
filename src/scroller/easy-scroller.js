@@ -1,13 +1,13 @@
 import Scroller from '@gulw/scroller'
 
-var EasyScroller = function (content, callback, options) {
+var EasyScroller = function (content, options) {
   this.content = content
   this.container = content.parentNode
   this.options = options || {}
 
   // create Scroller instance
   this.scroller = new Scroller((left, top, zoom) => {
-    callback(left, top, zoom, this.render.bind(this))
+    this.render(left, top, zoom, this.render.bind(this))
   }, options)
 
   // bind events
