@@ -68,6 +68,7 @@ app(
           <PickerItemsCol
             data={state.picker.data}
           />
+          <div class="picker-center-highlight"></div>
         </PickerModal>
       </Page>
     )
