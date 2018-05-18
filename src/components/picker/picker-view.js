@@ -130,10 +130,6 @@ class PickerScroller extends BaseScroller {
     }
   }
 
-  /**
-   *
-   * @param {Event} e
-   */
   onItemClick (e) {
     if (this.state.isTouched) {
       return
