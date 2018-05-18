@@ -5,28 +5,58 @@ import ContentBlock from '../../src/components/content-block'
 import List from '../../src/components/list'
 import InputItem from '../../src/components/input-item'
 import PickerModal from '../../src/components/picker/picker-modal'
-import { PickerItemsCol } from '../../src/components/picker/picker-view'
+import PickerView from '../../src/components/picker/picker-view'
+
+const pickerItem = (label, value) => {
+  return { label, value }
+}
+
+const mocker = {
+  range (start, end) {
+    let ranges = []
+    for (let i = start; i <= end; i++) {
+      ranges.push(i)
+    }
+    return ranges
+  },
+
+  mons () {
+    return mocker.range(1, 12).map(m => pickerItem(`${m}月`, m))
+  },
+
+  dates (mon) {
+    const a = [4, 6, 9, 11]
+    const b = 2
+    const maper = (date) => {
+      return pickerItem(`${date}日`, date)
+    }
+
+    if (a.indexOf(mon) > -1) {
+      return mocker.range(1, 30).map(maper)
+    } else if (mon === b) {
+      return mocker.range(1, 28).map(maper)
+    } else {
+      return mocker.range(1, 31).map(maper)
+    }
+  },
+
+  cascadeDate () {
+    return mocker.mons().map(({ value, label }) => {
+      return {
+        label,
+        value,
+        children: mocker.dates(value)
+      }
+    })
+  }
+}
 
 app(
   {
     book: 'book',
     picker: {
       show: false,
-      data: [
-        { label: '星期一', value: 'mon' },
-        { label: '星期二', value: 'tue' },
-        { label: '星期三', value: 'wen' },
-        { label: '星期四', value: 'thu' },
-        { label: '星期五', value: 'fri' },
-        { label: '星期六', value: 'sat' },
-        { label: '星期一', value: 'mon' },
-        { label: '星期二', value: 'tue' },
-        { label: '星期三', value: 'wen' },
-        { label: '星期四', value: 'thu' },
-        { label: '星期五', value: 'fri' },
-        { label: '星期六', value: 'sat' },
-        { label: '星期日', value: 'sun' }
-      ]
+      data: mocker.cascadeDate()
     }
   },
   {
@@ -64,11 +94,11 @@ app(
           close={actions.picker.close}
           pickerItems
         >
-          {/* <ContentBlock>It's a Picker Modal</ContentBlock> */}
-          <PickerItemsCol
+          <PickerView
+            cascade
             data={state.picker.data}
+            value={[5, 18]}
           />
-          <div class="picker-center-highlight"></div>
         </PickerModal>
       </Page>
     )

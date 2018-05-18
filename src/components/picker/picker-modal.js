@@ -53,9 +53,10 @@ const PickerModal = (props, children) => {
             <div class="left">{left}</div>
             <div class="right">{right}</div>
           </Toolbar>
-          <div class={cc('picker-modal-inner', { 'picker-items': pickerItems })}>
-            {children}
-          </div>
+          {pickerItems
+            ? children
+            : <div class="picker-modal-inner">{children}</div>
+          }
         </div>
       }
     </div>

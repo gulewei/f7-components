@@ -1,21 +1,25 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import { isarray } from '../../utils'
-import { noop, on, css } from '../_utils'
+import { noop, on } from '../_utils'
+import BaseScroller from '../_utils/scroller'
 import cc from 'classnames'
 import './picker-view.less'
 
 /**
+ * @typedef {{value: string, label: string}} PickerDataItem
  * @typedef {Object} PickerItemsColsProps
- * @prop {{value: string, label: string}[]} data
- * @prop {Function} [onValueChange]
+ * @prop {PickerDataItem[]} data
+ * @prop {string[]} value
+ * @prop {Function} [onChange]
  * @prop {'left' | 'center'} [align]
  * @param {PickerItemsColsProps} props
  */
 export const PickerItemsCol = (props) => {
   const {
     data,
-    // onValueChange,
+    value,
+    onChange,
     align
   } = props
 
@@ -23,8 +27,8 @@ export const PickerItemsCol = (props) => {
     <div class={cc('picker-items-col', { [`picker-items-col-${align}`]: align })}>
       <div class="picker-items-col-wrapper"
         oncreate={el => {
-          el.__scroller = new Scrolling(el)
-          console.log(el.__scroller)
+          el._scroller = new PickerScroller(el, { data, value, callback: onChange })
+          console.log(el._scroller)
         }}
       >
         {
@@ -41,158 +45,137 @@ export const PickerItemsCol = (props) => {
   )
 }
 
-function setTransform (nodestyle, translateY, duration = '') {
-  nodestyle.transform = `translate3d(0px, ${translateY}px, 0px)`
-  nodestyle.webkitTransform = `translate3d(0px, ${translateY}px, 0px)`
-  nodestyle.transitionDuration = duration
-  nodestyle.webkitTransitionDuration = duration
-}
+class PickerScroller extends BaseScroller {
+  /**
+   * @typedef {Object} PickerScrollerOptions
+   * @prop {Function} callback
+   * @prop {string} value
+   * @prop {PickerDataItem[]} data
+   * @param {HTMLElement} wraper
+   * @param {PickerScrollerOptions} options
+   */
+  constructor(wraper, options) { // eslint-disable-line
+    if (!options.data) {
+      throw new Error('picker must have data !')
+    }
 
-class Scrolling {
-  // eslint-disable-next-line
-  constructor(wraper, options) {
-    // const {
-    //   itemLength
-    // } = options
-
-    const container = wraper.parentNode
-    const wraperHeight = wraper.offsetHeight
-    const containerHeight = container.offsetHeight
-    const itemLength = wraper.children.length
-
-    this.options = options
+    super()
     this.wraper = wraper
-    this.calcSize(containerHeight, wraperHeight, itemLength)
-    this.initializeState(this.size.maxTranslate)
-    this.render(this.size.maxTranslate, '0ms')
+    this.options = options
+
+    const { itemHeight, maxTranslate, minTranslate } = this.calcSize(wraper)
+    this.initializeSize(maxTranslate, minTranslate)
+    this.itemHeight = itemHeight
+
+    const translate = this.calcTranslate()
+    this.initializeState(translate)
+
+    this.render(translate)
     this.bindEvents()
   }
 
-  calcSize (containerHeight, wraperHeight, itemLength) {
+  calcSize (wraper) {
+    const container = wraper.parentNode
+    const containerHeight = container.offsetHeight
+    const wraperHeight = wraper.offsetHeight
+    const itemLength = wraper.children.length
     const itemHeight = wraperHeight / itemLength
+
     const maxTranslate = (containerHeight - itemHeight) / 2
     const minTranslate = (containerHeight - itemHeight * (itemLength * 2 - 1)) / 2
 
-    this.size = {
-      itemHeight,
-      maxTranslate,
-      minTranslate
+    return {
+      maxTranslate, minTranslate, itemHeight
     }
   }
 
-  initializeState (startTranslate) {
-    this.state = {
-      isTouched: false,
-      startY: 0,
-      startTime: '',
-      startTranslate,
-      currentY: 0,
-      currentTime: '',
-      currentTranslate: startTranslate,
-      velocityTranslate: 0
-    }
+  calcTranslate () {
+    const { value, data } = this.options
+
+    const activeIndex = data.reduce((active, item, i) => {
+      return item.value === value ? i : active
+    }, 0)
+
+    return this.getActiveTranslate(activeIndex)
   }
 
   bindEvents () {
-    on(this.wraper, 'touchstart', this._onTouchStart.bind(this))
-    on(this.wraper, 'touchmove', this._onTouchMove.bind(this))
-    on(this.wraper, 'touchend', this._onTouchEnd.bind(this))
+    on(this.wraper, 'touchstart', (e) => {
+      this.onTouchStart(e.targetTouches, Date.now())
+    })
+
+    on(this.wraper, 'touchmove', (e) => {
+      this.onTouchMove(e.targetTouches, Date.now())
+      this.render(this.getTranslate(), false)
+    })
+
+    on(this.wraper, 'touchend', (e) => {
+      this.onTouchEnd(e.targetTouches, Date.now())
+      this.scrollToItem(this.getActiveIndex(this.getTranslate()))
+    })
+
+    on(this.wraper, 'click', this.onItemClick.bind(this))
   }
 
-  render (translateY, duration = '') {
-    setTransform(this.wraper.style, translateY, duration)
+  render (translate, animate) {
+    this.setTranslate(this.wraper.style, translate, animate)
   }
 
-  _setState (nextState) {
-    const prevState = this.state
-    this.state = {
-      ...prevState,
-      ...nextState
+  scrollToItem (activeIndex) {
+    const finalTranslate = this.getActiveTranslate(activeIndex)
+    this.updateTranslate(finalTranslate)
+    this.render(finalTranslate, true)
+    if (this.options.callback) {
+      this.options.callback(this.options.data[activeIndex])
     }
   }
 
-  _normalizeTranslate (translate) {
+  /**
+   *
+   * @param {Event} e
+   */
+  onItemClick (e) {
+    if (this.state.isTouched) {
+      return
+    }
+
+    const itemCls = 'picker-item'
+    const isItem = (el) => {
+      return el.className.indexOf(itemCls) > -1 ? el : false
+    }
+    const target = isItem(e.target) || isItem(e.target.parentNode)
+
+    if (target) {
+      let activeIndex
+      for (let i = 0, len = this.wraper.children.length; i < len; i++) {
+        if (this.wraper.children[i] === target) {
+          activeIndex = i
+          break
+        }
+      }
+      this.scrollToItem(activeIndex)
+    }
+  }
+
+  getActiveIndex (translate) {
     const { minTranslate: min, maxTranslate: max } = this.size
-
-    if (translate < min) {
-      return min - Math.pow((min - translate), 0.8)
-    } else if (translate > max) {
-      return max + Math.pow((translate - max), 0.8)
-    } else {
-      return translate
-    }
-  }
-
-  _velocityTranslate (endTime) {
-    const {
-      startTime,
-      currentTranslate: curr,
-      velocityTranslate: v
-    } = this.state
-    let newTranslate
-    if (endTime - startTime > 300) {
-      newTranslate = curr
-    } else {
-      newTranslate = curr + v * 7
-    }
-
-    return newTranslate
-  }
-
-  _getFinalActive (translate) {
-    const { minTranslate: min, maxTranslate: max, itemHeight } = this.size
     const newTranslate = Math.max(Math.min(translate, max), min)
     const activeIndex = Math.round((max - newTranslate) / 36)
-    const finalTranslate = max - activeIndex * itemHeight
-    return { activeIndex, finalTranslate }
+    return activeIndex
   }
 
-  _onTouchStart (e) {
-    this._setState({
-      isTouched: true,
-      startY: e.targetTouches[0].pageY,
-      startTime: (new Date()).getTime()
-    })
-
-    this.render(this.state.startTranslate, '0ms')
+  getActiveTranslate (activeIndex) {
+    const { maxTranslate: max } = this.size
+    const finalTranslate = max - activeIndex * this.itemHeight
+    return finalTranslate
   }
 
-  _onTouchMove (e) {
-    if (!this.state.isTouched) {
-      return
-    }
-
-    const currentY = e.targetTouches[0].pageY
-    const newTranslate = this.state.startTranslate + currentY - this.state.startY
-    const currentTranslate = this._normalizeTranslate(newTranslate)
-
-    this._setState({
-      currentY,
-      currentTime: (new Date()).getTime(),
-      currentTranslate,
-      velocityTranslate: currentTranslate - this.state.currentTranslate
-    })
-
-    this.render(currentTranslate, '0ms')
-  }
-
-  _onTouchEnd (e) {
-    if (!this.state.isTouched) {
-      this._setState({ isTouched: false })
-      return
-    }
-
-    const endTime = (new Date()).getTime()
-
-    const velocityTranslate = this._velocityTranslate(endTime)
-    const { finalTranslate } = this._getFinalActive(velocityTranslate)
-
-    this._setState({
-      isTouched: false,
-      startTranslate: finalTranslate
-    })
-
-    this.render(finalTranslate)
+  setTranslate (nodestyle, translate, animate) {
+    nodestyle.transform = `translate3d(0px, ${translate}px, 0px)`
+    nodestyle.webkitTransform = `translate3d(0px, ${translate}px, 0px)`
+    const duration = animate ? '' : '0ms'
+    nodestyle.transitionDuration = duration
+    nodestyle.webkitTransitionDuration = duration
   }
 }
 
@@ -200,7 +183,7 @@ class Scrolling {
  * @typedef {Object} PickerViewProps
  * @prop {Object[]} data
  * @prop {string[]} value
- * @prop {() => void} [onColChange]
+ * @prop {() => void} [onChange]
  * @prop {boolean} [cascade=false]
  * @param {PickerViewProps} props
  */
@@ -208,16 +191,23 @@ const PickerView = props => {
   const {
     data,
     value,
-    onColChange = noop,
+    // onChange = noop,
     cascade = false
   } = props
 
-  const cols = compatData(cascade ? getCascadeData(data, value) : data)
+  const cols = cascade ? getCascadeData(data, value) : compatData(data)
 
   return (
-    <div class="f7c-picker-view"
-      cols={cols}
-    ></div>
+    <div class="picker-modal-inner picker-items">
+      {
+        cols.map((data, i) => {
+          return (
+            <PickerItemsCol data={data} value={value[i]} />
+          )
+        })
+      }
+      <div key="center-highlight" class="picker-center-highlight"></div>
+    </div>
   )
 }
 
@@ -229,6 +219,7 @@ const PickerView = props => {
  * @prop {CascadeProps[]} children
  * @param {CascadeProps[]} data
  * @param {string[]} value
+ * @returns {PickerDataItem[]}
  */
 function getCascadeData (data, value) {
   const f = (data, [val, ...vals], acc) => {
@@ -247,21 +238,11 @@ function getCascadeData (data, value) {
 
 /**
  * 兼容多列与单列数据
- * @param {*} data
+ * @param {PickerDataItem[] | PickerDataItem[][]} data
+ * @returns {PickerDataItem[][]}
  */
 function compatData (data) {
   return isarray(data[0]) ? data : [data]
-}
-
-/**
- * 映射为f7cols数据结构
- * @param {*} cols
- */
-function mapF7Cols (cols) {
-  return cols.map(col => ({
-    values: col.map(item => item.value),
-    displayValues: col.map(item => item.label)
-  }))
 }
 
 /**
@@ -277,20 +258,6 @@ function diffCols (prev, data) {
     (acc, col, i) => compareCol(col, prev[i]) ? acc : acc.concat(i),
     []
   )
-}
-
-/**
- * 替换变更的列数据
- * @param {number[]} diff
- * @param {(values: string[], displayValues: string[]) => void} f7Cols
- */
-function applyDiff (diff, f7Cols, cols) {
-  diff.map(index => {
-    f7Cols[index].replaceValues(
-      cols[index].map(item => item.value),
-      cols[index].map(item => item.label)
-    )
-  })
 }
 
 export default PickerView
