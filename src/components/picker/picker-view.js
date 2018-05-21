@@ -1,17 +1,18 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import { isarray } from '../../utils'
-import { noop, on } from '../_utils'
+import { on } from '../_utils'
 import BaseScroller from '../_utils/scroller'
 import cc from 'classnames'
 import './picker-view.less'
 
 /**
+ * Picker must be controlled
  * @typedef {{value: string, label: string}} PickerDataItem
  * @typedef {Object} PickerItemsColsProps
  * @prop {PickerDataItem[]} data
  * @prop {string[]} value
- * @prop {Function} [onChange]
+ * @prop {(value: string) => void} [onChange]
  * @prop {'left' | 'center'} [align]
  * @param {PickerItemsColsProps} props
  */
@@ -20,15 +21,28 @@ export const PickerItemsCol = (props) => {
     data,
     value,
     onChange,
-    align
+    align,
+    key
   } = props
 
   return (
     <div class={cc('picker-items-col', { [`picker-items-col-${align}`]: align })}>
       <div class="picker-items-col-wrapper"
+        key={key}
+        onupdate={(el) => {
+          const scroller = el._scroller
+          if (scroller) {
+            try {
+              scroller.update(props)
+            } catch (e) { }
+          }
+        }}
         oncreate={el => {
-          el._scroller = new PickerScroller(el, { data, value, callback: onChange })
+          el._scroller = new PickerScroller(el, { data, value, onChange: onChange })
           console.log(el._scroller)
+        }}
+        ondestroy={el => {
+          el._scroller && (el._scroller = null)
         }}
       >
         {
@@ -52,51 +66,92 @@ class PickerScroller extends BaseScroller {
    * @prop {string} value
    * @prop {PickerDataItem[]} data
    * @param {HTMLElement} wraper
-   * @param {PickerScrollerOptions} options
+   * @param {PickerScrollerOptions} props
    */
-  constructor(wraper, options) { // eslint-disable-line
-    if (!options.data) {
+  constructor(wraper, props) { // eslint-disable-line
+    if (!props.data) {
       throw new Error('picker must have data !')
     }
 
     super()
     this.wraper = wraper
-    this.options = options
-
-    const { itemHeight, maxTranslate, minTranslate } = this.calcSize(wraper)
-    this.initializeSize(maxTranslate, minTranslate)
-    this.itemHeight = itemHeight
-
-    const translate = this.calcTranslate()
-    this.initializeState(translate)
-
-    this.render(translate)
+    this.props = {}
+    this.heights = this._getHeights(wraper)
+    this.initializeState(0)
+    this.update(props)
     this.bindEvents()
   }
 
-  calcSize (wraper) {
-    const container = wraper.parentNode
-    const containerHeight = container.offsetHeight
-    const wraperHeight = wraper.offsetHeight
-    const itemLength = wraper.children.length
-    const itemHeight = wraperHeight / itemLength
+  _getHeights (wraper) {
+    const container = wraper.parentNode.offsetHeight
+    const item = wraper.offsetHeight / wraper.children.length
 
-    const maxTranslate = (containerHeight - itemHeight) / 2
-    const minTranslate = (containerHeight - itemHeight * (itemLength * 2 - 1)) / 2
+    return { container, item }
+  }
 
-    return {
-      maxTranslate, minTranslate, itemHeight
+  update (newProps) {
+    this.props.onChange = newProps.onChange
+
+    if (!isSameData(this.props.data, newProps.data)) {
+      console.log('update data')
+      return this._updateData(newProps.value, newProps.data)
+    }
+
+    if (newProps.value !== this.props.value) {
+      this._updateValue(newProps.value, newProps.data)
     }
   }
 
-  calcTranslate () {
-    const { value, data } = this.options
+  _updateData (value, data) {
+    // data
+    this.props.data = data
 
+    // size
+    const itemLength = data.length
+    const { container, item } = this.heights
+    const maxTranslate = (container - item) / 2
+    const minTranslate = (container - item * (itemLength * 2 - 1)) / 2
+    this.initializeSize(maxTranslate, minTranslate)
+
+    // value
+    this._updateValue(value, data)
+  }
+
+  _updateValue (value, data) {
+    // value
+    this.props.value = value
+
+    // translate
     const activeIndex = data.reduce((active, item, i) => {
       return item.value === value ? i : active
     }, 0)
+    this.scrollToItem(activeIndex, false)
+  }
 
-    return this.getActiveTranslate(activeIndex)
+  scrollToItem (activeIndex, animate) {
+    // translate
+    const { maxTranslate: max } = this.size
+    const finalTranslate = max - activeIndex * this.heights.item
+    this.updateTranslate(finalTranslate)
+    this.render(finalTranslate, animate)
+
+    // callback
+    this.props.value = this.props.data[activeIndex].value
+    if (this.props.onChange) {
+      this.props.onChange(this.props.value)
+    }
+  }
+
+  render (translate, animate) {
+    this._setTranslate(this.wraper.style, translate, animate)
+  }
+
+  _setTranslate (nodestyle, translate, animate) {
+    nodestyle.transform = `translate3d(0px, ${translate}px, 0px)`
+    nodestyle.webkitTransform = `translate3d(0px, ${translate}px, 0px)`
+    const duration = animate ? '' : '0ms'
+    nodestyle.transitionDuration = duration
+    nodestyle.webkitTransitionDuration = duration
   }
 
   bindEvents () {
@@ -111,23 +166,17 @@ class PickerScroller extends BaseScroller {
 
     on(this.wraper, 'touchend', (e) => {
       this.onTouchEnd(e.targetTouches, Date.now())
-      this.scrollToItem(this.getActiveIndex(this.getTranslate()))
+      this.scrollToItem(this.getActiveIndex(this.getTranslate()), true)
     })
 
     on(this.wraper, 'click', this.onItemClick.bind(this))
   }
 
-  render (translate, animate) {
-    this.setTranslate(this.wraper.style, translate, animate)
-  }
-
-  scrollToItem (activeIndex) {
-    const finalTranslate = this.getActiveTranslate(activeIndex)
-    this.updateTranslate(finalTranslate)
-    this.render(finalTranslate, true)
-    if (this.options.callback) {
-      this.options.callback(this.options.data[activeIndex])
-    }
+  getActiveIndex (translate) {
+    const { minTranslate: min, maxTranslate: max } = this.size
+    const newTranslate = Math.max(Math.min(translate, max), min)
+    const activeIndex = Math.round((max - newTranslate) / this.heights.item)
+    return activeIndex
   }
 
   onItemClick (e) {
@@ -149,36 +198,15 @@ class PickerScroller extends BaseScroller {
           break
         }
       }
-      this.scrollToItem(activeIndex)
+      this.scrollToItem(activeIndex, true)
     }
-  }
-
-  getActiveIndex (translate) {
-    const { minTranslate: min, maxTranslate: max } = this.size
-    const newTranslate = Math.max(Math.min(translate, max), min)
-    const activeIndex = Math.round((max - newTranslate) / 36)
-    return activeIndex
-  }
-
-  getActiveTranslate (activeIndex) {
-    const { maxTranslate: max } = this.size
-    const finalTranslate = max - activeIndex * this.itemHeight
-    return finalTranslate
-  }
-
-  setTranslate (nodestyle, translate, animate) {
-    nodestyle.transform = `translate3d(0px, ${translate}px, 0px)`
-    nodestyle.webkitTransform = `translate3d(0px, ${translate}px, 0px)`
-    const duration = animate ? '' : '0ms'
-    nodestyle.transitionDuration = duration
-    nodestyle.webkitTransitionDuration = duration
   }
 }
 
 /**
  * @typedef {Object} PickerViewProps
  * @prop {Object[]} data
- * @prop {string[]} value
+ * @prop {string[]} values
  * @prop {() => void} [onChange]
  * @prop {boolean} [cascade=false]
  * @param {PickerViewProps} props
@@ -186,19 +214,26 @@ class PickerScroller extends BaseScroller {
 const PickerView = props => {
   const {
     data,
-    value,
-    // onChange = noop,
+    values,
+    onChange,
     cascade = false
   } = props
 
-  const cols = cascade ? getCascadeData(data, value) : compatData(data)
+  const cols = cascade ? getCascadeData(data, values) : compatData(data)
 
   return (
     <div class="picker-modal-inner picker-items">
       {
         cols.map((data, i) => {
           return (
-            <PickerItemsCol data={data} value={value[i]} />
+            <PickerItemsCol
+              data={data}
+              value={values[i]}
+              onChange={val => {
+                const newValue = values.map((prev, j) => j === i ? val : prev)
+                onChange(newValue)
+              }}
+            />
           )
         })
       }
@@ -215,14 +250,16 @@ const PickerView = props => {
  * @prop {CascadeProps[]} children
  * @param {CascadeProps[]} data
  * @param {string[]} value
- * @returns {PickerDataItem[]}
+ * @returns {PickerDataItem[][]}
  */
 function getCascadeData (data, value) {
-  const f = (data, [val, ...vals], acc) => {
-    return vals.length > 0
+  const f = (data, [val, ...restVals], acc) => {
+    const selected = data.filter(item => item.value === val).pop()
+
+    return restVals.length > 0
       ? f(
-        data.filter(item => item.value === val).pop().children,
-        vals,
+        selected.children,
+        restVals,
         acc.concat([
           data.map(({ label, value }) => ({ label, value }))
         ])
@@ -242,17 +279,16 @@ function compatData (data) {
 }
 
 /**
- * 检查列数据是否发生变化
- * @param {*} prev
- * @param {*} data
+ *
+ * @param {PickerDataItem[]} prev
+ * @param {PickerDataItem[]} data
  */
-function diffCols (prev, data) {
-  const compare = (a, b) => a.label === b.label && a.value === b.value
-  const compareCol = (prev, col) => col.every((item, i) => compare(item, prev[i]))
-
-  return data.reduce(
-    (acc, col, i) => compareCol(col, prev[i]) ? acc : acc.concat(i),
-    []
+function isSameData (prev, data) {
+  return (
+    prev &&
+    data &&
+    data.length === prev.length &&
+    data.every((item, i) => item.value === prev[i].value)
   )
 }
 

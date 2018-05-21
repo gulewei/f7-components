@@ -48,15 +48,23 @@ const mocker = {
         children: mocker.dates(value)
       }
     })
+  },
+
+  data () {
+    return mocker.range(1, 12).map(m => pickerItem(`${m} mon`, m))
   }
 }
 
+const singleColumn = mocker.data()
+const cascadeColumn = mocker.cascadeDate()
+
 app(
   {
-    book: 'book',
+    date: '5 18',
     picker: {
       show: false,
-      data: mocker.cascadeDate()
+      data: cascadeColumn,
+      values: [5, 18]
     }
   },
   {
@@ -70,17 +78,22 @@ app(
         return {
           show: false
         }
+      },
+      pickerValue: (values) => {
+        return { values }
       }
     }
   },
   (state, actions) => {
+    window.$picker = { state, actions }
+
     return (
       <Page>
         <ContentBlock title="Picker" />
         <List>
           <InputItem
             title="Picker-Item"
-            value={state.book}
+            value={state.picker.values.join(' - ')}
             onclick={actions.picker.open}
             readonly
             isLink
@@ -95,9 +108,10 @@ app(
           pickerItems
         >
           <PickerView
-            cascade
+            cascade={state.picker.data.length > 1}
             data={state.picker.data}
-            value={[5, 18]}
+            values={state.picker.values}
+            onChange={actions.picker.pickerValue}
           />
         </PickerModal>
       </Page>
