@@ -1,33 +1,40 @@
 // eslint-disable-next-line
-import { Toast } from '../components/Toast'
+import Toast from '../components/toast'
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import { install } from '../utils'
 
-const state = {
+const defaultDuration = 1500
+
+const defaultState = {
   show: false,
   msg: '',
-  duration: 1500
+  duration: defaultDuration
 }
 
 const actions = {
-  toast (msg) {
-    return { show: true, msg }
+  toast: ({ msg, duration = defaultDuration }) => (state, actions) => {
+    actions.set({ show: true, msg, duration })
+    actions.scheduleClose()
   },
 
-  close () {
-    return { show: false, msg: '' }
+  scheduleClose: () => (state, actions) => {
+    setTimeout(() => {
+      actions.set(defaultState)
+    }, state.duration)
   },
 
-  setToast (duration) {
-    return { duration }
-  }
+  set: state => state
 }
 
 const view = (state, actions) => (
-  <Toast {...state} close={actions.close} />
+  <Toast show={state.show} msg={state.msg} />
 )
 
-const api = ({ toast, setToast }) => ({ toast, setToast })
+const api = ({ toast }) => {
+  return (msg, duration) => toast({ msg, duration })
+}
 
-export const { toast, setToast } = install(state, actions, view, api)
+const toast = install(defaultState, actions, view, api)
+
+export default toast

@@ -1,4 +1,3 @@
-// eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
 import './style.less'
@@ -21,86 +20,95 @@ const List = (props, children) => {
   return (
     <div {...rests} class={cc(rests.class, 'list-block', { inset })}>
       <ul>
-        {renderListChildren(children)}
+        {children.map(child => (
+          <li key={child.key}>{child}</li>
+        ))}
       </ul>
       {label && <div class="list-block-label">{label}</div>}
     </div>
   )
 }
 
-const MEDIA_ITEM_CLASS = 'media-item'
-const hasMediaClass = cls => cls.indexOf(MEDIA_ITEM_CLASS) > -1
-function renderListChildren (children) {
-  return children.map(child => (
-    <li
-      key={child.key}
-      class={cc({ [MEDIA_ITEM_CLASS]: hasMediaClass(child.attributes.class) })}
-    >{child}</li>
-  ))
-}
-
 /**
  * @typedef {Object} ItemProps
  * @prop {boolean} [isLink=false]
+ * @prop {boolean} [alignTop]
  * @prop {JSX.Element} [media]
  * @prop {JSX.Element} title
  * @prop {JSX.Element} [after]
  * @prop {JSX.Element} [subTitle]
  * @prop {JSX.Element} [text]
+ * @prop {JSX.Element} [input]
+ * @prop {JSX.Element} [extraMedia]
+ * @prop {string} key
+ * @prop {Function} [onclick]
+ * @prop {(el: HTMLElement) => void} oncreate
+ * @prop {(el: HTMLElement, done: Function) => void} onremove
+ * @prop {(el: HTMLElement) => void} ondestroy
+ * @prop {(el: HTMLElement, oldAttr: Object) => void} onupdate
  * @param {ItemProps} props
+ * @param {JSX.Element[]} children
  */
-const Item = (props) => {
+const Item = (props, children) => {
   const {
     isLink,
+    alignTop,
     media,
-    title,
+    title = children,
     after,
-    input, // used in input-item
+    // mulptiple line
     subTitle,
     text,
-    ...rests
+    // input
+    input,
+    // custom
+    extraMedia,
+    // lifecycle, events, key...
+    key,
+    onclick,
+    oncreate,
+    onremove,
+    ondestroy,
+    onupdate
   } = props
 
   const multipleLine = subTitle || text
-  const cls = cc(rests.class, 'item-content', {
+  const cls = cc(props.class, 'item-content', {
     'item-link': isLink,
-    [MEDIA_ITEM_CLASS]: multipleLine
+    'media-item': multipleLine,
+    'align-top': alignTop
   })
 
-  return (
-    <div {...rests} class={cls}>
-      {media && <div class="item-media">{media}</div>}
-      {multipleLine
-        ? <MediaInner {...{ title, after, subTitle, text }} />
-        : <ItemInner {...{ title, after, input }} />
-      }
-    </div>
+  return h(
+    extraMedia ? 'label' : 'div',
+    { class: cls, key, onclick, oncreate, onremove, ondestroy, onupdate },
+    [
+      extraMedia,
+      media && <div key="media" class="item-media">{media}</div>,
+      renderInner(multipleLine, title, input, after, subTitle, text)
+    ]
   )
 }
 
-// eslint-disable-next-line no-unused-vars
-const ItemInner = ({ title, after, input }) => {
-  return (
-    <div class="item-inner">
-      <div class={cc('item-title', { label: !!input })}>{title}</div>
-      {input && <div class="item-input">{input}</div>}
-      {after && <div class="item-after">{after}</div>}
-    </div>
-  )
-}
-
-// eslint-disable-next-line no-unused-vars
-const MediaInner = ({ title, after, subTitle, text }) => {
-  return (
-    <div class="item-inner">
-      <div class="item-title-row">
-        {title && <div class='item-title'>{title}</div>}
-        {after && <div class="item-after">{after}</div>}
+const renderInner = (multipleLine, title, input, after, subTitle, text) => {
+  return multipleLine
+    ? (
+      <div key="inner" class="item-inner">
+        <div key="row" class="item-title-row">
+          {input && <div key="title" class="item-title">{title}</div>}
+          {after && <div key="after" class="item-after">{after}</div>}
+        </div>
+        {subTitle && <div key="sub" class="item-subtitle">{subTitle}</div>}
+        {text && <div key="text" class="item-text">{text}</div>}
       </div>
-      {subTitle && <div class="item-subtitle">{subTitle}</div>}
-      {text && <div class="item-text">{text}</div>}
-    </div>
-  )
+    )
+    : (
+      <div key="inner" class="item-inner">
+        <div key="title" class={cc('item-title', { label: !!input })}>{title}</div>
+        {input && <div key="input" class="item-input">{input}</div>}
+        {after && <div key="after" class="item-after">{after}</div>}
+      </div>
+    )
 }
 
 export default List

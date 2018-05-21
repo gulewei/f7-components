@@ -1,0 +1,122 @@
+@import url("../_styles//index.less");
+
+.modal {
+  width: 270px;
+  position: absolute;
+  z-index: 13500;
+  left: 50%;
+  margin-left: -135px;
+  margin-top: 0;
+  top: 50%;
+  text-align: center;
+  border-radius: 13px;
+  overflow: hidden;
+  opacity: 0;
+  .transform(translate3d(0,0,0) scale(1.185));
+  -webkit-transition-property: -webkit-transform, opacity;
+  -moz-transition-property: -moz-transform, opacity;
+  -ms-transition-property: -ms-transform, opacity;
+  -o-transition-property: -o-transform, opacity;
+  transition-property: transform, opacity;
+  color:#000;
+  display: none;
+
+  &.modal-in {
+      opacity: 1;
+      .transition(@modalDuration);
+      .transform(translate3d(0,0,0) scale(1));
+  }
+  &.modal-out {
+      opacity: 0;
+      z-index: 13500-1;
+      .transition(@modalDuration);
+      .transform(translate3d(0,0,0) scale(1));
+  }
+}
+.modal-inner {
+  padding: 15px;
+  border-radius: 13px 13px 0 0;
+  position: relative;
+  background: @modalBg;
+  .hairline(bottom, @modalHairlineColor);
+
+}
+.modal-title {
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  html.ios-gt-8 & {
+      font-weight: 600;
+  }
+  +.modal-text {
+      margin-top: 5px;
+  }
+}
+.modal-buttons {
+  height: 44px;
+  position: relative;
+  .flexbox();
+  .justify-content(center);
+  &.modal-buttons-vertical {
+      display: block;
+      height: auto;
+  }
+}
+.modal-button {
+  width: 100%;
+  padding: 0 5px;
+  height: 44px;
+  font-size: 17px;
+  line-height: 44px;
+  text-align: center;
+  color: @modalButonColor;
+  display: block;
+  position: relative;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+  box-sizing: border-box;
+  -webkit-box-flex:1;
+  -ms-flex:1;
+  background: @modalBg;
+  .hairline(right, @modalHairlineColor);
+  &:first-child {
+      border-radius: 0 0 0 13px;
+  }
+  &:last-child {
+      .hairline-remove(right);
+      border-radius: 0 0 13px 0;
+  }
+  &:first-child:last-child {
+      border-radius: 0 0 13px 13px;
+  }
+  &.modal-button-bold {
+      font-weight: 500;
+      html.ios-gt-8 & {
+          font-weight: 600;
+      }
+  }
+  html:not(.watch-active-state) &:active, &.active-state {
+      background: @modalButonActiveBg;
+  }
+  .modal-buttons-vertical & {
+      border-radius: 0;
+      .hairline-remove(right);
+      .hairline-remove(top);
+      .hairline(bottom, @modalHairlineColor);
+      &:last-child {
+          border-radius: 0 0 13px 13px;
+          .hairline-remove(bottom);
+      }
+  }
+}
+.modal-no-buttons {
+  .modal-inner {
+      border-radius: 13px;
+      .hairline-remove(bottom);
+  }
+  .modal-buttons {
+      display: none;
+  }
+}
