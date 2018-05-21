@@ -4,8 +4,9 @@ import Page from '../../src/components/page'
 import ContentBlock from '../../src/components/content-block'
 import List from '../../src/components/list'
 import InputItem from '../../src/components/input-item'
-import PickerModal from '../../src/components/picker/picker-modal'
-import PickerView from '../../src/components/picker/picker-view'
+// import PickerModal from '../../src/components/picker/picker-modal'
+// import PickerView from '../../src/components/picker/picker-view'
+import Picker from '../../src/components/picker'
 
 const pickerItem = (label, value) => {
   return { label, value }
@@ -60,28 +61,11 @@ const cascadeColumn = mocker.cascadeDate()
 
 app(
   {
-    date: '5 18',
-    picker: {
-      show: false,
-      data: cascadeColumn,
-      values: [5, 18]
-    }
+    date: [5, 18]
   },
   {
-    picker: {
-      open: () => {
-        return {
-          show: true
-        }
-      },
-      close: () => {
-        return {
-          show: false
-        }
-      },
-      pickerValue: (values) => {
-        return { values }
-      }
+    pickeDate: (date) => {
+      return { date }
     }
   },
   (state, actions) => {
@@ -91,15 +75,30 @@ app(
       <Page>
         <ContentBlock title="Picker" />
         <List>
-          <InputItem
-            title="Picker-Item"
-            value={state.picker.values.join(' - ')}
-            onclick={actions.picker.open}
-            readonly
-            isLink
-          />
+          <Picker>{
+            (picker) => {
+              return (
+                <InputItem
+                  title="Picker-Item"
+                  value={state.date.join(' - ')}
+                  onclick={e => {
+                    picker.open({
+                      data: cascadeColumn,
+                      cascade: true,
+                      value: state.date,
+                      onChange: actions.pickeDate,
+                      right: <a class="link" onclick={picker.close}>Done</a>
+                    })
+                  }}
+                  readonly
+                  isLink
+                />
+              )
+            }
+          }
+          </Picker>
         </List>
-        <PickerModal
+        {/* <PickerModal
           show={state.picker.show}
           right={
             <a class="link" onclick={actions.picker.close}>Done</a>
@@ -110,10 +109,10 @@ app(
           <PickerView
             cascade={state.picker.data.length > 1}
             data={state.picker.data}
-            values={state.picker.values}
+            value={state.picker.values}
             onChange={actions.picker.pickerValue}
           />
-        </PickerModal>
+        </PickerModal> */}
       </Page>
     )
   },

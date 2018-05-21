@@ -1,104 +1,85 @@
-import { install, noop } from '../_utils'
+import { install } from '../../utils'
 import PickerModal from './picker-modal'
 import PickerView from './picker-view'
 // eslint-disable-next-line
-import { Toolbar } from '../toolbars'
+import { h } from 'hyperapp'
 
 export { PickerModal, PickerView }
 
 /**
  * @typedef {Object} PopoverPickerProps
  * @prop {boolean} show
- * @prop {() => void} hide
- * @prop {(values) => void} update
+ * @prop {() => void} close
+ * @prop {JSX.Element} [left]
+ * @prop {JSX.Element} [right]
  * @prop {Object[]} data
  * @prop {string[]} value
- * @prop {(values: string[]) => string} [format]
- * @prop {(value) => void} [onChange]
- * @prop {() => void} [onColChange]
- * @prop {JSX.Element} [toolbar]
+ * @prop {(value) => void} onChange
  * @prop {boolean} [cascade=false]
- * @param {PickerProps} props
+ * @param {PopoverPickerProps} props
  */
 export const PopoverPicker = (props) => {
   const {
     show,
-    hide,
+    close,
+    left,
+    right,
     data,
     value,
-    update,
-    format = vals => vals,
-    onChange = noop,
-    onColChange = noop,
-    toolbar,
+    onChange,
     cascade = false
   } = props
 
   return (
     <PickerModal
-      show={show}
-      hide={hide}
-      toolbar={
-        toolbar || renderToolbar(hide, format, onChange, value)
-      }
+      {... { show, close, left, right }}
+      pickerItems
     >
-      <PickerView {...{ data, value, cascade }} onColChange={values => {
-        onColChange(values)
-        update(values)
-      }} />
+      <PickerView {...{ data, value, cascade, onChange }} />
     </PickerModal>
   )
 }
 
-const renderToolbar = (hide, format, onChange, value) => {
-  return (
-    <Toolbar>
-      <div class="left">
-        <a href="#" class="link" onclick={hide}>取消</a>
-      </div>
-      <div class="right">
-        <a href="#" class="link" onclick={e => {
-          onChange(format(value))
-          hide()
-        }}>完成</a>
-      </div>
-    </Toolbar>
-  )
-}
-
-const openPicker = install(
-  { show: false },
+const pickerActions = install(
+  {
+    show: false,
+    cascade: false,
+    data: [],
+    value: [],
+    onChange: () => { }
+  },
   {
     open: props => ({ ...props, show: true }),
-    hide: () => ({ show: false }),
+    close: () => ({ show: false }),
     update: value => ({ value })
   },
-  (state, { hide, update }) => <PopoverPicker {...state} {...{ hide, update }} />,
-  ({ open }) => open
+  (state, { close, update }) => {
+    return (
+      <PopoverPicker {...{
+        ...state,
+        close,
+        onChange: (val) => {
+          update(val)
+          state.onChange(val)
+        }
+      }} />
+    )
+  },
+  (actions) => actions
 )
 
 /**
- * @typedef {Object} PickerProps
- * @prop {Object[]} data
- * @prop {string[]} value
- * @prop {(values: string[]) => string} [format]
- * @prop {(value) => void} [onChange]
- * @prop {() => void} [onColChange]
- * @prop {JSX.Element} [toolbar]
- * @prop {boolean} [cascade=false]
- * @param {PickerProps} props
+ * @param {PopoverPickerProps} props
  * @param {JSX.Element[]} children
  */
 const Picker = (props, children) => {
-  if (!children[0]) {
+  const child = children[0]
+
+  if (!child) {
     return false
   }
 
-  children[0].attributes.onclick = e => {
-    openPicker(props)
-  }
-
-  return children.slice(0, 1)
+  return child(pickerActions)
 }
 
 export default Picker

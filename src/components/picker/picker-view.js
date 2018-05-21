@@ -69,17 +69,24 @@ class PickerScroller extends BaseScroller {
    * @param {PickerScrollerOptions} props
    */
   constructor(wraper, props) { // eslint-disable-line
-    if (!props.data) {
-      throw new Error('picker must have data !')
-    }
-
     super()
+    this._mustControll(props)
     this.wraper = wraper
     this.props = {}
     this.heights = this._getHeights(wraper)
     this.initializeState(0)
     this.update(props)
     this.bindEvents()
+  }
+
+  _mustControll (props) {
+    if (!props.data) {
+      throw new Error('picker must have data !')
+    }
+
+    if (typeof props.onChange !== 'function') {
+      throw new Error('Picker must be controlled')
+    }
   }
 
   _getHeights (wraper) {
@@ -206,7 +213,7 @@ class PickerScroller extends BaseScroller {
 /**
  * @typedef {Object} PickerViewProps
  * @prop {Object[]} data
- * @prop {string[]} values
+ * @prop {string[]} value
  * @prop {() => void} [onChange]
  * @prop {boolean} [cascade=false]
  * @param {PickerViewProps} props
@@ -214,12 +221,12 @@ class PickerScroller extends BaseScroller {
 const PickerView = props => {
   const {
     data,
-    values,
+    value,
     onChange,
     cascade = false
   } = props
 
-  const cols = cascade ? getCascadeData(data, values) : compatData(data)
+  const cols = cascade ? getCascadeData(data, value) : compatData(data)
 
   return (
     <div class="picker-modal-inner picker-items">
@@ -228,9 +235,9 @@ const PickerView = props => {
           return (
             <PickerItemsCol
               data={data}
-              value={values[i]}
+              value={value[i]}
               onChange={val => {
-                const newValue = values.map((prev, j) => j === i ? val : prev)
+                const newValue = value.map((prev, j) => j === i ? val : prev)
                 onChange(newValue)
               }}
             />

@@ -5,7 +5,7 @@ import Mask from '../mask'
 // eslint-disable-next-line
 import { Toolbar } from '../toolbars'
 import { addClass, on, requestAnimationFrame } from '../_utils'
-import cc from 'classnames'
+// import cc from 'classnames'
 import './picker-modal.less'
 
 const ENTER = 'modal-in'
