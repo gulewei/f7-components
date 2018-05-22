@@ -2,6 +2,7 @@
 import { h } from 'hyperapp'
 // eslint-disable-next-line
 import { Toolbar } from '../toolbars'
+import cc from 'classnames'
 
 /**
  * @typedef {Object} PickerToolbarProps
@@ -27,4 +28,25 @@ const PickerToolbar = (props) => {
   )
 }
 
-export default PickerToolbar
+/**
+ * @typedef {Object} PickerToolbarLinkProps
+ * @prop {string | JSX.Element} text
+ * @prop {(e: Event) => void} [onclick]
+ * @prop {string} [class]
+ * @param {PickerToolbarLinkProps} props
+ */
+const PickerToolbarLink = (props) => {
+  const {
+    text,
+    ...rest
+  } = props
+
+  return (
+    <a {...rest} class={cc('link', props.class)}>{text}</a>
+  )
+}
+
+export {
+  PickerToolbar,
+  PickerToolbarLink
+}

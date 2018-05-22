@@ -26,6 +26,7 @@ const MODAL = {
  * @prop {*[]} [columns]
  * @prop {(values: string[]) => void} onChange
  * @param {PickerProps} props
+ * @param {JSX.Element} children
  */
 const Picker = (props, children) => {
   const {
