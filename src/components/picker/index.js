@@ -1,10 +1,11 @@
 import { install } from '../../utils'
-import PickerModal from './picker-modal'
+import PickerModal, { PickerToolbar } from './picker-modal'
 import PickerView from './picker-view'
 // eslint-disable-next-line
 import { h } from 'hyperapp'
+import './styles'
 
-export { PickerModal, PickerView }
+export { PickerModal, PickerView, PickerToolbar }
 
 /**
  * @typedef {Object} PopoverPickerProps
@@ -24,6 +25,8 @@ export const PopoverPicker = (props) => {
     close,
     left,
     right,
+    center,
+    toolbarClass,
     data,
     value,
     onChange,
@@ -32,8 +35,15 @@ export const PopoverPicker = (props) => {
 
   return (
     <PickerModal
-      {... { show, close, left, right }}
-      pickerItems
+      show={show}
+      toolbar={
+        <PickerToolbar
+          class={toolbarClass}
+          {...{ left, right, center }}
+        />
+      }
+      onMaskClick={close}
+      pickerViewInner
     >
       <PickerView {...{ data, value, cascade, onChange }} />
     </PickerModal>

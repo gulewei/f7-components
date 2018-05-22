@@ -12,11 +12,27 @@ import './index.less'
 const Toolbar = (props, children) => {
   return (
     <div {...props} class={cc('toolbar', props.class)}>
-      <div class="toolbar-inner">
-        {children}
-      </div>
+      <div class="toolbar-inner">{children}</div>
     </div>
   )
 }
 
 export default Toolbar
+
+/**
+ * @typedef {Object} ToolbarLinkProps
+ * @prop {string} text
+ * @prop {Function} [onclick]
+ * @prop {string} [class]
+ * @param {ToolbarLinkProps} props
+ */
+export const ToolbarLink = (props) => {
+  const {
+    onclick,
+    text
+  } = props
+
+  return (
+    <a class={cc('link', props.class)} onclick={onclick}>{text}</a>
+  )
+}

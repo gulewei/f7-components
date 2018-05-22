@@ -14,12 +14,6 @@
         }
     }
 }
-.popover.popover-picker-columns {
-    width: 280px;
-    .toolbar {
-        border-radius: 2px 2px 0 0;
-    }
-}
 .picker-items {
     .flexbox();
     .justify-content(center);
@@ -93,27 +87,4 @@
     .hairline(top, rgba(0,0,0,0.15));
     .hairline(bottom, rgba(0,0,0,0.15));
     pointer-events: none;
-}
-// 3D Picker
-.picker-3d {
-    .picker-items {
-        overflow: hidden;
-        -webkit-perspective: 1200px;
-        perspective: 1200px;
-    }
-    .picker-items-col, .picker-items-col-wrapper, .picker-item {
-        -webkit-transform-style: preserve-3d;
-        transform-style: preserve-3d;
-    }
-    .picker-items-col {
-        overflow: visible;
-    }
-    .picker-item {
-        -webkit-transform-origin: center center -110px;
-        transform-origin: center center -110px;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-        -webkit-transition-timing-function: ease-out;
-        transition-timing-function: ease-out;
-    }
 }

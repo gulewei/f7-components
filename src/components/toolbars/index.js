@@ -1,7 +1,8 @@
 import Navbar from './Navbar'
-import Toolbar from './Toolbar'
+import Toolbar, { ToolbarLink } from './Toolbar'
 
 export {
   Navbar,
-  Toolbar
+  Toolbar,
+  ToolbarLink
 }
