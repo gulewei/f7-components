@@ -2,7 +2,7 @@ import { Component } from 'hyperapp'
 
 export as namespace F7cPicker
 
-interface PickerProps extends PickerColumnsProps {
+interface PickerProps extends PickerModalProps, PickerColumnsProps {
   show: boolean
   onOverlayClick: () => void
 }
@@ -13,7 +13,12 @@ interface PickerProps extends PickerColumnsProps {
 const Picker: Component<PickerProps>
 export default Picker
 
-type PickerModalProps = {}
+type PickerModalProps = {
+  toolbar?: JSX.Element
+  noColumns?: boolean
+  inline?: boolean
+  class?: string
+}
 
 export const PickerModal: Component<PickerColumnsProps>
 

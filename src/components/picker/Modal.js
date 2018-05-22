@@ -8,7 +8,7 @@ import anim from '../_utils/animations'
  * @prop {JSX.Element} [toolbar]
  * @prop {boolean} [noColumns=false]
  * @prop {boolean} [inline=false]
- * @prop {string} [class]
+ * @prop {string} [modalClass]
  * @param {PickerModalProps} props
  * @param {JSX.Element} children
  */
@@ -16,12 +16,13 @@ const PickerModal = (props, children) => {
   const {
     toolbar,
     noColumns,
-    inline
+    inline,
+    modalClass
   } = props
 
   return (
     <div
-      class={cc('picker-modal', props.class, { 'picker-modal-inline': inline })}
+      class={cc('picker-modal', modalClass, { 'picker-modal-inline': inline })}
       style={{ display: 'block' }}
       oncreate={el => {
         anim.enter(el, 'modal-in', '')

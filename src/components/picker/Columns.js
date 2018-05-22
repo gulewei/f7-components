@@ -6,7 +6,13 @@ import { PickerColumn, PickerDivider } from './Column'
 /// <reference path="index.d.ts"/>
 
 /**
- * @param {F7cPicker.PickerColumnsProps} props
+ * @typedef {Object} PickerColumnsProps
+ * @prop {boolean} [cascade]
+ * @prop {*[]} items
+ * @prop {string[]} values
+ * @prop {*[]} [columns]
+ * @prop {(values: string[]) => void} onChange
+ * @param {PickerColumnsProps} props
  */
 const PickerColumns = (props) => {
   const {

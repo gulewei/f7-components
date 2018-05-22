@@ -9,22 +9,43 @@ import PickerColumns from './Columns'
 
 /// <reference path="index.d.ts"/>
 
+const MODAL = {
+  columns: 'columns',
+  inline: 'inline-columns',
+  no: 'no-column'
+}
+
 /**
- * @param {F7cPicker.PickerProps} props
+ * @typedef {Object} PickerProps
+ * @prop {'columns' | 'inline-columns' | 'no-column'} modalType
+ * @prop {string} [modalClass]
+ * @prop {JSX.Element} [toolbar]
+ * @prop {boolean} [cascade]
+ * @prop {*[]} items
+ * @prop {string[]} values
+ * @prop {*[]} [columns]
+ * @prop {(values: string[]) => void} onChange
+ * @param {PickerProps} props
  */
-const Picker = (props) => {
+const Picker = (props, children) => {
   const {
     show,
     onOverlayClick,
-    inline,
-    ...otherProps
+    modalType,
+    modalClass,
+    toolbar
   } = props
+
+  const inline = modalType === MODAL.inline
+  const noColumns = modalType === MODAL.no
 
   return (
     <div>
       <Overlay type="picker-modal" show={show} onclick={onOverlayClick} />
       {show &&
-        PickerModal(otherProps, [PickerColumns(otherProps)])
+        <PickerModal {... { inline, noColumns, modalClass, toolbar }}>
+          {noColumns ? children : PickerColumns(props)}
+        </PickerModal>
       }
     </div>
   )
