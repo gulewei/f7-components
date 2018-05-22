@@ -10,8 +10,9 @@ import { PickerColumn, PickerDivider } from './Column'
  * @prop {boolean} [cascade]
  * @prop {*[]} items
  * @prop {string[]} values
- * @prop {*[]} [columns]
  * @prop {(values: string[]) => void} onChange
+ * @prop {*[]} [columns]
+ *
  * @param {PickerColumnsProps} props
  */
 const PickerColumns = (props) => {
@@ -22,6 +23,10 @@ const PickerColumns = (props) => {
     columns,
     onChange
   } = props
+
+  if (!items || !values) {
+    return false
+  }
 
   const models = modelColumn(cascade, items, values, columns)
 

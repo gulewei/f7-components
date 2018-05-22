@@ -13,6 +13,7 @@ const processWidth = (width) => {
  * @prop {number} [width]
  * @prop {string} [class]
  * @prop {string} [key]
+ *
  * @param {PickerDividerProps} props
  */
 const PickerDivider = (props) => {
@@ -32,7 +33,7 @@ const PickerDivider = (props) => {
 }
 
 /**
- * PickerColumn must be controlled
+ * Picker-Column must be controlled
  *
  * @typedef {Object} PickerItemProps
  * @prop {string} label
@@ -41,11 +42,12 @@ const PickerDivider = (props) => {
  * @typedef {Object} PickerColumnProps
  * @prop {string[]} value
  * @prop {PickerItemProps[]} items
+ * @prop {(value: string) => void} onChange
  * @prop {'left' | 'center' | 'right'} [align='right']
- * @prop {(value: string) => void} [onChange]
  * @prop {number} [width]
  * @prop {string} [class]
  * @prop {string} [key]
+ *
  * @param {PickerColumnProps} props
  */
 const PickerColumn = (props) => {
@@ -61,19 +63,26 @@ const PickerColumn = (props) => {
   const columnCls = cc('picker-items-col', props.class, { [`picker-items-col-${align}`]: align })
 
   return (
-    <div key={key} class={columnCls} style={{ width: processWidth(width) }}>
-      <div class="picker-items-col-wrapper"
+    <div
+      key={key}
+      class={columnCls}
+      style={{ width: processWidth(width) }}
+    >
+      <div
+        class="picker-items-col-wrapper"
         onupdate={(el) => {
-          const scroller = el._scroller
-          if (scroller) {
+          if (el._scroller) {
             try {
-              scroller.update(props)
+              el._scroller.update(props)
             } catch (e) { }
           }
         }}
         oncreate={el => {
-          el._scroller = new ScrollHandler(el, { items, value, onChange: onChange })
-          console.log(el._scroller)
+          el._scroller = new ScrollHandler(el, {
+            data: items,
+            value,
+            onChange: onChange
+          })
         }}
         ondestroy={el => {
           el._scroller && (el._scroller = null)

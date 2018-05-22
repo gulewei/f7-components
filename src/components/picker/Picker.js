@@ -17,6 +17,8 @@ const MODAL = {
 
 /**
  * @typedef {Object} PickerProps
+ * @prop {boolean} show
+ * @prop {(e: Event) => void} [onOverlayClick]
  * @prop {'columns' | 'inline-columns' | 'no-column'} modalType
  * @prop {string} [modalClass]
  * @prop {JSX.Element} [toolbar]
@@ -28,7 +30,7 @@ const MODAL = {
  * @param {PickerProps} props
  * @param {JSX.Element} children
  */
-const Picker = (props, children) => {
+function Picker (props, children) {
   const {
     show,
     onOverlayClick,
@@ -44,12 +46,14 @@ const Picker = (props, children) => {
     <div>
       <Overlay type="picker-modal" show={show} onclick={onOverlayClick} />
       {show &&
-        <PickerModal {... { inline, noColumns, modalClass, toolbar }}>
+        <PickerModal {...{ inline, noColumns, modalClass, toolbar }}>
           {noColumns ? children : PickerColumns(props)}
         </PickerModal>
       }
     </div>
   )
 }
+
+Picker.TYPES = MODAL
 
 export default Picker

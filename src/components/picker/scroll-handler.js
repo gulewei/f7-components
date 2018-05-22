@@ -4,31 +4,21 @@ import BaseScroller from '../_utils/scroller'
 class ScrollerHandler extends BaseScroller {
   /**
    * @typedef {Object} PickerScrollerOptions
-   * @prop {Function} callback
+   * @prop {(val: string) => void} onChange
    * @prop {string} value
    * @prop {PickerColumnItemProps[]} data
+   *
    * @param {HTMLElement} wraper
    * @param {PickerScrollerOptions} props
    */
   constructor(wraper, props) { // eslint-disable-line
     super()
-    this._mustControll(props)
     this.wraper = wraper
     this.props = {}
     this.heights = this._getHeights(wraper)
     this.initializeState(0)
     this.update(props)
     this.bindEvents()
-  }
-
-  _mustControll (props) {
-    if (!props.data) {
-      throw new Error('picker must have data !')
-    }
-
-    if (typeof props.onChange !== 'function') {
-      throw new Error('Picker must be controlled')
-    }
   }
 
   _getHeights (wraper) {
@@ -87,7 +77,7 @@ class ScrollerHandler extends BaseScroller {
     // value
     this.props.value = this.props.data[activeIndex].value
     transitionEnd(this.wraper, () => {
-      this.props.onChange(this.props.value)
+      this.props.onChange && this.props.onChange(this.props.value)
     })
   }
 
