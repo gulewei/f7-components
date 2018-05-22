@@ -1,15 +1,14 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-// eslint-disable-next-line
 import cc from 'classnames'
-import { addClass, requestAnimationFrame } from '../_utils'
+import anim from '../_utils/animations'
 import './index.less'
 
-const transitionEl = el => {
-  // TODO: transition doesn't work when use requestAinmationFrame
-  // requestAnimationFrame(_ => addClass(el, 'modal-overlay-visible'))
-  setTimeout(_ => addClass(el, 'modal-overlay-visible'), 0)
-}
+// const transitionEl = el => {
+//   // TODO: transition doesn't work when use requestAinmationFrame
+//   // requestAnimationFrame(_ => addClass(el, 'modal-overlay-visible'))
+//   // setTimeout(_ => addClass(el, 'modal-overlay-visible'), 0)
+// }
 
 /**
  * @typedef {Object} MaskProps
@@ -38,7 +37,7 @@ const Mask = (props) => {
         'not-animated': noAinmation
       })}
       oncreate={el => {
-        visible && transitionEl(el)
+        visible && anim.enter(el, 'modal-overlay-visible', '')
         oncreate && oncreate(el)
       }}
     ></div >
