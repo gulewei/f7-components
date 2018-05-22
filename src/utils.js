@@ -8,10 +8,6 @@ export function install (state, actions, view, api) {
   return api(appActions)
 }
 
-export function isarray (arr) {
-  return toString.call(arr) === '[object Array]'
-}
-
 function modularApp (ownState, ownActions, connector) {
   return function getContaienr (key) {
     // auto generate key if not provided

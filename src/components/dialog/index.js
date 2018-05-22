@@ -2,7 +2,8 @@
 import { h } from 'hyperapp'
 // eslint-disable-next-line
 import Mask from '../Mask'
-import { addClass, css, requestAnimationFrame } from '../_utils'
+import { css } from '../_utils'
+import anim from '../_utils/animations'
 import cc from 'classnames'
 import './index.less'
 
@@ -21,11 +22,12 @@ const DialogButton = ({ text, bold, onclick }) => {
  * @param {HTMLElement} el
  */
 const transitionEl = el => {
-  requestAnimationFrame(_ => {
-    css(el, { display: 'block' })
-    css(el, { 'margin-top': `-${el.offsetHeight / 2}px` })
-    addClass(el, 'modal-in')
-  })
+  css(el, { 'margin-top': `-${el.offsetHeight / 2}px` })
+  // requestAnimationFrame(_ => {
+  //   css(el, { display: 'block' })
+  //   addClass(el, 'modal-in')
+  // })
+  anim.enter(el, 'modal-in', '')
 }
 
 /**
@@ -64,7 +66,10 @@ const Dialog = (props) => {
   return (
     <div {...r}>
       {show && [
-        <div class="modal" oncreate={transitionEl}>
+        <div class="modal"
+          style={{ display: 'block' }}
+          oncreate={transitionEl}
+        >
           <div class="modal-inner">
             <div class="modal-title">{title}</div>
             <div class="modal-text">{text}</div>

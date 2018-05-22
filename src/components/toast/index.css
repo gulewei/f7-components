@@ -1,4 +1,33 @@
 /* === toast === */
-.toast { position: fixed; width: 150px; left: 50%; top: 80%; padding: 5px 10px; background-color: rgba(0, 0, 0, 0.7); border-radius: 5px; z-index: 13511; color: #fff; font-weight: normal; font-family: 'Helvetica-Neue', 'HelveticaNeue', arial, sans-serif; display: none; opacity: 0; -webkit-transition: opacity 0.8s; transition: opacity 0.8s; text-align:center; font-weight:normal; } 
-.toast.show { display: block; } 
-.toast.fadein { opacity: 1; } 
+
+.toast {
+    position: fixed;
+    width: 150px;
+    left: 50%;
+    top: 80%;
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    z-index: 13511;
+    color: #fff;
+    font-weight: normal;
+    font-family: 'Helvetica-Neue', 'HelveticaNeue', arial, sans-serif;
+    /* display: none; */
+    opacity: 0;
+    -webkit-transition: opacity 0.8s;
+    transition: opacity 0.8s;
+    text-align: center;
+    font-weight: normal;
+}
+/* 
+.toast.show {
+    display: block;
+} */
+
+.toast.fadein {
+    opacity: 1;
+}
+
+.toast.fadeout {
+  opacity: 0;
+}

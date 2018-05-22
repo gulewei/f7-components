@@ -1,7 +1,9 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-import { addClass, removeClass, css, on } from '../_utils'
+// eslint-disable-next-line
 import Mask from '../mask'
+import { css } from '../_utils'
+import anim from '../_utils/animations'
 import cc from 'classnames'
 import './index.css'
 
@@ -15,13 +17,15 @@ const transitionEl = el => {
     'margin-left': `${el.offsetWidth / -2}px`
   })
 
-  addClass(el, 'fadein')
+  // addClass(el, 'fadein')
+  anim.enter(el, '', 'fadein')
 }
 
 const removeEl = (el, done) => {
-  on(el, 'transitionend', done)
-  on(el, 'webkitTransitionEnd', done)
-  removeClass(el, 'fadein')
+  // on(el, 'transitionend', done)
+  // on(el, 'webkitTransitionEnd', done)
+  // removeClass(el, 'fadein')
+  anim.exit(el, '', 'fadeout', done)
 }
 
 /**
@@ -43,7 +47,7 @@ const Toast = (props) => {
     <div>
       {show && [
         <div {...rest}
-          class={cc('toast show', rest.class)}
+          class={cc('toast', rest.class)}
           oncreate={el => {
             transitionEl(el)
             oncreate && oncreate(el)
