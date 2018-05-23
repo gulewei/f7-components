@@ -4,9 +4,10 @@ import Page from '../../src/components/page'
 import ContentBlock from '../../src/components/content-block'
 import List from '../../src/components/list'
 import InputItem from '../../src/components/input-item'
-// import PickerModal from '../../src/components/picker/picker-modal'
-// import PickerView from '../../src/components/picker/picker-view'
-import Picker from '../../src/components/picker'
+import { PickerToolbar, PickerToolbarLink } from '../../src/components/picker';
+import install, { pickerPlugin } from '../../src/plugins'
+
+const $picker = install(pickerPlugin)
 
 const pickerItem = (label, value) => {
   return { label, value }
@@ -69,34 +70,37 @@ app(
     }
   },
   (state, actions) => {
-    window.$picker = { state, actions }
+    window.$_picker = { state, actions }
 
     return (
       <Page>
         <ContentBlock title="Picker" />
         <List>
-          <Picker>{
-            (picker) => {
-              return (
-                <InputItem
-                  title="Picker-Item"
-                  value={state.date.join(' - ')}
-                  onclick={e => {
-                    picker.open({
-                      data: cascadeColumn,
-                      cascade: true,
-                      value: state.date,
-                      onChange: actions.pickeDate,
-                      right: <a class="link" onclick={picker.close}>Done</a>
-                    })
-                  }}
-                  readonly
-                  isLink
-                />
-              )
-            }
-          }
-          </Picker>
+          <InputItem
+            title="Picker-Item"
+            value={state.date.join(' - ')}
+            onclick={e => {
+              $picker.open({
+                items: cascadeColumn,
+                cascade: true,
+                values: state.date,
+                onChange: (values) => {
+                  console.log({ values })
+                  actions.pickeDate(values)
+                },
+                onOverlayClick: $picker.close,
+                toolbar: (
+                  <PickerToolbar
+                    right={
+                      <PickerToolbarLink text="Done" onclick={$picker.close} />
+                    }
+                  />
+                )
+              })
+            }}
+            readonly
+            isLink
+          />
         </List>
         {/* <PickerModal
           show={state.picker.show}

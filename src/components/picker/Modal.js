@@ -25,10 +25,10 @@ const PickerModal = (props, children) => {
       class={cc('picker-modal', modalClass, { 'picker-modal-inline': inline })}
       style={{ display: 'block' }}
       oncreate={el => {
-        anim.enter(el, 'modal-in', '')
+        anim.enter(el, '', 'anim-slidein')
       }}
       onremove={(el, done) => {
-        anim.exit(el, '', 'modal-out', done)
+        anim.exit(el, '', 'anim-slideout', done)
       }}
     >
       {toolbar}

@@ -1,5 +1,15 @@
 @import url("../_styles/index.less");
 
+.anim-fadein {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.anim-fadein-active {
+  visibility: visible;
+  opacity: 1;
+}
+
 .modal-overlay, .preloader-indicator-overlay, .popup-overlay, .picker-modal-overlay {
   position: absolute;
   left: 0;
@@ -8,15 +18,22 @@
   height: 100%;
   background: rgba(0,0,0,0.4);
   z-index: 13000;
-  visibility: hidden;
-  opacity: 0;
+  // visibility: hidden;
+  // opacity: 0;
   .transition(@modalDuration);
   &.not-animated {
       .transition(0ms);
   }
-  &.modal-overlay-visible {
-      visibility: visible;
-      opacity: 1;
+  // &.modal-overlay-visible {
+  //     visibility: visible;
+  //     opacity: 1;
+  // } 
+  &.modal-overlay-enter {
+    visibility: hidden;
+    opacity: 0;
+  }
+  &.modal-overlay-enter-active {
+
   }
 }
 .picker-modal-overlay {

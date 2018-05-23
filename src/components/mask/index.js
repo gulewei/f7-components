@@ -37,7 +37,7 @@ const Mask = (props) => {
         'not-animated': noAinmation
       })}
       oncreate={el => {
-        visible && anim.enter(el, 'modal-overlay-visible', '')
+        visible && anim.enter(el, '', 'anim-fadein')
         oncreate && oncreate(el)
       }}
     ></div >

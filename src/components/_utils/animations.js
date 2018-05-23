@@ -46,7 +46,7 @@ function runAndCleanUp (element, startAnimation, finishAnimation) {
   element.addEventListener(transitionEndName, transitionEnd)
 }
 
-function exit (node, exitAnimationActive, exitAnimation = '', removeNode) {
+function exit (node, exitAnimationActive, exitAnimation, removeNode) {
   const activeClass = exitAnimationActive || `${exitAnimation}-active`
 
   runAndCleanUp(
@@ -64,21 +64,24 @@ function exit (node, exitAnimationActive, exitAnimation = '', removeNode) {
   )
 }
 
-function enter (node, enterAnimationActive, enterAnimation = '') {
+function enter (node, enterAnimationActive, enterAnimation) {
   const activeClass = enterAnimationActive || `${enterAnimation}-active`
 
   runAndCleanUp(
     node,
     () => {
       node.classList.add(enterAnimation)
+      // console.log('enter', { phase: 'enter', node, enterAnimation, time: Date.now() })
 
       requestAnimationFrame(function () {
         node.classList.add(activeClass)
+        // console.log('enter', { phase: 'enter-active', node, activeClass, time: Date.now() })
       })
     },
     () => {
       node.classList.remove(enterAnimation)
       node.classList.remove(activeClass)
+      // console.log('enter', { phase: 'enter-to', node, enterAnimation, time: Date.now() })
     }
   )
 }
