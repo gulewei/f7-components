@@ -1,15 +1,5 @@
 @import url("../_styles/index.less");
 
-.anim-fadein {
-  visibility: hidden;
-  opacity: 0;
-}
-
-.anim-fadein-active {
-  visibility: visible;
-  opacity: 1;
-}
-
 .modal-overlay, .preloader-indicator-overlay, .popup-overlay, .picker-modal-overlay {
   position: absolute;
   left: 0;
@@ -20,21 +10,14 @@
   z-index: 13000;
   // visibility: hidden;
   // opacity: 0;
-  .transition(@modalDuration);
-  &.not-animated {
-      .transition(0ms);
-  }
+  // .transition(@modalDuration);
+  // &.not-animated {
+  //     .transition(0ms);
+  // }
   // &.modal-overlay-visible {
   //     visibility: visible;
   //     opacity: 1;
   // } 
-  &.modal-overlay-enter {
-    visibility: hidden;
-    opacity: 0;
-  }
-  &.modal-overlay-enter-active {
-
-  }
 }
 .picker-modal-overlay {
   z-index: 12000;
