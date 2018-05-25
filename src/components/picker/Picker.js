@@ -1,11 +1,13 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Overlay from '../mask'
+import Overlay from '../overlay'
 // eslint-disable-next-line
 import PickerModal from './Modal'
 // eslint-disable-next-line
 import PickerColumns from './Columns'
+// eslint-disable-next-line
+import { CSSTransition } from '../../animation'
 
 /// <reference path="index.d.ts"/>
 
@@ -44,12 +46,16 @@ function Picker (props, children) {
 
   return (
     <div>
-      <Overlay type="picker-modal" show={show} onclick={onOverlayClick} />
-      {show &&
-        <PickerModal {...{ inline, noColumns, modalClass, toolbar }}>
-          {noColumns ? children : PickerColumns(props)}
-        </PickerModal>
-      }
+      {show && [
+        <CSSTransition enter="anim-fadein">
+          <Overlay type="picker-modal" onOverlayClick={onOverlayClick} />
+        </CSSTransition>,
+        <CSSTransition enter="anim-slidein" exit="anim-slideout">
+          <PickerModal {...{ inline, noColumns, modalClass, toolbar }}>
+            {noColumns ? children : PickerColumns(props)}
+          </PickerModal>
+        </CSSTransition>
+      ]}
     </div>
   )
 }

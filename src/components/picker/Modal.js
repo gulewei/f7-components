@@ -1,7 +1,6 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import anim from '../_utils/animations'
 
 /**
  * @typedef {Object} PickerModalProps
@@ -24,12 +23,6 @@ const PickerModal = (props, children) => {
     <div
       class={cc('picker-modal', modalClass, { 'picker-modal-inline': inline })}
       style={{ display: 'block' }}
-      oncreate={el => {
-        anim.enter(el, '', 'anim-slidein')
-      }}
-      onremove={(el, done) => {
-        anim.exit(el, '', 'anim-slideout', done)
-      }}
     >
       {toolbar}
       <div class={cc('picker-modal-inner', { 'picker-items': !noColumns })}>

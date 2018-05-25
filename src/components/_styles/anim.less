@@ -1,0 +1,12 @@
+@import url('./_mixins.less');
+
+.anim-fadein {
+  visibility: hidden;
+  opacity: 0;
+  .transition(@modalDuration);
+}
+
+.anim-fadein-active {
+  visibility: visible;
+  opacity: 1;
+}
