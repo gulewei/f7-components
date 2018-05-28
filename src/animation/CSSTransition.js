@@ -2,7 +2,6 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 import run from './run-transition'
-import hyperFn from '../fn'
 
 /**
  * @typedef {Object} CSSTransitionProps
@@ -22,7 +21,12 @@ const CSSTransition = (props, children) => {
     exitActive = `${exit}-active`
   } = props
 
-  const child = hyperFn.childOnly(children)
+  const child = children[0]
+
+  if (!child.attributes) {
+    return child
+  }
+
   const attr = child.attributes
   let replaceAttr = {}
 
@@ -49,7 +53,13 @@ const CSSTransition = (props, children) => {
     }
   }
 
-  return hyperFn.cloneNode(child, replaceAttr)
+  return {
+    ...child,
+    attributes: {
+      ...attr,
+      ...replaceAttr
+    }
+  }
 }
 
 export default CSSTransition
