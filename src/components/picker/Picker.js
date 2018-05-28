@@ -6,12 +6,10 @@ import Overlay from '../overlay'
 import PickerModal from './Modal'
 // eslint-disable-next-line
 import PickerColumns from './Columns'
-// eslint-disable-next-line
-import { CSSTransition } from '../../animation'
 
 /// <reference path="index.d.ts"/>
 
-const MODAL = {
+const TYPE = {
   columns: 'columns',
   inline: 'inline-columns',
   no: 'no-column'
@@ -41,25 +39,21 @@ function Picker (props, children) {
     toolbar
   } = props
 
-  const inline = modalType === MODAL.inline
-  const noColumns = modalType === MODAL.no
+  const inline = modalType === TYPE.inline
+  const noColumns = modalType === TYPE.no
 
   return (
     <div>
       {show && [
-        <CSSTransition enter="anim-fadein">
-          <Overlay type="picker-modal" onOverlayClick={onOverlayClick} />
-        </CSSTransition>,
-        <CSSTransition enter="anim-slidein" exit="anim-slideout">
-          <PickerModal {...{ inline, noColumns, modalClass, toolbar }}>
-            {noColumns ? children : PickerColumns(props)}
-          </PickerModal>
-        </CSSTransition>
+        <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
+        <PickerModal {...{ inline, noColumns, modalClass, toolbar }}>
+          {noColumns ? children : PickerColumns(props)}
+        </PickerModal>
       ]}
     </div>
   )
 }
 
-Picker.TYPES = MODAL
+Picker.TYPE = TYPE
 
 export default Picker
