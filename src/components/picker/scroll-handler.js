@@ -36,12 +36,10 @@ class ScrollerHandler extends BaseScroller {
     this.props.onChange = newProps.onChange
 
     if (!isSameItems(this.props.items, newProps.items)) {
-      console.log('update items', { ...newProps })
       return this._updateItems(newProps.value, newProps.items)
     }
 
     if (newProps.value !== this.props.value) {
-      console.log('update value only')
       this._updateValue(newProps.value, newProps.items)
     }
   }
@@ -97,8 +95,8 @@ class ScrollerHandler extends BaseScroller {
   }
 
   _emitValue () {
-    this.props.onChange && this.props.onChange(this.props.value)
     console.log('emit value', { ...this.props })
+    this.props.onChange && this.props.onChange(this.props.value)
   }
 
   // #region event entry

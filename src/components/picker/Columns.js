@@ -30,8 +30,6 @@ const PickerColumns = (props) => {
 
   const models = modelColumn(cascade, items, values, columns)
 
-  console.log('columns: ', models)
-
   return (
     models.map(({ isDivider, props, content }, i) => {
       return (
