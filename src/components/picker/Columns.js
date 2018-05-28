@@ -39,7 +39,7 @@ const PickerColumns = (props) => {
             {... { ...props, ...content }}
             onChange={val => {
               const newValues = values.map(prev => {
-                return prev === content.value ? prev : val
+                return prev === content.value ? val : prev
               })
               onChange(newValues)
             }}

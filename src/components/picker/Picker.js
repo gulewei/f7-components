@@ -9,17 +9,10 @@ import PickerColumns from './Columns'
 
 /// <reference path="index.d.ts"/>
 
-const TYPE = {
-  columns: 'columns',
-  inline: 'inline-columns',
-  no: 'no-column'
-}
-
 /**
  * @typedef {Object} PickerProps
  * @prop {boolean} show
  * @prop {(e: Event) => void} [onOverlayClick]
- * @prop {'columns' | 'inline-columns' | 'no-column'} modalType
  * @prop {string} [modalClass]
  * @prop {JSX.Element} [toolbar]
  * @prop {boolean} [cascade]
@@ -34,26 +27,55 @@ function Picker (props, children) {
   const {
     show,
     onOverlayClick,
-    modalType,
     modalClass,
-    toolbar
+    toolbar,
+    ...columnsProps
   } = props
-
-  const inline = modalType === TYPE.inline
-  const noColumns = modalType === TYPE.no
 
   return (
     <div>
       {show && [
         <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
-        <PickerModal {...{ inline, noColumns, modalClass, toolbar }}>
-          {noColumns ? children : PickerColumns(props)}
+        <PickerModal {...{ modalClass, toolbar }}>
+          <PickerColumns {...columnsProps} />
         </PickerModal>
       ]}
     </div>
   )
 }
 
-Picker.TYPE = TYPE
+export const ContentPicker = (props, children) => {
+  const {
+    show,
+    onOverlayClick,
+    modalClass,
+    toolbar
+  } = props
+
+  return (
+    <div>
+      {show && [
+        <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
+        <PickerModal {...{ modalClass, toolbar, noColumns: true }}>
+          {children}
+        </PickerModal>
+      ]}
+    </div>
+  )
+}
+
+export const InliePicker = (props) => {
+  const {
+    modalClass,
+    toolbar,
+    ...columnsProps
+  } = props
+
+  return (
+    <PickerModal {...{ modalClass, toolbar, inline: true }}>
+      <PickerColumns {...columnsProps} />
+    </PickerModal>
+  )
+}
 
 export default Picker

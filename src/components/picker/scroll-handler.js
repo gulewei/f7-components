@@ -31,19 +31,20 @@ class ScrollerHandler extends BaseScroller {
   update (newProps) {
     this.props.onChange = newProps.onChange
 
-    if (!isSameData(this.props.data, newProps.data)) {
+    if (!isSameData(this.props.items, newProps.items)) {
       console.log('update data')
-      return this._updateData(newProps.value, newProps.data)
+      return this._updateData(newProps.value, newProps.items)
     }
 
     if (newProps.value !== this.props.value) {
-      this._updateValue(newProps.value, newProps.data)
+      console.log('update value only')
+      this._updateValue(newProps.value, newProps.items)
     }
   }
 
   _updateData (value, data) {
     // data
-    this.props.data = data
+    this.props.items = data
 
     // size
     const itemLength = data.length
@@ -75,9 +76,10 @@ class ScrollerHandler extends BaseScroller {
     this.render(finalTranslate, animate)
 
     // value
-    this.props.value = this.props.data[activeIndex].value
+    this.props.value = this.props.items[activeIndex].value
     transitionEnd(this.wraper, () => {
       this.props.onChange && this.props.onChange(this.props.value)
+      console.log('handler', this)
     })
   }
 
@@ -101,7 +103,7 @@ class ScrollerHandler extends BaseScroller {
     })
 
     // click to select
-    on(this.wraper, 'click', this.onItemClick.bind(this))
+    // on(this.wraper, 'click', this.onItemClick.bind(this))
   }
 
   getActiveIndex (translate) {

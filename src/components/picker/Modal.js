@@ -22,7 +22,7 @@ const PickerModal = (props, children) => {
   } = props
 
   return (
-    <CSSTransition enter="anim-slidein" exit="anim-slideout">
+    <CSSTransition enter={!inline && 'anim-slidein'} exit={!inline && 'anim-slideout'}>
       <div
         class={cc('picker-modal', modalClass, { 'picker-modal-inline': inline })}
         style={{ display: 'block' }}
