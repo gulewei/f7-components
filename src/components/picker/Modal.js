@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import { CSSTransition } from '../../animation'
+import CSSTransition from '../../animation'
 import cc from 'classnames'
 
 /**

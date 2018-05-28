@@ -2,7 +2,7 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 // eslint-disable-next-line
-import { CSSTransition } from '../../animation'
+import CSSTransition from '../../animation'
 import './index.less'
 
 const TYPE = {

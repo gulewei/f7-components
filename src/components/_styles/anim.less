@@ -10,3 +10,20 @@
   visibility: visible;
   opacity: 1;
 }
+.anim-slidein {
+  .transition(400ms);
+  .translate3d(0,100%,0);
+}
+
+.anim-slidein-active {
+  .translate3d(0,0,0);
+}
+
+.anim-slideout {
+  .transition(400ms);
+  .translate3d(0,0,0);
+}
+
+.anim-slideout-active {
+  .translate3d(0,100%,0);
+}

@@ -1,7 +1,8 @@
+// eslint-disable-next-line
 import { h } from 'hyperapp'
-import Children from '../children'
 import cc from 'classnames'
-import anim from './run-transition'
+import run from './run-transition'
+import hyperFn from '../fn'
 
 /**
  * @typedef {Object} CSSTransitionProps
@@ -21,32 +22,34 @@ const CSSTransition = (props, children) => {
     exitActive = `${exit}-active`
   } = props
 
-  const child = Children.only(children)
+  const child = hyperFn.childOnly(children)
   const attr = child.attributes
+  let replaceAttr = {}
 
-  return {
-    ...child,
-    attributes: {
-      ...attr,
-      class: cc(attr.class, { [enter]: enter }),
-      oncreate: (el) => {
-        if (enter) {
-          anim.enter(el, enterActive, enter)
-        }
-        if (attr.oncreate) {
-          attr.oncreate(el)
-        }
-      },
-      onremove: (el, done) => {
-        if (exit) {
-          anim.exit(el, exitActive, exit, done)
-        }
-        if (attr.onremove) {
-          attr.onremove(el, () => { })
-        }
+  if (enter) {
+    replaceAttr.class = cc(attr.class, { [enter]: enter })
+    replaceAttr.oncreate = (el) => {
+      if (enter) {
+        run.enter(el, enterActive, enter)
+      }
+      if (attr.oncreate) {
+        attr.oncreate(el)
       }
     }
   }
+
+  if (exit) {
+    replaceAttr.onremove = (el, done) => {
+      if (exit) {
+        run.exit(el, exitActive, exit, done)
+      }
+      if (attr.onremove) {
+        attr.onremove(el, () => { })
+      }
+    }
+  }
+
+  return hyperFn.cloneNode(child, replaceAttr)
 }
 
 export default CSSTransition

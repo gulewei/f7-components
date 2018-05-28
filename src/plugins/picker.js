@@ -4,7 +4,7 @@ import { h } from 'hyperapp'
 import Picker, { PickerToolbar, PickerToolbarLink as PickerLink } from '../components/picker'
 
 const DEFAULT = {
-  modalTypes: Picker.TYPES.columns,
+  modalTypes: Picker.TYPE.columns,
   toolbar: (
     <PickerToolbar
       right={<PickerLink text="Done" />}

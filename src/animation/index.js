@@ -1,5 +1,2 @@
-import CSSTransition from './CSSTransition'
-
-export {
-  CSSTransition
-}
+export { default } from './CSSTransition'
+export { runAndCleanUp } from './run-transition'
