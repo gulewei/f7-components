@@ -1,14 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
 import Page from '../../src/components/page'
-import Mask from '../../src/components/mask'
 import ContentBlock from '../../src/components/content-block'
 import Preloader from '../../src/components/preloader'
-import modals from '../../src/plugins/modals'
-import toast from '../../src/plugins/toast'
-import loading from '../../src/plugins/loading'
+import install, { loadingPlugin, toastPlugin, dialogPlugin } from '../../src/plugins'
 
-window.$loading = loading
+const modals = install(loadingPlugin, toastPlugin, dialogPlugin)
+
+window.$modals = modals
 
 app(
   {
@@ -22,7 +21,7 @@ app(
     }
   },
   (state, actions) => {
-    window.$modal = { state, actions }
+    window.$_modal = { state, actions }
 
     return (
       <Page>
@@ -69,7 +68,7 @@ app(
           </p>
 
           <p onclick={e => {
-            modals.custom({
+            modals.customDialog({
               text: 'Vivamus feugiat diam velit. Maecenas aliquet egestas lacus, eget pretium massa mattis non. Donec volutpat euismod nisl in posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae',
               title: 'Vertical Buttons Layout',
               verticalButtons: true,
@@ -85,11 +84,11 @@ app(
         </ContentBlock>
 
         <ContentBlock title="Toast">
-          <p onclick={e => toast(`It's a toast`)}>
+          <p onclick={e => modals.toast(`It's a toast`)}>
             <a>Toast</a>
           </p>
 
-          <p onclick={e => toast(`It's a 2s toast`, 2000)}>
+          <p onclick={e => modals.toast(`It's a 2s toast`, 2000)}>
             <a>Toast with 2s duration</a>
           </p>
         </ContentBlock>
@@ -106,18 +105,11 @@ app(
 
         <ContentBlock title="Loading">
           <p onclick={e => {
-            loading.show()
-            setTimeout(() => loading.hide(), 2000)
+            modals.showLoading()
+            setTimeout(modals.hideLoading, 2000)
           }}
           ><a>loading</a></p>
         </ContentBlock>
-
-        <Mask
-          // key="mask"
-          show={state.masker.show}
-          onclick={e => actions.masker.show(false)}
-        ></Mask>
-
       </Page >
     )
   },

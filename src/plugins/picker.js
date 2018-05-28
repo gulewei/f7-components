@@ -4,7 +4,6 @@ import { h } from 'hyperapp'
 import Picker, { PickerToolbar, PickerToolbarLink as PickerLink } from '../components/picker'
 
 const DEFAULT = {
-  modalTypes: Picker.TYPE.columns,
   toolbar: (
     <PickerToolbar
       right={<PickerLink text="Done" />}
@@ -42,14 +41,14 @@ export default {
 
   api: (actions) => {
     return {
-      open: (pickerProps) => {
+      openPicker: (pickerProps) => {
         actions.toggle({
           show: true,
           props: { ...DEFAULT, ...pickerProps }
         })
       },
 
-      close: () => {
+      closePicker: () => {
         actions.toggle({ show: false, props: {} })
       }
     }

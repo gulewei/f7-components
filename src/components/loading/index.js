@@ -3,7 +3,7 @@ import { h } from 'hyperapp'
 // eslint-disable-next-line
 import Preloader from '../preloader'
 // eslint-disable-next-line
-import Mask from '../mask'
+import Overlay from '../overlay'
 import './index.less'
 
 /**
@@ -15,7 +15,7 @@ const Loading = props => {
   return (
     <div>
       {props.show && [
-        <Mask show type='preloader-indicator' />,
+        <Overlay type={Overlay.TYPE.prelader} notAnimated />,
         <div class="preloader-indicator-modal">
           <Preloader white />
         </div>

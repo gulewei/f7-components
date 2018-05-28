@@ -1,29 +1,74 @@
 @import url('./_mixins.less');
 
+// fade-in / fade-out
+
 .anim-fadein {
   visibility: hidden;
   opacity: 0;
-  .transition(@modalDuration);
 }
 
 .anim-fadein-active {
   visibility: visible;
   opacity: 1;
+  .transition(@modalDuration);  
 }
+
+.anim-fadeout {
+  visibility: visible;
+  opacity: 1;
+}
+
+.anim-fadeout-active {
+  visibility: hidden;
+  opacity: 0;
+  .transition(@modalDuration)  
+}
+
+// slide-in / slide-out
+
 .anim-slidein {
-  .transition(400ms);
   .translate3d(0,100%,0);
+  transition-property: transform;
 }
 
 .anim-slidein-active {
   .translate3d(0,0,0);
+  .transition(400ms);  
 }
 
 .anim-slideout {
-  .transition(400ms);
   .translate3d(0,0,0);
+  transition-property: transform;    
 }
 
 .anim-slideout-active {
   .translate3d(0,100%,0);
+  .transition(400ms);  
+}
+
+
+// bounce-in / bouce-out
+
+.anim-bouncein {
+  opacity: 0;
+  .transform(translate3d(0,0,0) scale(1.185));
+  transition-property: transform, opacity;
+}
+
+.anim-bouncein-active {
+  opacity: 1;
+  .transform(translate3d(0,0,0) scale(1));
+  .transition(@modalDuration);  
+}
+
+.anim-boutncout {
+  opacity: 1;
+  .transform(translate3d(0,0,0) scale(1));
+  transition-property: transform, opacity;  
+}
+
+.anim-bounceout-active {
+  opacity: 0;
+  .transition(@modalDuration);
+  .transform(translate3d(0,0,0) scale(1));
 }

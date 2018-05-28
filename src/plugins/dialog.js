@@ -2,7 +2,6 @@
 import { h } from 'hyperapp'
 // eslint-disable-next-line
 import Dialog from '../components/dialog'
-import { install } from '../utils'
 
 const defaultState = {
   show: false,
@@ -118,7 +117,7 @@ const api = (actions) => {
       return actions.close
     },
 
-    custom: (props) => {
+    customDialog: (props) => {
       actions.open(props)
       return actions.close
     },
@@ -127,6 +126,9 @@ const api = (actions) => {
   }
 }
 
-const modals = install(defaultState, actions, view, api)
-
-export default modals
+export default {
+  state: defaultState,
+  actions,
+  view,
+  api
+}

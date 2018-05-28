@@ -21,7 +21,7 @@ const TYPE = {
  * @prop {string} [class]
  * @param {MaskProps} props
  */
-const Overlay = (props) => {
+function Overlay (props) {
   const {
     type = TYPE.modal,
     onOverlayClick,
@@ -32,7 +32,7 @@ const Overlay = (props) => {
   const noAnim = notAnimated || type === TYPE.prelader
 
   return (
-    <CSSTransition enter={!noAnim && 'anim-fadein'}>
+    <CSSTransition enter={!noAnim && 'anim-fadein'} exit={!noAnim && 'anim-fadeout'}>
       <div {...rest}
         class={cc(`${type}-overlay`, props.class)}
         onclick={onOverlayClick}

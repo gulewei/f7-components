@@ -1,9 +1,11 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Mask from '../mask'
+import Overlay from '../overlay'
+// eslint-disable-next-line
+import CSSTransition from '../../animation'
+// import anim from '../_utils/animations'
 import { css } from '../_utils'
-import anim from '../_utils/animations'
 import cc from 'classnames'
 import './index.css'
 
@@ -11,53 +13,32 @@ import './index.css'
  *
  * @param {HTMLElement} el
  */
-const transitionEl = el => {
+const sizeEl = el => {
   css(el, {
     'margin-top': `${el.offsetHeight / -2}px`,
     'margin-left': `${el.offsetWidth / -2}px`
   })
-
-  // addClass(el, 'fadein')
-  anim.enter(el, '', 'fadein')
 }
-
-const removeEl = (el, done) => {
-  // on(el, 'transitionend', done)
-  // on(el, 'webkitTransitionEnd', done)
-  // removeClass(el, 'fadein')
-  anim.exit(el, '', 'fadeout', done)
-}
-
 /**
  * @typedef {Object} ToastProps
  * @prop {boolean} [show=false]
  * @prop {string} msg
+ * @prop {string} class
  * @param {ToastProps} props
  */
 const Toast = (props) => {
   const {
     show = false,
-    msg,
-    oncreate,
-    onremove,
-    ...rest
+    msg
   } = props
 
   return (
     <div>
       {show && [
-        <div {...rest}
-          class={cc('toast', rest.class)}
-          oncreate={el => {
-            transitionEl(el)
-            oncreate && oncreate(el)
-          }}
-          onremove={(el, done) => {
-            removeEl(el, done)
-            onremove && onremove(el, done)
-          }}
-        >{msg}</div>,
-        <Mask type="preloader-indicator" show invisible />
+        <CSSTransition enter="anim-fadein" exit="anim-fadeout">
+          <div class={cc('toast', props.class)} oncreate={sizeEl}>{msg}</div>
+        </CSSTransition>,
+        <Overlay type={Overlay.TYPE.prelader} notAnimated />
       ]}
     </div>
   )
