@@ -2,6 +2,7 @@
  * Scroll Behaiver
  * @typedef {Object} ScrollerState
  * @prop {boolean} isTouched
+ * @prop {boolean} isMoved
  * @prop {number} startY
  * @prop {number} startTranslate
  * @prop {number} startTime
@@ -12,22 +13,21 @@
  */
 export default class BaseScroller {
   /**
-   * @param {number} maxTranslate Translate value when scroll content on the top
-   * @param {number} minTranslate Translate value when content on the bottom
-   */
-  initializeSize (maxTranslate, minTranslate) {
-    this.size = { maxTranslate, minTranslate }
-  }
-
-  /**
-   * @param {number} currentTranslate Initial translate value
+   * @param {number} currentTranslate
    */
   initializeState (currentTranslate) {
+    if (this.__initialized) {
+      return
+    }
+
     const n = Date.now()
 
-    /** @type {ScrollerState} */
+    /**
+     *  @type {ScrollerState}
+     */
     this.state = {
       isTouched: false,
+      isMoved: false,
       startY: 0,
       startTime: n,
       startTranslate: 0,
@@ -36,24 +36,44 @@ export default class BaseScroller {
       currentTranslate,
       velocityTranslate: 0
     }
+
+    this.__initialized = true
   }
 
   /**
-   * @param {ScrollerState} nextState
+   * @param {number} maxTranslate Translate value when scroll content on the top
+   * @param {number} minTranslate Translate value when content on the bottom
    */
-  _setState (nextState) {
-    const prevState = this.state
-    this.state = {
-      ...prevState,
-      ...nextState
+  setSize (maxTranslate, minTranslate) {
+    this.size = { maxTranslate, minTranslate }
+  }
+
+  /**
+   * @param {number} finalTranslate
+   */
+  updateTranslate (finalTranslate) {
+    if (this.state.isTouched || this.state.isMoved) {
+      throw new Error('Do not update translate until touch end !')
     }
+
+    this._setState({
+      currentTranslate: finalTranslate
+    })
+  }
+
+  /**
+   * publish translate to render
+   * @param {(translate: number, isMove: boolean) => void} callback
+   */
+  setCallback (callback) {
+    this._callback = callback
   }
 
   /**
    * @param {Touch[]} touches
    * @param {number} startTime
    */
-  onTouchStart (touches, startTime) {
+  onTouchStart (touches, startTime, callback) {
     this._setState({
       isTouched: true,
       startY: touches[0].pageY,
@@ -71,16 +91,20 @@ export default class BaseScroller {
       return
     }
 
+    const isMoved = true
     const currentY = touches[0].pageY
     const newTranslate = this.state.startTranslate + currentY - this.state.startY
     const currentTranslate = this._normalize(newTranslate)
 
     this._setState({
+      isMoved,
       currentY,
       currentTime,
       currentTranslate,
       velocityTranslate: currentTranslate - this.state.currentTranslate
     })
+
+    this._publish(currentTranslate, isMoved)
   }
 
   /**
@@ -88,34 +112,40 @@ export default class BaseScroller {
    * @param {number} endTime
    */
   onTouchEnd (touches, endTime) {
-    if (!this.state.isTouched) {
-      this._setState({ isTouched: false })
+    const isTouched = false
+    const isMoved = false
+
+    if (!this.state.isTouched || !this.state.isMoved) {
+      this._setState({ isTouched, isMoved })
       return
     }
 
-    const acc = this._accelerate(endTime)
+    const currentTranslate = this._accelerate(endTime)
 
     this._setState({
-      isTouched: false,
-      currentTranslate: acc
+      isTouched,
+      isMoved,
+      currentTranslate
     })
-  }
 
-  getTranslate () {
-    return this.state.currentTranslate
+    this._publish(currentTranslate, isMoved)
   }
 
   /**
-   * @param {number} finalTranslate
+   * @param {ScrollerState} nextState
    */
-  updateTranslate (finalTranslate) {
-    if (this.state.isTouched) {
-      throw new Error('Do not update translate until touch end !')
+  _setState (nextState) {
+    const prevState = this.state
+    this.state = {
+      ...prevState,
+      ...nextState
     }
+  }
 
-    this._setState({
-      currentTranslate: finalTranslate
-    })
+  _publish (translate, isMoved) {
+    if (this._callback) {
+      this._callback(translate, isMoved)
+    }
   }
 
   /**

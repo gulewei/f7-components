@@ -6,34 +6,38 @@ class ScrollerHandler extends BaseScroller {
    * @typedef {Object} PickerScrollerOptions
    * @prop {(val: string) => void} onChange
    * @prop {string} value
-   * @prop {PickerColumnItemProps[]} data
+   * @prop {PickerColumnItemProps[]} items
    *
    * @param {HTMLElement} wraper
    * @param {PickerScrollerOptions} props
    */
   constructor(wraper, props) { // eslint-disable-line
     super()
+
     this.wraper = wraper
+    /**
+     * @type {PickerScrollerOptions}
+     */
     this.props = {}
-    this.heights = this._getHeights(wraper)
-    this.initializeState(0)
+
+    const container = wraper.parentNode.offsetHeight
+    const item = wraper.offsetHeight / wraper.children.length
+    const currentTranslate = 0
+
+    this.heights = { container, item }
+    this.initializeState(currentTranslate)
     this.update(props)
     this.bindEvents()
   }
 
-  _getHeights (wraper) {
-    const container = wraper.parentNode.offsetHeight
-    const item = wraper.offsetHeight / wraper.children.length
-
-    return { container, item }
-  }
+  // #region update
 
   update (newProps) {
     this.props.onChange = newProps.onChange
 
-    if (!isSameData(this.props.items, newProps.items)) {
-      console.log('update data')
-      return this._updateData(newProps.value, newProps.items)
+    if (!isSameItems(this.props.items, newProps.items)) {
+      console.log('update items', { ...newProps })
+      return this._updateItems(newProps.value, newProps.items)
     }
 
     if (newProps.value !== this.props.value) {
@@ -42,82 +46,108 @@ class ScrollerHandler extends BaseScroller {
     }
   }
 
-  _updateData (value, data) {
+  _updateItems (value, data) {
     // data
     this.props.items = data
 
-    // size
+    // resize size
     const itemLength = data.length
     const { container, item } = this.heights
     const maxTranslate = (container - item) / 2
     const minTranslate = (container - item * (itemLength * 2 - 1)) / 2
-    this.initializeSize(maxTranslate, minTranslate)
+    this.setSize(maxTranslate, minTranslate)
 
-    // value
+    // update value
     this._updateValue(value, data)
   }
 
   _updateValue (value, data) {
-    // value
-    this.props.value = value
+    const foundIndex = data.map(item => item.value).indexOf(value)
+    const foundInData = foundIndex > -1
+    const activeIndex = foundInData ? foundIndex : 0
 
     // translate
-    const activeIndex = data.reduce((active, item, i) => {
-      return item.value === value ? i : active
-    }, 0)
-    this.scrollToItem(activeIndex, false)
+    this._scrollToItem(activeIndex, false, !foundInData)
   }
 
-  scrollToItem (activeIndex, animate) {
+  // #endregion
+
+  _scrollToItem (activeIndex, animate, emitValue) {
     // translate
     const { maxTranslate: max } = this.size
     const finalTranslate = max - activeIndex * this.heights.item
     this.updateTranslate(finalTranslate)
-    this.render(finalTranslate, animate)
+    this._render(finalTranslate, animate)
 
     // value
     this.props.value = this.props.items[activeIndex].value
-    transitionEnd(this.wraper, () => {
-      this.props.onChange && this.props.onChange(this.props.value)
-      console.log('handler', this)
-    })
+
+    // emit value
+    if (emitValue) {
+      animate
+        ? transitionEnd(this.wraper, () => {
+          this._emitValue()
+        })
+        : this._emitValue()
+    }
   }
 
-  render (translate, animate) {
+  _render (translate, animate) {
     setTranslate(this.wraper.style, translate, animate)
   }
 
-  bindEvents () {
-    on(this.wraper, 'touchstart', (e) => {
-      this.onTouchStart(e.targetTouches, Date.now())
-    })
-
-    on(this.wraper, 'touchmove', (e) => {
-      this.onTouchMove(e.targetTouches, Date.now())
-      this.render(this.getTranslate(), false)
-    })
-
-    on(this.wraper, 'touchend', (e) => {
-      this.onTouchEnd(e.targetTouches, Date.now())
-      this.scrollToItem(this.getActiveIndex(this.getTranslate()), true)
-    })
-
-    // click to select
-    // on(this.wraper, 'click', this.onItemClick.bind(this))
+  _emitValue () {
+    this.props.onChange && this.props.onChange(this.props.value)
+    console.log('emit value', { ...this.props })
   }
 
-  getActiveIndex (translate) {
+  // #region event entry
+
+  bindEvents () {
+    this.setCallback(this._onTouchScroll.bind(this))
+
+    const events = {
+      touchstart: (e) => {
+        this.onTouchStart(e.targetTouches, Date.now())
+      },
+      touchmove: (e) => {
+        this.onTouchMove(e.targetTouches, Date.now())
+      },
+      touchend: (e) => {
+        this.onTouchEnd(e.targetTouches, Date.now())
+      },
+      // click to select
+      click: (e) => {
+        if (this.state.isMoved) {
+          return
+        }
+        this._onItemClick(e)
+      }
+    }
+
+    for (let eventName in events) {
+      on(this.wraper, eventName, events[eventName])
+    }
+  }
+
+  _onTouchScroll (translate, isMoved) {
+    const animate = !isMoved
+
+    if (isMoved) {
+      this._render(translate, animate)
+    } else {
+      this._scrollToItem(this._getActiveIndex(translate), animate, true)
+    }
+  }
+
+  _getActiveIndex (translate) {
     const { minTranslate: min, maxTranslate: max } = this.size
     const newTranslate = Math.max(Math.min(translate, max), min)
     const activeIndex = Math.round((max - newTranslate) / this.heights.item)
     return activeIndex
   }
 
-  onItemClick (e) {
-    if (this.state.isTouched) {
-      return
-    }
-
+  _onItemClick (e) {
     const itemCls = 'picker-item'
     const isItem = (el) => {
       return el.className.indexOf(itemCls) > -1 ? el : false
@@ -132,9 +162,11 @@ class ScrollerHandler extends BaseScroller {
           break
         }
       }
-      this.scrollToItem(activeIndex, true)
+      this._scrollToItem(activeIndex, true, true)
     }
   }
+
+  // #endregion
 }
 
 export default ScrollerHandler
@@ -144,7 +176,7 @@ export default ScrollerHandler
  * @param {PickerColumnItemProps[]} prev
  * @param {PickerColumnItemProps[]} data
  */
-function isSameData (prev, data) {
+function isSameItems (prev, data) {
   return (
     prev &&
     data &&
