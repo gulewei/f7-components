@@ -8,7 +8,7 @@ export default {
 
   cloneNode (node, attrs, children) {
     return {
-      type: node.type,
+      nodeName: node.nodeName,
       key: node.key,
       attributes: {
         ...node.attributes,
