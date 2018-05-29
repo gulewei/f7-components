@@ -8,13 +8,21 @@ import './index.less'
 
 /**
  * @typedef {Object} LoadingProps
- * @prop {boolean} [show=false]
+ * @prop {boolean} show
+ * @prop {string} [wraperClass='loading-wraper']
+ *
  * @param {LoadingProps} props
  */
 const Loading = props => {
+  const {
+    show,
+    wraperclass = 'loading-wraper',
+    ...rest
+  } = props
+
   return (
-    <div>
-      {props.show && [
+    <div {...rest} class={wraperclass}>
+      {show && [
         <Overlay type={Overlay.TYPE.prelader} notAnimated />,
         <div class="preloader-indicator-modal">
           <Preloader white />

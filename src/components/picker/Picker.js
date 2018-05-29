@@ -12,6 +12,8 @@ import PickerColumns from './Columns'
 /**
  * @typedef {Object} PickerProps
  * @prop {boolean} show
+ * @prop {string} [wraperClass='picker-wraper']
+ * @prop {string} [wraperKey]
  * @prop {(e: Event) => void} [onOverlayClick]
  * @prop {string} [modalClass]
  * @prop {JSX.Element} [toolbar]
@@ -26,14 +28,16 @@ import PickerColumns from './Columns'
 function Picker (props, children) {
   const {
     show,
-    onOverlayClick,
+    wraperClass,
+    wraperKey,
     modalClass,
+    onOverlayClick,
     toolbar,
     ...columnsProps
   } = props
 
   return (
-    <div>
+    <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
         <PickerModal {...{ modalClass, toolbar }}>
@@ -47,13 +51,15 @@ function Picker (props, children) {
 export const ContentPicker = (props, children) => {
   const {
     show,
-    onOverlayClick,
+    wraperClass,
+    wraperKey,
     modalClass,
+    onOverlayClick,
     toolbar
   } = props
 
   return (
-    <div>
+    <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
         <PickerModal {...{ modalClass, toolbar, noColumns: true }}>

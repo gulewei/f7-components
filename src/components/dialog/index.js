@@ -9,8 +9,7 @@ import { css } from '../_utils'
 import cc from 'classnames'
 import './index.less'
 
-// eslint-disable-next-line
-const DialogButton = ({ text, bold, onclick }) => {
+export const DialogButton = ({ text, bold, onclick }) => {
   return (
     <span
       class={cc('modal-button', { 'modal-button-bold': bold })}
@@ -36,6 +35,7 @@ const sizeEl = el => {
  * 弹框
  * @typedef {Object} DialogProps
  * @prop {boolean} show
+ * @prop {string} [wraperClass]
  * @prop {string} title
  * @prop {string} text
  * @prop {string} [afterText]
@@ -48,12 +48,13 @@ const sizeEl = el => {
 const Dialog = (props) => {
   const {
     show,
+    wraperClass = 'dialog-wraper',
     title,
     text,
     afterText,
     buttons = [],
     onButtonsClick,
-    onMaskClick,
+    onOverlayClick,
     verticalButtons,
     ...r
   } = props
@@ -61,9 +62,10 @@ const Dialog = (props) => {
   const buttonWraperCls = cc('modal-buttons', { 'modal-buttons-vertical': verticalButtons })
 
   return (
-    <div {...r}>
+    <div {...r} class={wraperClass}>
       {show && [
-        <CSSTransition enter="anim-bouncein" exit="anim-bouceout">
+        <Overlay onOverlayClick={onOverlayClick} />,
+        <CSSTransition enter="anim-bouncein" exit="anim-bounceout">
           <div class="modal" oncreate={sizeEl}>
             <div class="modal-inner">
               <div class="modal-title">{title}</div>
@@ -74,8 +76,7 @@ const Dialog = (props) => {
               {buttons.map(button => <DialogButton {...button} />)}
             </div>
           </div>
-        </CSSTransition>,
-        <Overlay onOverlayClick={onMaskClick} />
+        </CSSTransition>
       ]}
     </div>
   )

@@ -11,9 +11,10 @@
     z-index: 13511;
     color: #fff;
     font-family: 'Helvetica-Neue', 'HelveticaNeue', arial, sans-serif;
-    opacity: 0;
-    -webkit-transition: opacity 0.8s;
-    transition: opacity 0.8s;
     text-align: center;
     font-weight: normal;
+}
+
+.toast.toast-transition {
+    transition: opacity .8s;
 }

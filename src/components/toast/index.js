@@ -4,7 +4,6 @@ import { h } from 'hyperapp'
 import Overlay from '../overlay'
 // eslint-disable-next-line
 import CSSTransition from '../../animation'
-// import anim from '../_utils/animations'
 import { css } from '../_utils'
 import cc from 'classnames'
 import './index.css'
@@ -19,26 +18,62 @@ const sizeEl = el => {
     'margin-left': `${el.offsetWidth / -2}px`
   })
 }
+
+/**
+ * @typedef {Object} ToastElProps
+ * @prop {string} msg
+ * @prop {Function} [onToastClick]
+ * @prop {string} [toastClass]
+ * @prop {string | false} [enterClass="anim-fadein"]
+ * @prop {string | false} [exitClass="anim-fadeout"]
+ *
+ * @param {ToastElProps} props
+ */
+export const ToastEl = (props) => {
+  const {
+    enterClass = 'anim-fadein',
+    exitClass = 'anim-fadeout'
+  } = props
+
+  return (
+    <CSSTransition enter={enterClass} exit={exitClass}>
+      <div class={cc('toast toast-transition', props.toastClass)}
+        oncreate={sizeEl}
+        onclick={props.onToastClick}
+      >{props.msg}</div>
+    </CSSTransition>
+  )
+}
+
 /**
  * @typedef {Object} ToastProps
- * @prop {boolean} [show=false]
+ * @prop {boolean} show
+ * @prop {string} [wraperClass='toast-wraper']
  * @prop {string} msg
- * @prop {string} class
+ * @prop {Function} [onToastClick]
+ * @prop {string} [toastClass]
+ * @prop {string | false} [enterClass="anim-fadein"]
+ * @prop {string | false} [exitClass="anim-fadeout"]
+ *
  * @param {ToastProps} props
  */
 const Toast = (props) => {
   const {
-    show = false,
-    msg
+    show,
+    wraperClass = 'toast-wraper',
+    msg,
+    toastClass,
+    onToastClick,
+    enterClass,
+    exitClass,
+    ...rest
   } = props
 
   return (
-    <div>
+    <div {...rest} class={wraperClass}>
       {show && [
-        <CSSTransition enter="anim-fadein" exit="anim-fadeout">
-          <div class={cc('toast', props.class)} oncreate={sizeEl}>{msg}</div>
-        </CSSTransition>,
-        <Overlay type={Overlay.TYPE.prelader} notAnimated />
+        <Overlay type={Overlay.TYPE.prelader} notAnimated />,
+        ToastEl(props)
       ]}
     </div>
   )

@@ -9,19 +9,17 @@
 
 .anim-fadein-active {
   visibility: visible;
+  .transition(@modalDuration);
   opacity: 1;
-  .transition(@modalDuration);  
 }
 
 .anim-fadeout {
-  visibility: visible;
   opacity: 1;
+  .transition(@modalDuration)  
 }
 
 .anim-fadeout-active {
-  visibility: hidden;
   opacity: 0;
-  .transition(@modalDuration)  
 }
 
 // slide-in / slide-out
@@ -61,7 +59,7 @@
   .transition(@modalDuration);  
 }
 
-.anim-boutncout {
+.anim-bounceout {
   opacity: 1;
   .transform(translate3d(0,0,0) scale(1));
   transition-property: transform, opacity;  
@@ -69,6 +67,6 @@
 
 .anim-bounceout-active {
   opacity: 0;
-  .transition(@modalDuration);
+  .transition(@modalDuration);  
   .transform(translate3d(0,0,0) scale(1));
 }
