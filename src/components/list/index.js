@@ -10,7 +10,7 @@ import './style.less'
  * @param {ListProps} props
  * @param {JSX.Element[]} children
  */
-const List = (props, children) => {
+function List (props, children) {
   const {
     inset,
     label,
@@ -111,7 +111,6 @@ const renderInner = (multipleLine, title, input, after, subTitle, text) => {
     )
 }
 
+List.Item = Item
+
 export default List
-export {
-  Item
-}
