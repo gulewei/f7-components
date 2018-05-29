@@ -2,7 +2,6 @@
 import { h } from 'hyperapp'
 // eslint-disable-next-line
 import Loading from '../components/loading'
-import { install } from '../utils'
 
 const state = {
   show: false
@@ -18,11 +17,14 @@ const view = (state, actions) => (
 
 const api = ({ loading }) => {
   return {
-    show: () => loading(true),
-    hide: () => loading(false)
+    showLoading: () => loading(true),
+    hideLoading: () => loading(false)
   }
 }
 
-const loading = install(state, actions, view, api)
-
-export default loading
+export default {
+  state,
+  actions,
+  view,
+  api
+}

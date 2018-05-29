@@ -1,9 +1,10 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Mask from '../mask'
+import Overlay from '../overlay'
+// eslint-disable-next-line
+import CSSTransition from '../../animation'
 import { css } from '../_utils'
-import anim from '../_utils/animations'
 import cc from 'classnames'
 import './index.css'
 
@@ -11,53 +12,68 @@ import './index.css'
  *
  * @param {HTMLElement} el
  */
-const transitionEl = el => {
+const sizeEl = el => {
   css(el, {
     'margin-top': `${el.offsetHeight / -2}px`,
     'margin-left': `${el.offsetWidth / -2}px`
   })
-
-  // addClass(el, 'fadein')
-  anim.enter(el, '', 'fadein')
 }
 
-const removeEl = (el, done) => {
-  // on(el, 'transitionend', done)
-  // on(el, 'webkitTransitionEnd', done)
-  // removeClass(el, 'fadein')
-  anim.exit(el, '', 'fadeout', done)
+/**
+ * @typedef {Object} ToastElProps
+ * @prop {string} msg
+ * @prop {Function} [onToastClick]
+ * @prop {string} [toastClass]
+ * @prop {string | false} [enterClass="anim-fadein"]
+ * @prop {string | false} [exitClass="anim-fadeout"]
+ *
+ * @param {ToastElProps} props
+ */
+export const ToastEl = (props) => {
+  const {
+    enterClass = 'anim-fadein',
+    exitClass = 'anim-fadeout'
+  } = props
+
+  return (
+    <CSSTransition enter={enterClass} exit={exitClass}>
+      <div class={cc('toast toast-transition', props.toastClass)}
+        oncreate={sizeEl}
+        onclick={props.onToastClick}
+      >{props.msg}</div>
+    </CSSTransition>
+  )
 }
 
 /**
  * @typedef {Object} ToastProps
- * @prop {boolean} [show=false]
+ * @prop {boolean} show
+ * @prop {string} [wraperClass='toast-wraper']
  * @prop {string} msg
+ * @prop {Function} [onToastClick]
+ * @prop {string} [toastClass]
+ * @prop {string | false} [enterClass="anim-fadein"]
+ * @prop {string | false} [exitClass="anim-fadeout"]
+ *
  * @param {ToastProps} props
  */
 const Toast = (props) => {
   const {
-    show = false,
+    show,
+    wraperClass = 'toast-wraper',
     msg,
-    oncreate,
-    onremove,
+    toastClass,
+    onToastClick,
+    enterClass,
+    exitClass,
     ...rest
   } = props
 
   return (
-    <div>
+    <div {...rest} class={wraperClass}>
       {show && [
-        <div {...rest}
-          class={cc('toast', rest.class)}
-          oncreate={el => {
-            transitionEl(el)
-            oncreate && oncreate(el)
-          }}
-          onremove={(el, done) => {
-            removeEl(el, done)
-            onremove && onremove(el, done)
-          }}
-        >{msg}</div>,
-        <Mask type="preloader-indicator" show invisible />
+        <Overlay type={Overlay.TYPE.prelader} notAnimated />,
+        ToastEl(props)
       ]}
     </div>
   )

@@ -1,14 +1,15 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Mask from '../Mask'
+import Overlay from '../overlay'
+// eslint-disable-next-line
+import CSSTransition from '../../animation'
+// import anim from '../_utils/animations'
 import { css } from '../_utils'
-import anim from '../_utils/animations'
 import cc from 'classnames'
 import './index.less'
 
-// eslint-disable-next-line
-const DialogButton = ({ text, bold, onclick }) => {
+export const DialogButton = ({ text, bold, onclick }) => {
   return (
     <span
       class={cc('modal-button', { 'modal-button-bold': bold })}
@@ -21,13 +22,8 @@ const DialogButton = ({ text, bold, onclick }) => {
  *
  * @param {HTMLElement} el
  */
-const transitionEl = el => {
+const sizeEl = el => {
   css(el, { 'margin-top': `-${el.offsetHeight / 2}px` })
-  // requestAnimationFrame(_ => {
-  //   css(el, { display: 'block' })
-  //   addClass(el, 'modal-in')
-  // })
-  anim.enter(el, 'modal-in', '')
 }
 
 /**
@@ -39,6 +35,7 @@ const transitionEl = el => {
  * 弹框
  * @typedef {Object} DialogProps
  * @prop {boolean} show
+ * @prop {string} [wraperClass]
  * @prop {string} title
  * @prop {string} text
  * @prop {string} [afterText]
@@ -51,12 +48,13 @@ const transitionEl = el => {
 const Dialog = (props) => {
   const {
     show,
+    wraperClass = 'dialog-wraper',
     title,
     text,
     afterText,
     buttons = [],
     onButtonsClick,
-    onMaskClick,
+    onOverlayClick,
     verticalButtons,
     ...r
   } = props
@@ -64,22 +62,21 @@ const Dialog = (props) => {
   const buttonWraperCls = cc('modal-buttons', { 'modal-buttons-vertical': verticalButtons })
 
   return (
-    <div {...r}>
+    <div {...r} class={wraperClass}>
       {show && [
-        <div class="modal"
-          style={{ display: 'block' }}
-          oncreate={transitionEl}
-        >
-          <div class="modal-inner">
-            <div class="modal-title">{title}</div>
-            <div class="modal-text">{text}</div>
-            {afterText}
+        <Overlay onOverlayClick={onOverlayClick} />,
+        <CSSTransition enter="anim-bouncein" exit="anim-bounceout">
+          <div class="modal" oncreate={sizeEl}>
+            <div class="modal-inner">
+              <div class="modal-title">{title}</div>
+              <div class="modal-text">{text}</div>
+              {afterText}
+            </div>
+            <div class={buttonWraperCls} onclick={onButtonsClick} >
+              {buttons.map(button => <DialogButton {...button} />)}
+            </div>
           </div>
-          <div class={buttonWraperCls} onclick={onButtonsClick} >
-            {buttons.map(button => <DialogButton {...button} />)}
-          </div>
-        </div>,
-        <Mask show onclick={onMaskClick} />
+        </CSSTransition>
       ]}
     </div>
   )

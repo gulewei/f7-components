@@ -1,5 +1,4 @@
-import Picker from './Picker'
 import './styles'
 
-export default Picker
-export { PickerToolbar, PickerToolbarLink } from './Toolbar'
+export { default, ContentPicker, InliePicker } from './Picker'
+export { PickerToolbar, PickerLink } from './Toolbar'

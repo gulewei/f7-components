@@ -4,9 +4,10 @@ import Page from '../../src/components/page'
 import ContentBlock from '../../src/components/content-block'
 import List from '../../src/components/list'
 import InputItem from '../../src/components/input-item'
-// import PickerModal from '../../src/components/picker/picker-modal'
-// import PickerView from '../../src/components/picker/picker-view'
-import Picker from '../../src/components/picker'
+import Picker, { PickerToolbar, PickerLink } from '../../src/components/picker'
+// import install, { pickerPlugin } from '../../src/plugins'
+
+// const $picker = install(pickerPlugin)
 
 const pickerItem = (label, value) => {
   return { label, value }
@@ -61,60 +62,63 @@ const cascadeColumn = mocker.cascadeDate()
 
 app(
   {
-    date: [5, 18]
+    date: [5, 18],
+    picker: {
+      show: false
+    }
   },
   {
     pickeDate: (date) => {
       return { date }
+    },
+    picker: {
+      open: () => {
+        return { show: true }
+      },
+      close: () => {
+        return { show: false }
+      }
     }
   },
   (state, actions) => {
-    window.$picker = { state, actions }
+    window.$_picker = { state, actions }
 
     return (
-      <Page>
+      <Page outside={
+        <Outsides />
+      } >
         <ContentBlock title="Picker" />
         <List>
-          <Picker>{
-            (picker) => {
-              return (
-                <InputItem
-                  title="Picker-Item"
-                  value={state.date.join(' - ')}
-                  onclick={e => {
-                    picker.open({
-                      data: cascadeColumn,
-                      cascade: true,
-                      value: state.date,
-                      onChange: actions.pickeDate,
-                      right: <a class="link" onclick={picker.close}>Done</a>
-                    })
-                  }}
-                  readonly
-                  isLink
-                />
-              )
-            }
-          }
-          </Picker>
-        </List>
-        {/* <PickerModal
-          show={state.picker.show}
-          right={
-            <a class="link" onclick={actions.picker.close}>Done</a>
-          }
-          close={actions.picker.close}
-          pickerItems
-        >
-          <PickerView
-            cascade={state.picker.data.length > 1}
-            data={state.picker.data}
-            value={state.picker.values}
-            onChange={actions.picker.pickerValue}
+          <InputItem
+            title="Picker-Item"
+            value={state.date.join(' - ')}
+            onclick={actions.picker.open}
+            readonly
+            isLink
           />
-        </PickerModal> */}
+        </List>
       </Page>
     )
   },
   document.body
 )
+
+const Outsides = () => (state, actions) => {
+  return (
+    <Picker
+      show={state.picker.show}
+      items={cascadeColumn}
+      cascade={true}
+      values={state.date}
+      onOverlayClick={actions.picker.close}
+      onChange={values => {
+        actions.pickeDate(values)
+      }}
+      toolbar={
+        <PickerToolbar right={
+          <PickerLink text="Done" onclick={actions.picker.close} />
+        } />
+      }
+    />
+  )
+}

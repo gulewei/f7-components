@@ -35,7 +35,7 @@ const PickerToolbar = (props) => {
  * @prop {string} [class]
  * @param {PickerToolbarLinkProps} props
  */
-const PickerToolbarLink = (props) => {
+const PickerLink = (props) => {
   const {
     text,
     ...rest
@@ -48,5 +48,5 @@ const PickerToolbarLink = (props) => {
 
 export {
   PickerToolbar,
-  PickerToolbarLink
+  PickerLink
 }

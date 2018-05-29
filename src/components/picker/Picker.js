@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Overlay from '../mask'
+import Overlay from '../overlay'
 // eslint-disable-next-line
 import PickerModal from './Modal'
 // eslint-disable-next-line
@@ -9,17 +9,12 @@ import PickerColumns from './Columns'
 
 /// <reference path="index.d.ts"/>
 
-const MODAL = {
-  columns: 'columns',
-  inline: 'inline-columns',
-  no: 'no-column'
-}
-
 /**
  * @typedef {Object} PickerProps
  * @prop {boolean} show
+ * @prop {string} [wraperClass='picker-wraper']
+ * @prop {string} [wraperKey]
  * @prop {(e: Event) => void} [onOverlayClick]
- * @prop {'columns' | 'inline-columns' | 'no-column'} modalType
  * @prop {string} [modalClass]
  * @prop {JSX.Element} [toolbar]
  * @prop {boolean} [cascade]
@@ -33,27 +28,60 @@ const MODAL = {
 function Picker (props, children) {
   const {
     show,
-    onOverlayClick,
-    modalType,
+    wraperClass,
+    wraperKey,
     modalClass,
-    toolbar
+    onOverlayClick,
+    toolbar,
+    ...columnsProps
   } = props
 
-  const inline = modalType === MODAL.inline
-  const noColumns = modalType === MODAL.no
-
   return (
-    <div>
-      <Overlay type="picker-modal" show={show} onclick={onOverlayClick} />
-      {show &&
-        <PickerModal {...{ inline, noColumns, modalClass, toolbar }}>
-          {noColumns ? children : PickerColumns(props)}
+    <div key={wraperKey} class={wraperClass}>
+      {show && [
+        <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
+        <PickerModal {...{ modalClass, toolbar }}>
+          <PickerColumns {...columnsProps} />
         </PickerModal>
-      }
+      ]}
     </div>
   )
 }
 
-Picker.TYPES = MODAL
+export const ContentPicker = (props, children) => {
+  const {
+    show,
+    wraperClass,
+    wraperKey,
+    modalClass,
+    onOverlayClick,
+    toolbar
+  } = props
+
+  return (
+    <div key={wraperKey} class={wraperClass}>
+      {show && [
+        <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
+        <PickerModal {...{ modalClass, toolbar, noColumns: true }}>
+          {children}
+        </PickerModal>
+      ]}
+    </div>
+  )
+}
+
+export const InliePicker = (props) => {
+  const {
+    modalClass,
+    toolbar,
+    ...columnsProps
+  } = props
+
+  return (
+    <PickerModal {...{ modalClass, toolbar, inline: true }}>
+      <PickerColumns {...columnsProps} />
+    </PickerModal>
+  )
+}
 
 export default Picker

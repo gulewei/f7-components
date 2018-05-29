@@ -1,31 +1,24 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-import { install } from '../utils'
 // eslint-disable-next-line
 import Picker, { PickerToolbar, PickerToolbarLink as PickerLink } from '../components/picker'
 
 const DEFAULT = {
-  modalTypes: Picker.TYPES.columns,
-  modalClass: '',
-  cascade: false,
   toolbar: (
     <PickerToolbar
       right={<PickerLink text="Done" />}
     />
-  ),
-  items: [],
-  values: [],
-  columns: null,
-  onChange: () => { }
+  )
 }
 
-const pickerActions = install(
-  {
+export default {
+  state: {
     show: false,
-    props: { ...DEFAULT },
+    props: {},
     value: DEFAULT.values
   },
-  {
+
+  actions: {
     toggle: ({ show, props }) => {
       return { show, props }
     },
@@ -34,7 +27,8 @@ const pickerActions = install(
       return { value }
     }
   },
-  (state, actions) => {
+
+  view: (state, actions) => {
     return (
       <Picker show={state.show} {...state.props} onChange={(val) => {
         // update view
@@ -44,17 +38,19 @@ const pickerActions = install(
       }} />
     )
   },
-  (actions) => {
+
+  api: (actions) => {
     return {
-      open: (pickerProps) => {
-        actions.toggle({ show: true, props: pickerProps })
+      openPicker: (pickerProps) => {
+        actions.toggle({
+          show: true,
+          props: { ...DEFAULT, ...pickerProps }
+        })
       },
 
-      close: () => {
-        actions.toggle({ show: true, props: DEFAULT })
+      closePicker: () => {
+        actions.toggle({ show: false, props: {} })
       }
     }
   }
-)
-
-export default pickerActions
+}

@@ -3,19 +3,27 @@ import { h } from 'hyperapp'
 // eslint-disable-next-line
 import Preloader from '../preloader'
 // eslint-disable-next-line
-import Mask from '../mask'
+import Overlay from '../overlay'
 import './index.less'
 
 /**
  * @typedef {Object} LoadingProps
- * @prop {boolean} [show=false]
+ * @prop {boolean} show
+ * @prop {string} [wraperClass='loading-wraper']
+ *
  * @param {LoadingProps} props
  */
 const Loading = props => {
+  const {
+    show,
+    wraperclass = 'loading-wraper',
+    ...rest
+  } = props
+
   return (
-    <div>
-      {props.show && [
-        <Mask show type='preloader-indicator' />,
+    <div {...rest} class={wraperclass}>
+      {show && [
+        <Overlay type={Overlay.TYPE.prelader} notAnimated />,
         <div class="preloader-indicator-modal">
           <Preloader white />
         </div>

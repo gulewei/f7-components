@@ -40,7 +40,7 @@ const PickerDivider = (props) => {
  * @prop {string} value
  *
  * @typedef {Object} PickerColumnProps
- * @prop {string[]} value
+ * @prop {string} value
  * @prop {PickerItemProps[]} items
  * @prop {(value: string) => void} onChange
  * @prop {'left' | 'center' | 'right'} [align='right']
@@ -73,16 +73,12 @@ const PickerColumn = (props) => {
         onupdate={(el) => {
           if (el._scroller) {
             try {
-              el._scroller.update(props)
+              el._scroller.update({ items, value, onChange })
             } catch (e) { }
           }
         }}
         oncreate={el => {
-          el._scroller = new ScrollHandler(el, {
-            data: items,
-            value,
-            onChange: onChange
-          })
+          el._scroller = new ScrollHandler(el, { items, value, onChange })
         }}
         ondestroy={el => {
           el._scroller && (el._scroller = null)

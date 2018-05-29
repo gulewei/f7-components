@@ -2,7 +2,6 @@
 import Toast from '../components/toast'
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-import { install } from '../utils'
 
 const defaultDuration = 1500
 
@@ -32,9 +31,14 @@ const view = (state, actions) => (
 )
 
 const api = ({ toast }) => {
-  return (msg, duration) => toast({ msg, duration })
+  return {
+    toast: (msg, duration) => toast({ msg, duration })
+  }
 }
 
-const toast = install(defaultState, actions, view, api)
-
-export default toast
+export default {
+  state: defaultState,
+  actions,
+  view,
+  api
+}

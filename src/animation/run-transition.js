@@ -25,7 +25,7 @@ function initialize (element) {
   }
 }
 
-function runAndCleanUp (element, startAnimation, finishAnimation) {
+export function runAndCleanUp (element, startAnimation, finishAnimation) {
   initialize(element)
 
   let finished = false
@@ -46,7 +46,7 @@ function runAndCleanUp (element, startAnimation, finishAnimation) {
   element.addEventListener(transitionEndName, transitionEnd)
 }
 
-function exit (node, exitAnimationActive, exitAnimation = '', removeNode) {
+function exit (node, exitAnimationActive, exitAnimation, removeNode) {
   const activeClass = exitAnimationActive || `${exitAnimation}-active`
 
   runAndCleanUp(
@@ -64,13 +64,13 @@ function exit (node, exitAnimationActive, exitAnimation = '', removeNode) {
   )
 }
 
-function enter (node, enterAnimationActive, enterAnimation = '') {
+function enter (node, enterAnimationActive, enterAnimation) {
   const activeClass = enterAnimationActive || `${enterAnimation}-active`
 
   runAndCleanUp(
     node,
     () => {
-      node.classList.add(enterAnimation)
+      // node.classList.add(enterAnimation)
 
       requestAnimationFrame(function () {
         node.classList.add(activeClass)
