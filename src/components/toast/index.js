@@ -1,79 +1,61 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Overlay from '../overlay'
+import Overlay, { OVERLAY_TYPES } from '../overlay'
 // eslint-disable-next-line
 import CSSTransition from '../../animation'
-import { css } from '../_utils'
+import { sizeEl, ANIM_NAMES } from '../_utils'
 import cc from 'classnames'
 import './index.css'
 
-/**
- *
- * @param {HTMLElement} el
- */
-const sizeEl = el => {
-  css(el, {
-    'margin-top': `${el.offsetHeight / -2}px`,
-    'margin-left': `${el.offsetWidth / -2}px`
-  })
-}
-
-/**
- * @typedef {Object} ToastElProps
- * @prop {string} msg
- * @prop {Function} [onToastClick]
- * @prop {string} [toastClass]
- * @prop {string | false} [enterClass="anim-fadein"]
- * @prop {string | false} [exitClass="anim-fadeout"]
- *
- * @param {ToastElProps} props
- */
-export const ToastEl = (props) => {
-  const {
-    enterClass = 'anim-fadein',
-    exitClass = 'anim-fadeout'
-  } = props
-
-  return (
-    <CSSTransition enter={enterClass} exit={exitClass}>
-      <div class={cc('toast toast-transition', props.toastClass)}
-        oncreate={sizeEl}
-        onclick={props.onToastClick}
-      >{props.msg}</div>
-    </CSSTransition>
-  )
-}
+const WRAPER = 'toast-wraper'
 
 /**
  * @typedef {Object} ToastProps
  * @prop {boolean} show
- * @prop {string} [wraperClass='toast-wraper']
  * @prop {string} msg
  * @prop {Function} [onToastClick]
  * @prop {string} [toastClass]
  * @prop {string | false} [enterClass="anim-fadein"]
  * @prop {string | false} [exitClass="anim-fadeout"]
+ * @prop {string} [wraperClass='toast-wraper']
+ * @prop {string} [key]
  *
  * @param {ToastProps} props
  */
 const Toast = (props) => {
   const {
     show,
-    wraperClass = 'toast-wraper',
     msg,
     toastClass,
     onToastClick,
-    enterClass,
-    exitClass,
-    ...rest
+    enterClass = ANIM_NAMES.fadeIn,
+    exitClass = ANIM_NAMES.fadeOut,
+    wraperClass = WRAPER,
+    key
   } = props
 
   return (
-    <div {...rest} class={wraperClass}>
+    <div key={key} class={wraperClass}>
       {show && [
-        <Overlay type={Overlay.TYPE.prelader} notAnimated />,
-        ToastEl(props)
+        <Overlay
+          type={OVERLAY_TYPES.preloader}
+          notAnimated
+        />,
+        <CSSTransition
+          enter={enterClass}
+          exit={exitClass}
+        >
+          <div
+            class={cc('toast toast-transition', toastClass)}
+            oncreate={el => {
+              sizeEl(el, true, true)
+            }}
+            onclick={onToastClick}
+          >
+            {msg}
+          </div>
+        </CSSTransition>
       ]}
     </div>
   )

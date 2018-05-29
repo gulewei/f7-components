@@ -37,6 +37,7 @@
     "Android >= 4.1"
   ],
   "devDependencies": {
+    "@types/classnames": "^2.2.3",
     "antd-mobile": "^2.1.10",
     "autoprefixer": "^8.5.1",
     "babel-core": "^6.26.3",

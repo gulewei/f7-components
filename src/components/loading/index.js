@@ -23,7 +23,10 @@ const Loading = props => {
   return (
     <div {...rest} class={wraperclass}>
       {show && [
-        <Overlay type={Overlay.TYPE.prelader} notAnimated />,
+        <Overlay
+          type={Overlay.TYPE.preloader}
+          notAnimated
+        />,
         <div class="preloader-indicator-modal">
           <Preloader white />
         </div>

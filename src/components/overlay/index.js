@@ -3,44 +3,56 @@ import { h } from 'hyperapp'
 import cc from 'classnames'
 // eslint-disable-next-line
 import CSSTransition from '../../animation'
+import { ANIM_NAMES } from '../_utils'
 import './index.less'
 
-const TYPE = {
+/**
+ * @type {h7Components.OVERLAY_TYPES}
+ */
+export const OVERLAY_TYPES = {
   modal: 'modal',
-  prelader: 'preloader-indicator',
+  preloader: 'preloader-indicator',
   popup: 'popup',
   picker: 'picker-modal'
 }
 
 /**
- * @typedef {Object} MaskProps
+ * @typedef {Object} OverlayProps
  * @prop {'modal' | 'preloader-indicator' | 'popup' | 'picker-modal'} [type='modal']
  * @prop {boolean} [notAnimated=false]
  * @prop {(e) => void} [onOverlayClick]
  * @prop {string} [key]
- * @prop {string} [class]
- * @param {MaskProps} props
+ * @prop {string} [overlayClass]
+ * @prop {string} [enterClass='anim-fadein']
+ * @prop {string} [exitClass='anim-fadeout']
+ *
+ * @param {OverlayProps} props
  */
-function Overlay (props) {
+const Overlay = (props) => {
   const {
-    type = TYPE.modal,
-    onOverlayClick,
+    type = OVERLAY_TYPES.modal,
     notAnimated,
-    ...rest
+    onOverlayClick,
+    key,
+    overlayClass,
+    enterClass = ANIM_NAMES.fadeIn,
+    exitClass = ANIM_NAMES.fadeOut
   } = props
 
-  const noAnim = notAnimated || type === TYPE.prelader
+  const noAnim = notAnimated || type === OVERLAY_TYPES.preloader
 
   return (
-    <CSSTransition enter={!noAnim && 'anim-fadein'} exit={!noAnim && 'anim-fadeout'}>
-      <div {...rest}
-        class={cc(`${type}-overlay`, props.class)}
+    <CSSTransition
+      enter={!noAnim && enterClass}
+      exit={!noAnim && exitClass}
+    >
+      <div
+        key={key}
+        class={cc(`${type}-overlay`, overlayClass)}
         onclick={onOverlayClick}
       />
     </CSSTransition>
   )
 }
-
-Overlay.TYPE = TYPE
 
 export default Overlay

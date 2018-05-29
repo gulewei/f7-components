@@ -60,3 +60,33 @@ export function transitionEnd (el, callback) {
     return on(el, type, run)
   })
 }
+
+/**
+ * Animation names
+ */
+export const ANIM_NAMES = {
+  fadeIn: 'anim-fadein',
+  fadeOut: 'anim-fadeout',
+  slideIn: 'anim-slidein',
+  slideOut: 'anim-slideOut',
+  bounceIn: 'anim-bouncein',
+  bounceOut: 'anim-bounceout'
+}
+
+/**
+ * Size element make it center
+ * @param {HTMLElement} el
+ */
+export function sizeEl (el, sizeTop, sizeLeft) {
+  let size = {}
+
+  if (sizeTop) {
+    size['margin-top'] = `${el.offsetHeight / -2}px`
+  }
+
+  if (sizeLeft) {
+    size['margin-left'] = `${el.offsetWidth / -2}px`
+  }
+
+  css(el, size)
+}
