@@ -5,18 +5,9 @@ import Overlay from '../overlay'
 // eslint-disable-next-line
 import CSSTransition from '../../animation'
 // import anim from '../_utils/animations'
-import { css } from '../_utils'
+import { css, ANIM_NAMES } from '../_utils'
 import cc from 'classnames'
 import './index.less'
-
-export const DialogButton = ({ text, bold, onclick }) => {
-  return (
-    <span
-      class={cc('modal-button', { 'modal-button-bold': bold })}
-      onclick={onclick}
-    >{text}</span>
-  )
-}
 
 /**
  *
@@ -43,6 +34,9 @@ const sizeEl = el => {
  * @prop {() => void} [onButtonsClick]
  * @prop {() => void} [onMaskClick]
  * @prop {boolean} [verticalButtons=false]
+ * @prop {string} [enterClass='anim-bouncein']
+ * @prop {string} [exitClass='anim-bouncout]
+ *
  * @param {DialogProps} props
  */
 const Dialog = (props) => {
@@ -56,16 +50,23 @@ const Dialog = (props) => {
     onButtonsClick,
     onOverlayClick,
     verticalButtons,
+    enterClass = ANIM_NAMES.bounceIn,
+    exitClass = ANIM_NAMES.bounceOut,
     ...r
   } = props
 
-  const buttonWraperCls = cc('modal-buttons', { 'modal-buttons-vertical': verticalButtons })
+  const buttonWraperCls = cc('modal-buttons', {
+    'modal-buttons-vertical': verticalButtons
+  })
 
   return (
     <div {...r} class={wraperClass}>
       {show && [
         <Overlay onOverlayClick={onOverlayClick} />,
-        <CSSTransition enter="anim-bouncein" exit="anim-bounceout">
+        <CSSTransition
+          enter={enterClass}
+          exit={exitClass}
+        >
           <div class="modal" oncreate={sizeEl}>
             <div class="modal-inner">
               <div class="modal-title">{title}</div>
@@ -73,7 +74,18 @@ const Dialog = (props) => {
               {afterText}
             </div>
             <div class={buttonWraperCls} onclick={onButtonsClick} >
-              {buttons.map(button => <DialogButton {...button} />)}
+              {
+                buttons.map(button => {
+                  return (
+                    <span
+                      class={cc('modal-button', { 'modal-button-bold': button.bold })}
+                      onclick={button.onclick}
+                    >
+                      {button.text}
+                    </span>
+                  )
+                })
+              }
             </div>
           </div>
         </CSSTransition>

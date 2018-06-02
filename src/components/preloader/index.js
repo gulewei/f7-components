@@ -5,13 +5,13 @@ import './index.less'
 /**
  * @typedef {Object} PreloaderProps
  * @prop {boolean} [white]
- * TODO: material theme
- * @prop {'ios' | 'material'} [theme='ios']
+ * @prop {string} preloaderClass
+ *
  * @param {PreloaderProps} props
  */
 const Preloader = (props) => {
   return (
-    <span class={cc('preloader', { 'preloader-white': props.white })}></span>
+    <span class={cc('preloader', props.preloaderClass, { 'preloader-white': props.white })}></span>
   )
 }
 

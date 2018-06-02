@@ -8,6 +8,7 @@ import './index.less'
  * @prop {JSX.Element} [navbar]
  * @prop {JSX.Element} [toolbar]
  * @prop {JSX.Element} [outside]
+ *
  * @param {PageProps} props
  * @param {JSX.Element[]} children
  */
@@ -16,11 +17,11 @@ const Page = (props, children) => {
     navbar,
     toolbar,
     outside,
-    ...rest
+    ...keyAndLifecycles
   } = props
 
   return (
-    <div {...rest} class={cc('page', {
+    <div {...keyAndLifecycles} class={cc('page', {
       'navbar-fixed': !!navbar,
       'toolbar-fixed': !!toolbar
     })}>

@@ -17,11 +17,11 @@ const Loading = props => {
   const {
     show,
     wraperclass = 'loading-wraper',
-    ...rest
+    ...wraperProps
   } = props
 
   return (
-    <div {...rest} class={wraperclass}>
+    <div {...wraperProps} class={wraperclass}>
       {show && [
         <Overlay
           type={Overlay.TYPE.preloader}

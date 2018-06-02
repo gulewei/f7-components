@@ -1,6 +1,6 @@
 import { Component } from 'hyperapp'
 
-export as namespace h7Animation
+// export as namespace h7Animation
 
 /**
  * Perform an animation
@@ -12,7 +12,7 @@ export function runAndCleanUp(): {
 /**
  * Transition decarator component
  */
-declare const CSSTransition: Component<{
+const CSSTransition: Component<{
   /**
    * Enter class name
    */

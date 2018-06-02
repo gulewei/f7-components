@@ -28,25 +28,27 @@ const PickerToolbar = (props) => {
   )
 }
 
-/**
- * @typedef {Object} PickerToolbarLinkProps
- * @prop {string | JSX.Element} text
- * @prop {(e: Event) => void} [onclick]
- * @prop {string} [class]
- * @param {PickerToolbarLinkProps} props
- */
-const PickerLink = (props) => {
-  const {
-    text,
-    ...rest
-  } = props
+// /**
+//  * @typedef {Object} PickerToolbarLinkProps
+//  * @prop {string | JSX.Element} text
+//  * @prop {(e: Event) => void} [onclick]
+//  * @prop {string} [class]
+//  * @param {PickerToolbarLinkProps} props
+//  */
+// const PickerLink = (props) => {
+//   const {
+//     text,
+//     ...rest
+//   } = props
 
-  return (
-    <a {...rest} class={cc('link', props.class)}>{text}</a>
-  )
-}
+//   return (
+//     <a {...rest} class={cc('link', props.class)}>{text}</a>
+//   )
+// }
 
-export {
-  PickerToolbar,
-  PickerLink
-}
+// export {
+//   PickerToolbar,
+//   PickerLink
+// }
+
+export default PickerToolbar
