@@ -1,15 +1,12 @@
-/**
- * Toast componet
- */
-const Toast: Component<{
-  /**
-   * Specify the create or remove of toast element
-   */
-  show: boolean
+import { Component } from 'hyperapp'
+import { WraperProperties, TransitionProperties } from '../_utils/interfaces'
+
+
+export interface ToastProperties extends WraperProperties, TransitionProperties {
   /**
    * A toast message of string or a VNode
    */
-  msg: string | VNode
+  msg: string | JSX.Element
   /**
    * Click handler when toast element is clicked
    */
@@ -19,23 +16,13 @@ const Toast: Component<{
    * Specify class name of toast element
    */
   toastClass?: string
-  /**
-   * Specify enter animation class name
-   */
-  enterClass?: string
-  /**
-   * Specify exit animation class name
-   */
-  exitClass?: string
-  /**
-   * Specify class name of wraper element.
-   * Default as 'toast-wrpaer'
-   */
-  wraperClass?: string
-  /**
-   * Wraper key
-   */
-  Key?: string
+}
+
+/**
+ * Toast componet
+ */
+declare const Toast: Component<{
+  
 }>
 
 export default Toast

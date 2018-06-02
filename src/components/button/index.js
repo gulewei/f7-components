@@ -10,8 +10,11 @@ import './index.less'
  * @prop {boolean} [big=false]
  * @prop {boolean} [round=false]
  * @prop {boolean} [disabled=false]
- * @prop {(e) => void} [onClick]
  * @prop {string | JSX.Element} [text]
+ * @prop {(e) => void} [onclick]
+ * @prop {string} [class]
+ * @prop {string} [key]
+ *
  * @param {ButtonProps} props
  * @param {JSX.Element[]} children
  */
@@ -21,22 +24,20 @@ const Button = (props, children) => {
     big = false,
     round = false,
     disabled = false,
-    onClick = noop,
     text = '',
-    ...r
+    ...restProps
   } = props
 
   return (
     <a
-      {...r}
+      {...restProps}
       disabled={disabled}
-      class={cc(r.class, 'button', {
+      class={cc(restProps.class, 'button', {
         'button-big': big,
         'button-fill': fill,
         'button-round': round
       })
       }
-      onclick={onClick}
     >{text || children}</a>
   )
 }

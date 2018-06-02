@@ -3,15 +3,26 @@ import { h } from 'hyperapp'
 // eslint-disable-next-line
 import { PickerColumn, PickerDivider } from './Column'
 
-/// <reference path="index.d.ts"/>
-
 /**
+ * @typedef {Object} PickerItem
+ * @prop {string} label
+ * @prop {string} value
+ * @prop {PickerItem[]} [children]
+ *
+ * @typedef {Object} PickerColumnTypes
+ * @prop {boolean} [isDivider]
+ * @prop {string} [content]
+ * @prop {string} [class]
+ * @prop {string} [key]
+ * @prop {number} [width]
+ * @prop {'left' | 'center'} [align]
+ *
  * @typedef {Object} PickerColumnsProps
  * @prop {boolean} [cascade]
- * @prop {*[]} items
+ * @prop {PickerItem[]} items
  * @prop {string[]} values
  * @prop {(values: string[]) => void} onChange
- * @prop {*[]} [columns]
+ * @prop {PickerColumn[]} [columns]
  *
  * @param {PickerColumnsProps} props
  */
@@ -54,44 +65,46 @@ export default PickerColumns
 /**
  * final column model
  *
+ * @typedef {Object} FinalColumnModel
+ * @prop {boolean} [isDivider]
+ * @prop {string | {items: PickerItem[], value: string}} [content]
+ * @prop {PickerColumnTypes} [props]
+ *
  * @param {boolean} cascade
- * @param {F7cPicker.Items} items
+ * @param {PickerItem[]} items
  * @param {string []} values
- * @param {F7cPicker.ColumnModel} [columns]
- * @returns {F7cPicker.FinalColumnModel[]}
+ * @param {PickerColumnTypes[]} [columns]
+ *
  */
 function modelColumn (cascade, items, values, columns) {
-  const itemSet = cascade ? getCascadeDatas(items, values) : compatDatas(items)
+  const datas = cascade ? getCascadeDatas(items, values) : compatDatas(items)
+
+  const contents = datas.map((items, i) => {
+    return {
+      items,
+      value: values[i]
+    }
+  })
 
   if (!columns) {
-    return itemSet.map((items, i) => {
-      return {
-        content: {
-          items,
-          value: values[i]
-        }
-      }
-    })
+    return contents.map(content => ({ content }))
   }
 
   let itemIndex = 0
-
-  return columns.map(({ isDivider, props, content }, i) => {
+  return columns.map(({ isDivider, content, ...props }, i) => {
     return {
       isDivider,
       props,
-      content: isDivider ? content : {
-        items: itemSet[++itemIndex]
-      }
+      content: isDivider ? content : contents[++itemIndex]
     }
   })
 }
 
 /**
  * convert cascade items to multiple columns items
- * @param {F7cPicker.CascadeItem[]} items
+ * @param {PickerItem[]} items
  * @param {string[]} value
- * @returns {F7cPicker.ItemProps[][]}
+ * @returns {PickerItem[][]}
  */
 function getCascadeDatas (items, value) {
   const f = (data, [val, ...restVals], acc) => {
@@ -112,8 +125,8 @@ function getCascadeDatas (items, value) {
 
 /**
  * campat items between single column and multiple columns
- * @param {F7cPicker.ItemProps[] | F7cPicker.ItemProps[][]} data
- * @returns {F7cPicker.ItemProps[][]}
+ * @param {PickerItem[] | PickerItem[][]} data
+ * @returns {PickerItem[][]}
  */
 function compatDatas (data) {
   return data[0].value ? data : [data]

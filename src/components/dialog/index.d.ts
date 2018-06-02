@@ -1,4 +1,7 @@
-interface DialogButtonProperties {
+import { Component } from 'hyperapp'
+import { TransitionProperties, WraperProperties } from '../_utils/interfaces'
+
+export interface DialogButtonProperties {
   /**
    * Button content
    */
@@ -14,15 +17,7 @@ interface DialogButtonProperties {
 }
 
 
-interface DialogProperties {
-  /**
-   * Visible
-   */
-  show?: boolean
-  /**
-   * Wraper element class name
-   */
-  wraperClass?: string
+export interface DialogProperties extends WraperProperties, TransitionProperties {
   /**
    * Title content
    */
@@ -51,22 +46,11 @@ interface DialogProperties {
    * Display buttons vertially
    */
   verticalButtons?: boolean
-  /**
-   * Enter transition class
-   * Default as 'anim-bouncein'
-   */
-  enterClass?: string
-  /**
-   * Exit transition class
-   * Default as 'anim-bouncout
-   */
-  exitClass?: string
-
 }
 
 /**
  * Dialog component
  */
-const Dialog: Component<DialogProperties>
+declare const Dialog: Component<DialogProperties>
 
 export default Dialog

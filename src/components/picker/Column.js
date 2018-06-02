@@ -56,7 +56,7 @@ const PickerColumn = (props) => {
     items,
     align,
     onChange,
-    width = '',
+    width,
     key
   } = props
 

@@ -19,7 +19,7 @@ const WRAPER = 'toast-wraper'
  * @prop {string | false} [enterClass="anim-fadein"]
  * @prop {string | false} [exitClass="anim-fadeout"]
  * @prop {string} [wraperClass='toast-wraper']
- * @prop {string} [key]
+ * @prop {string} [wraperKey]
  *
  * @param {ToastProps} props
  */
@@ -32,11 +32,11 @@ const Toast = (props) => {
     enterClass = ANIM_NAMES.fadeIn,
     exitClass = ANIM_NAMES.fadeOut,
     wraperClass = WRAPER,
-    key
+    wraperKey
   } = props
 
   return (
-    <div key={key} class={wraperClass}>
+    <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay
           type={OVERLAY_TYPES.preloader}

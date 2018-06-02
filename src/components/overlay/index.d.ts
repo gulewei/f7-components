@@ -1,3 +1,6 @@
+import { Component } from 'hyperapp'
+import { TransitionProperties } from '../_utils/interfaces'
+
 /**
  * Possible overlay type
  */
@@ -20,13 +23,10 @@ export const OVERLAY_TYPES: {
   picker: 'picker-modal'
 }
 
-/**
- * Overlay component
- */
-const Overlay: Component<{
+export interface OverlayProperties {
   /**
-   * Overlay type
-   */
+     * Overlay type
+     */
   type: 'modal' | 'preloader-indicator' | 'popup' | 'picker-modal'
   /**
    * Use animation when enter or exit
@@ -37,14 +37,6 @@ const Overlay: Component<{
    */
   onOverlayClick?: (e: Event) => void
   /**
- * Specify enter animation class name
- */
-  enterClass?: string
-  /**
-   * Specify exit animation class name
-   */
-  exitClass?: string
-  /**
    * Additional class name
    */
   overlayClass?: string
@@ -52,6 +44,11 @@ const Overlay: Component<{
    * Element key
    */
   key?: string
-}>
+}
+
+/**
+ * Overlay component
+ */
+declare const Overlay: Component<OverlayProperties>
 
 export default Overlay

@@ -17,11 +17,11 @@ const Page = (props, children) => {
     navbar,
     toolbar,
     outside,
-    ...keyAndLifecycles
+    ...restProps
   } = props
 
   return (
-    <div {...keyAndLifecycles} class={cc('page', {
+    <div {...restProps} class={cc('page', restProps.class, {
       'navbar-fixed': !!navbar,
       'toolbar-fixed': !!toolbar
     })}>

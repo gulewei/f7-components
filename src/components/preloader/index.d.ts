@@ -1,16 +1,17 @@
-/**
- * Loading component
- */
-const Loading: Component<{
-  /**
-   * Visible
-   */
-  show?: boolean
-  /**
-   * Wraper element class name
-   * Default as 'loading-wrpaer'
-   */
-  wraperClass?: string
-}>
+import { Component } from 'hyperapp'
+import { ElementProperties } from '../_utils/interfaces'
 
-export default Loading
+export interface PreloaderProperties extends ElementProperties {
+  /**
+   * Color
+   */
+  white?: boolean
+
+}
+
+/**
+ * Preloader component
+ */
+declare const Preloader: Component<PreloaderProperties>
+
+export default Preloader

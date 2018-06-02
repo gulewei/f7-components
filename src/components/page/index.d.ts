@@ -1,24 +1,18 @@
-import { Component } from "hyperapp";
+import { Component } from "hyperapp"
+import { ElementProperties } from '../_utils/interfaces'
 
-interface PageProperties {
+export interface PageProperties extends ElementProperties {
 
   navbar?: JSX.Element
 
   toolbar?: JSX.Element
 
   outside?: JSX.Element
-
-  key?: string
-
-  oncreate?: (el: HTMLElement) => void
-
-  onremove?: (el: HTMLElement, done: () => void) => void
-
-  ondestroy?: (el: HTMLElement) => void
-
-  onupdate?: (el: HTMLElement, oldAttributs: any) => void
 }
 
-const Page: Component<PageProperties>
+/**
+ * Page component
+ */
+declare const Page: Component<PageProperties>
 
 export default Page

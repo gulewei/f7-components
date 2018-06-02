@@ -10,18 +10,19 @@ import './index.less'
  * @typedef {Object} LoadingProps
  * @prop {boolean} show
  * @prop {string} [wraperClass='loading-wraper']
+ * @prop {string} [wraperKey]
  *
  * @param {LoadingProps} props
  */
 const Loading = props => {
   const {
     show,
-    wraperclass = 'loading-wraper',
-    ...wraperProps
+    wraperClass = 'loading-wraper',
+    wraperKey
   } = props
 
   return (
-    <div {...wraperProps} class={wraperclass}>
+    <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay
           type={Overlay.TYPE.preloader}

@@ -7,10 +7,11 @@ import './style.less'
  * @typedef {Object} ListProps
  * @prop {boolean} [inset=false]
  * @prop {string} [label='']
+ *
  * @param {ListProps} props
  * @param {JSX.Element[]} children
  */
-function List (props, children) {
+const List = (props, children) => {
   const {
     inset,
     label,
@@ -28,6 +29,8 @@ function List (props, children) {
     </div>
   )
 }
+
+export default List
 
 /**
  * @typedef {Object} ItemProps
@@ -49,7 +52,7 @@ function List (props, children) {
  * @param {ItemProps} props
  * @param {JSX.Element[]} children
  */
-const Item = (props, children) => {
+export const Item = (props, children) => {
   const {
     isLink,
     alignTop,
@@ -110,7 +113,3 @@ const renderInner = (multipleLine, title, input, after, subTitle, text) => {
       </div>
     )
 }
-
-List.Item = Item
-
-export default List

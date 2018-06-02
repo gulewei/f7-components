@@ -36,13 +36,12 @@ const sizeEl = el => {
  * @prop {boolean} [verticalButtons=false]
  * @prop {string} [enterClass='anim-bouncein']
  * @prop {string} [exitClass='anim-bouncout]
+ * @prop {string} [wraperKey]
  *
  * @param {DialogProps} props
  */
 const Dialog = (props) => {
   const {
-    show,
-    wraperClass = 'dialog-wraper',
     title,
     text,
     afterText,
@@ -50,9 +49,11 @@ const Dialog = (props) => {
     onButtonsClick,
     onOverlayClick,
     verticalButtons,
+    show,
+    wraperClass = 'dialog-wraper',
+    wraperKey,
     enterClass = ANIM_NAMES.bounceIn,
-    exitClass = ANIM_NAMES.bounceOut,
-    ...r
+    exitClass = ANIM_NAMES.bounceOut
   } = props
 
   const buttonWraperCls = cc('modal-buttons', {
@@ -60,7 +61,7 @@ const Dialog = (props) => {
   })
 
   return (
-    <div {...r} class={wraperClass}>
+    <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay onOverlayClick={onOverlayClick} />,
         <CSSTransition

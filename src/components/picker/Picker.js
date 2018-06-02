@@ -7,9 +7,20 @@ import PickerModal from './Modal'
 // eslint-disable-next-line
 import PickerColumns from './Columns'
 
-/// <reference path="index.d.ts"/>
-
 /**
+ * @typedef {Object} PickerItem
+ * @prop {string} label
+ * @prop {string} value
+ * @prop {PickerItem[]} [children]
+ *
+ * @typedef {Object} PickerColumn
+ * @prop {boolean} [isDivider]
+ * @prop {string} [content]
+ * @prop {string} [class]
+ * @prop {string} [key]
+ * @prop {number} [width]
+ * @prop {'left' | 'center'} [align]
+ *
  * @typedef {Object} PickerProps
  * @prop {boolean} show
  * @prop {string} [wraperClass='picker-wraper']
@@ -18,14 +29,15 @@ import PickerColumns from './Columns'
  * @prop {string} [modalClass]
  * @prop {JSX.Element} [toolbar]
  * @prop {boolean} [cascade]
- * @prop {*[]} items
+ * @prop {PickerItem[]} items
  * @prop {string[]} values
- * @prop {*[]} [columns]
+ * @prop {PickerColumn[]} [columns]
  * @prop {(values: string[]) => void} onChange
+ *
  * @param {PickerProps} props
  * @param {JSX.Element} children
  */
-function Picker (props, children) {
+const Picker = (props, children) => {
   const {
     show,
     wraperClass,
