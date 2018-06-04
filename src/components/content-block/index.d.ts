@@ -1,7 +1,7 @@
 import { Component } from 'hyperapp'
-import { ElementProperties, HairlinesProperties } from '../_utils/interfaces'
+import { ElementProperties, OuterHairlines } from '../_utils/interfaces'
 
-interface ContentBlockProperties extends ElementProperties, HairlinesProperties {
+interface ContentBlockProperties extends ElementProperties, OuterHairlines {
   /**
    * Adds additional "inner" element for content extra highlighting
    */
