@@ -45,3 +45,34 @@ export interface WraperProperties {
   wraperClass?: string
   
 }
+
+export interface OuterHairlines {
+  /**
+   * Removes outer hairlines
+   */
+  noHairlines?: boolean
+}
+
+export interface InnerHairlines {
+  /**
+   * Removes inner hairlines
+   */
+  noHairlinesBetween?: boolean
+}
+
+export interface CheckProperties {
+  
+  checked: boolean
+
+  name: string
+
+  value: string
+
+  onchange: (e: Event) => void
+
+  disabled?: boolean
+
+  readonly?: boolean
+
+  required?: boolean
+}

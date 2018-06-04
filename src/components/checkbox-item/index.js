@@ -2,9 +2,9 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 // eslint-disable-next-line
-import Icon from '../Icon'
+import Icon from '../img-icon'
 // eslint-disable-next-line
-import { Item } from '../list'
+import { ListItem } from '../list'
 import './index.less'
 
 const checkboxIcon = <Icon name="form-checkbox" />
@@ -12,10 +12,14 @@ const checkboxIcon = <Icon name="form-checkbox" />
 /**
  * @typedef {Object} CheckboxItemProps
  * @prop {boolean} checked
- * @prop {string} [name]
+ * @prop {string} name
+ * @prop {string} value
+ * @prop {(e: Event) => void} onchange
  * @prop {boolean} [disabled]
- * @prop {(checked: boolean) => void} [onchange]
+ * @prop {boolean} [readonly]
+ * @prop {boolean} [required]
  * @prop {JSX.Element} [media]
+ *
  * @param {CheckboxItemProps} props
  * @param {JSX.Element[]} children
  */
@@ -23,25 +27,29 @@ const CheckboxItem = (props, children) => {
   const {
     checked,
     name,
-    disabled,
+    value,
     onchange,
+    disabled,
+    readonly,
+    required,
     media,
     ...itemProps
   } = props
 
   return (
-    <Item
+    <ListItem
       {...itemProps}
-      class={cc(itemProps.class, 'label-checkbox')}
+      useLabel
+      class={cc('label-checkbox', itemProps.class)}
       media={media || checkboxIcon}
-      extraMedia={
+      contentStart={
         <input
-          {...{ name, disabled, checked }}
-          key="checkbox" type="checkbox"
-          onchange={onchange && (e => onchange(e.target.checked))}
+          {...{ checked, name, value, onchange, disabled, readonly, required }}
+          type="checkbox"
+          key="content-start"
         />
       }
-    > {children}</Item >
+    > {children}</ListItem >
   )
 }
 

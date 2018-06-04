@@ -20,18 +20,16 @@ import './index.less'
  */
 const Button = (props, children) => {
   const {
-    fill = false,
-    big = false,
-    round = false,
-    disabled = false,
-    text = '',
+    fill,
+    big,
+    round,
+    text,
     ...restProps
   } = props
 
   return (
     <a
       {...restProps}
-      disabled={disabled}
       class={cc(restProps.class, 'button', {
         'button-big': big,
         'button-fill': fill,

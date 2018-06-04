@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
 import './index.less'
@@ -7,19 +8,31 @@ import './index.less'
  * @prop {boolean} [inner=false]
  * @prop {boolean} [inset=false]
  * @prop {string} [title]
+ * @prop {boolean} [noHairlines]
+ *
  * @param {ContentBlockProps} props
  * @param {JSX.Element[]} children
  */
 const ContentBlock = (props, children) => {
   const {
-    inner = false,
-    inset = false,
+    inner,
+    inset,
     title,
-    ...rests
+    noHairlines,
+    ...elProps
   } = props
 
+  const elClass = cc(
+    elProps.class,
+    'content-block',
+    {
+      inset,
+      'no-hairlines': noHairlines
+    }
+  )
+
   return renderWithTitle(title,
-    children.length > 0 && <div {...rests} class={cc(rests.class, 'content-block', { inset })}>
+    children.length > 0 && <div {...elProps} class={elClass}>
       {renderContent(inner, children)}
     </div>
   )

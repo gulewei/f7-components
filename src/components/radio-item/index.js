@@ -4,7 +4,7 @@ import cc from 'classnames'
 // eslint-disable-next-line
 import { Item } from '../list'
 // eslint-disable-next-line
-import Icon from '../icon'
+import Icon from '../img-icon'
 import './index.less'
 
 const radioIcon = <Icon name="form-radio" />
@@ -12,10 +12,14 @@ const radioIcon = <Icon name="form-radio" />
 /**
  * @typedef {Object} RadioItemProps
  * @prop {boolean} checked
- * @prop {string} [name]
+ * @prop {string} name
+ * @prop {string} value
+ * @prop {(e: Event) => void} onchange
  * @prop {boolean} [disabled]
- * @prop {(checked: boolean) => void} [onchange]
+ * @prop {boolean} [readonly]
+ * @prop {boolean} [required]
  * @prop {JSX.Element} [media]
+ *
  * @param {RadioItemProps} props
  * @param {JSX.Element[]} children
  */
@@ -23,8 +27,11 @@ const RadioItem = (props, children) => {
   const {
     checked,
     name,
-    disabled,
+    value,
     onchange,
+    disabled,
+    readonly,
+    required,
     media,
     ...itemProps
   } = props
@@ -32,12 +39,14 @@ const RadioItem = (props, children) => {
   return (
     <Item
       {...itemProps}
-      class={cc(itemProps.class, 'label-radio')}
+      useLabel
+      class={cc('label-radio', itemProps.class)}
       media={media || radioIcon}
-      extraMedia={
+      contentStart={
         <input
-          key="radio" type="radio"
-          {...{ name, disabled, checked, onchange }}
+          {...{ checked, name, value, onchange, disabled, readonly, required }}
+          type="radio"
+          key="content-start"
         />
       }
     > {children}</Item >

@@ -1,12 +1,19 @@
-import { ElementProperties } from '../_utils/interfaces'
-import { Component } from 'hyperapp';
+import { Component } from 'hyperapp'
+import { ElementProperties, OuterHairlines, InnerHairlines } from '../_utils/interfaces'
 
-export interface ListProperties extends ElementProperties {
-
+export interface ListProperties extends ElementProperties, OuterHairlines, InnerHairlines {
+  /**
+   * Makes list block inse
+   */
   inset?: boolean
-
+  /**
+   * Add list block label at the end of list block
+   */
   label?: string | JSX.Element
-
+  /**
+   * Enables <form> tag on list block instead of <div>
+   */
+  useForm?: boolean
 }
 
 /**
@@ -16,25 +23,28 @@ declare const List: Component<ListProperties>
 
 export default List
 
-export interface ListItemProperites extends ElementProperties {
+export interface ListItemProperties extends ElementProperties {
 
   isLink?: boolean
 
   alignTop?: boolean
+  
+  useLabel?: boolean
+
+  contentStart?: JSX.Element
 
   media?: JSX.Element
 
-  title: JSX.Element
+  title: string | JSX.Element
 
-  after?: JSX.Element
+  input?: JSX.Element
+
+  after?: string | JSX.Element
 
   subTitle?: JSX.Element
 
   text?: JSX.Element
 
-  inpute?: JSX.Element
-
-  extraMedia?: JSX.Element
-
-
 }
+
+export const ListItem: Component<ListItemProperties>

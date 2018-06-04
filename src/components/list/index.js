@@ -6,7 +6,9 @@ import './style.less'
  * List block
  * @typedef {Object} ListProps
  * @prop {boolean} [inset=false]
- * @prop {string} [label='']
+ * @prop {string} [label]
+ * @prop {boolean} [useForm]
+ * @prop {boolean} [noHairlines]
  *
  * @param {ListProps} props
  * @param {JSX.Element[]} children
@@ -15,101 +17,92 @@ const List = (props, children) => {
   const {
     inset,
     label,
+    noHairlines,
+    useForm,
     ...rests
   } = props
 
+  const wraperCls = cc(rests.class, 'list-block', { inset, 'no-hairlines': noHairlines })
+  const wraperEl = useForm ? 'form' : 'div' // eslint-disable-line
+
   return (
-    <div {...rests} class={cc(rests.class, 'list-block', { inset })}>
+    <wraperEl {...rests} class={wraperCls}>
       <ul>
         {children.map(child => (
           <li key={child.key}>{child}</li>
         ))}
       </ul>
       {label && <div class="list-block-label">{label}</div>}
-    </div>
+    </wraperEl>
   )
 }
 
 export default List
 
 /**
- * @typedef {Object} ItemProps
- * @prop {boolean} [isLink=false]
+ * @typedef {Object} ItemWraperProps
+ * @prop {boolean} [isLink]
  * @prop {boolean} [alignTop]
+ * @prop {boolean} [useLabel]
+ * @prop {JSX.Element} [contentStart]
  * @prop {JSX.Element} [media]
- * @prop {JSX.Element} title
+ * @prop {JSX.Element} [title]
+ * @prop {JSX.Element} [input]
  * @prop {JSX.Element} [after]
  * @prop {JSX.Element} [subTitle]
  * @prop {JSX.Element} [text]
- * @prop {JSX.Element} [input]
- * @prop {JSX.Element} [extraMedia]
- * @prop {string} key
- * @prop {Function} [onclick]
- * @prop {(el: HTMLElement) => void} oncreate
- * @prop {(el: HTMLElement, done: Function) => void} onremove
- * @prop {(el: HTMLElement) => void} ondestroy
- * @prop {(el: HTMLElement, oldAttr: Object) => void} onupdate
- * @param {ItemProps} props
+ *
+ * @param {ItemWraperProps} props
  * @param {JSX.Element[]} children
  */
-export const Item = (props, children) => {
+export const ListItem = (props, children) => {
   const {
     isLink,
     alignTop,
+    useLabel,
+    contentStart,
     media,
     title = children,
+    input,
     after,
-    // mulptiple line
     subTitle,
     text,
-    // input
-    input,
-    // custom
-    extraMedia,
-    // lifecycle, events, key...
-    key,
-    onclick,
-    oncreate,
-    onremove,
-    ondestroy,
-    onupdate
+    ...wraperProps
   } = props
 
-  const multipleLine = subTitle || text
-  const cls = cc(props.class, 'item-content', {
-    'item-link': isLink,
-    'media-item': multipleLine,
-    'align-top': alignTop
-  })
+  const isMedia = !!(subTitle || text)
 
-  return h(
-    extraMedia ? 'label' : 'div',
-    { class: cls, key, onclick, oncreate, onremove, ondestroy, onupdate },
-    [
-      extraMedia,
-      media && <div key="media" class="item-media">{media}</div>,
-      renderInner(multipleLine, title, input, after, subTitle, text)
-    ]
+  const wraperCls = cc(wraperProps.class, 'item-content', {
+    'item-link': isLink,
+    'align-top': alignTop,
+    'media-item': isMedia
+  })
+  const wraperEl = useLabel ? 'label' : 'div' // eslint-disable-line
+
+  return (
+    <wraperEl {...wraperProps} class={wraperCls}>
+      {contentStart}
+      {media && <div key="media" class="item-media">{media}</div>}
+      <div key="inner" class="item-inner">
+        {isMedia
+          ? [
+            <div key="row" class="item-title-row">
+              {renderTitle(title, input, after)}
+            </div>,
+            <div key="sub" class="item-subtitle">{subTitle}</div>,
+            <div key="text" class="item-text">{text}</div>
+          ]
+          : renderTitle(title, input, after)
+        }
+      </div>
+    </wraperEl>
   )
 }
 
-const renderInner = (multipleLine, title, input, after, subTitle, text) => {
-  return multipleLine
-    ? (
-      <div key="inner" class="item-inner">
-        <div key="row" class="item-title-row">
-          {input && <div key="title" class="item-title">{title}</div>}
-          {after && <div key="after" class="item-after">{after}</div>}
-        </div>
-        {subTitle && <div key="sub" class="item-subtitle">{subTitle}</div>}
-        {text && <div key="text" class="item-text">{text}</div>}
-      </div>
-    )
-    : (
-      <div key="inner" class="item-inner">
-        <div key="title" class={cc('item-title', { label: !!input })}>{title}</div>
-        {input && <div key="input" class="item-input">{input}</div>}
-        {after && <div key="after" class="item-after">{after}</div>}
-      </div>
-    )
+const renderTitle = (title, input, after) => {
+  return [
+    <div key="title" class={cc('item-title', { label: !!input })}>{title}</div>,
+    input && <div class="item-input">{input}</div>,
+    <div key="after" class="item-after">{after}</div>
+  ]
 }
