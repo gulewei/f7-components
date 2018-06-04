@@ -1,3 +1,15 @@
+import { VNode } from 'hyperapp'
+
+export {
+  VNode
+}
+
+export type Fragment = Array<VNode | string | number | boolean | null>
+
+export interface Component<P extends ElementProperties = {}, C = any> {
+  (props: P, children: Array<C>): VNode | Fragment
+}
+
 export interface ElementProperties {
 
   key?: string
@@ -43,7 +55,7 @@ export interface WraperProperties {
    * Wraper element class name
    */
   wraperClass?: string
-  
+
 }
 
 export interface OuterHairlines {
@@ -61,7 +73,7 @@ export interface InnerHairlines {
 }
 
 export interface CheckProperties {
-  
+
   checked: boolean
 
   name: string
