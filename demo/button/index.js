@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
-import Button from '../../src/components/button'
-import Page from '../../src/components/page'
-import ContentBlock from '../../src/components/content-block'
+import { Page, ContentBlock, Button } from '../../src'
+import '../../src/index.less'
 
 const demo = {
   state: {},

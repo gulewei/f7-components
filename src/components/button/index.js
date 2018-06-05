@@ -29,10 +29,10 @@ const Button = (props, children) => {
   return (
     <a
       {...restProps}
-      class={cc(restProps.class, 'button', {
-        'button-big': big,
-        'button-fill': fill,
-        'button-round': round
+      class={cc(restProps.class, 'hm-button', {
+        'hm-button-big': big,
+        'hm-button-fill': fill,
+        'hm-button-round': round
       })
       }
     >{text || children}</a>
