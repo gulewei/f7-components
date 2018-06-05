@@ -12,7 +12,7 @@ export function runAndCleanUp(): {
 /**
  * Transition decarator component
  */
-const CSSTransition: Component<{
+declare const CSSTransition: Component<{
   /**
    * Enter class name
    */

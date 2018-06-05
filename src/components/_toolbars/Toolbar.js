@@ -6,6 +6,7 @@ import './index.less'
  * @typedef {Object} ToolbarProps
  * @prop {string} [key]
  * @prop {string} [class]
+ *
  * @param {ToolbarProps} props
  * @param {JSX.Element[]} children
  */
@@ -24,15 +25,11 @@ export default Toolbar
  * @prop {string} text
  * @prop {Function} [onclick]
  * @prop {string} [class]
+ *
  * @param {ToolbarLinkProps} props
  */
-export const ToolbarLink = (props) => {
-  const {
-    onclick,
-    text
-  } = props
-
+export const ToolbarLink = (props, children) => {
   return (
-    <a class={cc('link', props.class)} onclick={onclick}>{text}</a>
+    <a {...props} class={cc('link', props.class)} >{children}</a>
   )
 }

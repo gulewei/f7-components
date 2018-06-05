@@ -1,9 +1,11 @@
+// eslint-disable-next-line
 import { h } from 'hyperapp'
+import cc from 'classnames'
 import './index.less'
 
 const View = (props, children) => {
   return (
-    <div class="view">
+    <div {...props} class={cc('view', props.class)}>
       <div class="pages">{children}</div>
     </div>
   )
