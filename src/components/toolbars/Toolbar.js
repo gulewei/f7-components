@@ -1,18 +1,17 @@
+// eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import './index.less'
 
 /**
  * @typedef {Object} ToolbarProps
- * @prop {string} [key]
- * @prop {string} [class]
+ * @prop {boolean} noBorder
  *
  * @param {ToolbarProps} props
  * @param {JSX.Element[]} children
  */
 const Toolbar = (props, children) => {
   return (
-    <div {...props} class={cc('toolbar', props.class)}>
+    <div {...props} class={cc('toolbar', {'no-border': props.noBorder}, props.class)}>
       <div class="toolbar-inner">{children}</div>
     </div>
   )

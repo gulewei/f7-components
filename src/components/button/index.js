@@ -1,8 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import { noop } from '../_utils'
-import './index.less'
+// import './index.less'
 
 /**
  * @typedef {Object} ButtonProps

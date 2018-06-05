@@ -1,6 +1,7 @@
+// eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import './style.less'
+// import './style.less'
 
 /**
  * List block
@@ -9,6 +10,7 @@ import './style.less'
  * @prop {string} [label]
  * @prop {boolean} [useForm]
  * @prop {boolean} [noHairlines]
+ * @prop {boolean} [noHairlinesBetween]
  *
  * @param {ListProps} props
  * @param {JSX.Element[]} children
@@ -18,11 +20,16 @@ const List = (props, children) => {
     inset,
     label,
     noHairlines,
+    noHairlinesBetween,
     useForm,
     ...rests
   } = props
 
-  const wraperCls = cc(rests.class, 'list-block', { inset, 'no-hairlines': noHairlines })
+  const wraperCls = cc(rests.class, 'list-block', {
+    inset,
+    'no-hairlines': noHairlines,
+    'no-hairlines-between': noHairlinesBetween
+  })
   const wraperEl = useForm ? 'form' : 'div' // eslint-disable-line
 
   return (
