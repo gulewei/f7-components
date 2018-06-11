@@ -85,7 +85,11 @@ export default {
     }
 
     return (
-      <div {...rests} class={cc('pull-to-refresh', rests.class)} onscroll={e => doScroll(e.target.scrollTop)}>
+      <div
+        {...rests}
+        class={cc('pull-to-refresh', rests.class)}
+        onscroll={e => doScroll(e.target.scrollTop)}
+      >
         <div class="pull-to-refresh-wraper">
           <div
             class={cc('pull-to-refresh-content', { 'pull-to-refresh-transition': !isTracking })}
