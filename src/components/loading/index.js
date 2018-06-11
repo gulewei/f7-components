@@ -4,7 +4,7 @@ import { h } from 'hyperapp'
 import Preloader from '../preloader'
 // eslint-disable-next-line
 import Overlay from '../overlay'
-import './index.less'
+// import './index.less'
 
 /**
  * @typedef {Object} LoadingProps

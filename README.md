@@ -1,4 +1,4 @@
-## Mobile Components Borrowed from Framework7, Rewrite with Hyperapp
+## Hyperapp components lib based on Framework7 styles
 
 ## See [Demo Page](https://venecy.github.io/f7c/)
 

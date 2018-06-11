@@ -1,5 +1,6 @@
+// eslint-disable-next-line
 import { h } from 'hyperapp'
-import './index.less'
+// import './index.less'
 
 /**
  * @typedef {Object} RangeSliderProps
@@ -7,6 +8,7 @@ import './index.less'
  * @prop {number} max
  * @prop {number} step
  * @prop {number} value
+ *
  * @param {RangeSliderProps} props
  */
 const RangeSlider = props => {

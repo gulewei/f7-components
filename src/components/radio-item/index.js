@@ -5,7 +5,7 @@ import cc from 'classnames'
 import { Item } from '../list'
 // eslint-disable-next-line
 import Icon from '../img-icon'
-import './index.less'
+// import './index.less'
 
 const radioIcon = <Icon name="form-radio" />
 

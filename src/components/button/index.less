@@ -1,6 +1,8 @@
 @import url('../_styles/index.less');
 
-.button {
+@buttonPrefixCls: hm-button;
+
+.@{buttonPrefixCls} {
   border: 1px solid @themeColor;
   color: @themeColor;
   text-decoration: none;
@@ -32,32 +34,20 @@
   &:active, &.active-state {
       background: rgba(red(@themeColor), green(@themeColor), blue(@themeColor), .15);
   }
-  &.button-round {
+  &.@{buttonPrefixCls}-round {
       border-radius: 27px;
   }
-  &.button-big {
+  &.@{buttonPrefixCls}-big {
       font-size: 17px;
       height: 44px;
       line-height: 42px;
   }
-  &.button-fill {
+  &.@{buttonPrefixCls}-fill {
       color:#fff;
       background: @themeColor;
       border-color: transparent;
     &:active, &.active-state {
           opacity: 0.8;
-      }
-  }
-  i.icon {
-      &:first-child {
-          margin-right: 10px;
-      }
-      &:last-child {
-          margin-left: 10px;
-      }
-      &:first-child:last-child {
-          margin-left: 0;
-          margin-right: 0;
       }
   }
 }

@@ -6,7 +6,6 @@ import Overlay, { OVERLAY_TYPES } from '../overlay'
 import CSSTransition from '../../animation'
 import { sizeEl, ANIM_NAMES } from '../_utils'
 import cc from 'classnames'
-import './index.css'
 
 const WRAPER = 'toast-wraper'
 

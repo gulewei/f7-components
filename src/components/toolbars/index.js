@@ -1,8 +1,2 @@
-import Navbar from './Navbar'
-import Toolbar, { ToolbarLink } from './Toolbar'
-
-export {
-  Navbar,
-  Toolbar,
-  ToolbarLink
-}
+export { default, default as Navbar } from './Navbar'
+export { default as Toolbar, ToolbarLink } from './Toolbar'

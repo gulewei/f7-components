@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import './index.less'
+// import './index.less'
 
 /**
  * @typedef {Object} PageProps

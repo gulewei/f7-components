@@ -5,16 +5,15 @@ import Overlay from '../overlay'
 // eslint-disable-next-line
 import CSSTransition from '../../animation'
 // import anim from '../_utils/animations'
-import { css, ANIM_NAMES } from '../_utils'
+import { sizeEl, ANIM_NAMES } from '../_utils'
 import cc from 'classnames'
-import './index.less'
 
 /**
  *
  * @param {HTMLElement} el
  */
-const sizeEl = el => {
-  css(el, { 'margin-top': `-${el.offsetHeight / 2}px` })
+function sizeModal (el) {
+  sizeEl(el, true)
 }
 
 /**
@@ -68,7 +67,7 @@ const Dialog = (props) => {
           enter={enterClass}
           exit={exitClass}
         >
-          <div class="modal" oncreate={sizeEl}>
+          <div class="modal" oncreate={sizeModal}>
             <div class="modal-inner">
               <div class="modal-title">{title}</div>
               <div class="modal-text">{text}</div>

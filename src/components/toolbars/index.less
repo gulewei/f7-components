@@ -12,9 +12,6 @@
     .justify-content(space-between);
     .align-items(center);
 }
-.navbar-inner.cached {
-    display: none;
-}
 .navbar, .toolbar {
     height: @toolbarSize;
     width: 100%;
@@ -33,7 +30,7 @@
         }
     }
 }
-.navbar, .toolbar, .subnavbar {
+.navbar, .toolbar {
     background: @toolbarBg;
     a.link {
         line-height: @toolbarSize;
@@ -124,50 +121,6 @@
     }
     .popup & {
         .translate3d(0,0,0);
-    }
-}
-.subnavbar {
-    height: @toolbarSize;
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 100%;
-    margin-top: -1px;
-    z-index: 20;
-    box-sizing: border-box;
-    padding: 0 8px;
-    .flexbox();
-    .justify-content(space-between);
-    .align-items(center);
-    .hairline(bottom, @toolbarBorderColor);
-    &.no-border {
-        .hairline-remove(bottom);
-    }
-    .navbar.no-border & {
-        margin-top: 0;
-    }
-    .navbar-on-left &, .navbar-on-right &{
-        pointer-events: none;
-    }
-    .navbar &, .page & {
-        position: absolute;
-    }
-    .page > & {
-        top: 0;
-        margin-top: 0;
-    }
-    > .buttons-row {
-        width: 100%;
-    }
-    .searchbar, &.searchbar {
-        position: absolute;
-    }
-    &.searchbar, .searchbar {
-        position: absolute;
-    }
-    .searchbar {
-        left: 0;
-        top: 0;
     }
 }
 .toolbar {

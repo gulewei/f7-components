@@ -1,25 +1,3 @@
-export const noop = () => { }
-
-/**
- * 添加类名
- * @param {HTMLElement} el
- * @param {string} className
- */
-export function addClass (el, className) {
-  // http://caniuse.com/#search=classList
-  el.classList.add(className)
-}
-
-/**
- * 去除类名
- * @param {HTMLElement} el
- * @param {string} className
- */
-export function removeClass (el, className) {
-  // http://caniuse.com/#search=classList
-  el.classList.remove(className)
-}
-
 /**
  * 修改样式
  * @param {HTMLElement} el
