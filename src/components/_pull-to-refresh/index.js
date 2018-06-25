@@ -1,8 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import { on } from '../_utils'
-import './index.less'
+import { on, css } from '../_utils'
+import BaseScroller from '../_utils/scroller'
+import { runAndCleanUp } from '../../animation/run-transition'
 
 /**
  * State of refreshing
@@ -28,21 +29,59 @@ import './index.less'
  * @prop {boolean} isScrolling
  */
 
-const enumRefreshing = {
+const enumRefreshStatus = {
   deactivate: 'deactivate',
   activate: 'activate',
   release: 'release',
   finish: 'finish'
 }
 
-const defaultIndiacotr = {
-  deactivate: '下拉刷新',
-  activate: '松开立即刷新',
-  release: '加载中...',
-  finish: '完成刷新'
+const renderDefaultIndiacotr = (refreshStatus) => {
+  return {
+    deactivate: '下拉刷新',
+    activate: '松开立即刷新',
+    release: '加载中...',
+    finish: '完成刷新'
+  }[refreshStatus]
 }
 
-export default {
+const PullToRefresh = (props, children) => {
+  const {
+    distance = 25,
+    // indicator = {},
+    renderIndicator = renderDefaultIndiacotr,
+    // onRefresh,
+    onRefreshChange,
+    ...rests
+  } = props
+
+  return (
+    <div {...rests}
+      class={cc('pull-to-refresh', rests.class)}
+    >
+      <div class="pull-to-refresh-wraper">
+        <div
+          class="pull-to-refresh-content"
+          oncreate={el => attachPullToRefresh({
+            container: el.parentNode.parentNode,
+            content: el,
+            distance,
+            onRefreshChange
+          })}
+        >
+          <div key="indicator" class="pull-to-refresh-indicator">
+            {renderDefaultIndiacotr()}
+          </div>
+          <div key="inner">{children}</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default PullToRefresh
+
+export const m = {
   /**
    * Pull-to-Refresh view
    * @typedef {Object} PtrProps
@@ -75,11 +114,11 @@ export default {
     } = props
 
     const realIndicator = {
-      ...defaultIndiacotr,
+      ...renderDefaultIndiacotr,
       ...indicator
     }
 
-    if (refreshing === enumRefreshing.release) {
+    if (refreshing === enumRefreshStatus.release) {
       // trigger refresh after render done
       onRefresh && setTimeout(() => onRefresh(finish), 0)
     }
@@ -125,7 +164,7 @@ export default {
 
       return {
         translateY,
-        refreshing: translateY > distance ? enumRefreshing.activate : enumRefreshing.deactivate
+        refreshing: translateY > distance ? enumRefreshStatus.activate : enumRefreshStatus.deactivate
       }
     },
     doTouchEnd: (distance) => ({ isTracking, refreshing }) => {
@@ -133,12 +172,12 @@ export default {
         return
       }
 
-      const isActivate = refreshing === enumRefreshing.activate
+      const isActivate = refreshing === enumRefreshStatus.activate
 
       return {
         isTracking: false,
         translateY: isActivate ? distance : 0,
-        refreshing: isActivate ? enumRefreshing.release : enumRefreshing.deactivate
+        refreshing: isActivate ? enumRefreshStatus.release : enumRefreshStatus.deactivate
       }
     },
     doScroll: (scrollTop) => ({ isScrolling }) => {
@@ -148,15 +187,15 @@ export default {
       }
     },
     doDeactivate: () => ({ refreshing }) => {
-      if (refreshing === enumRefreshing.finish) {
-        return { refreshing: enumRefreshing.deactivate }
+      if (refreshing === enumRefreshStatus.finish) {
+        return { refreshing: enumRefreshStatus.deactivate }
       }
     },
-    finish: () => ({ refreshing: enumRefreshing.finish, translateY: 0 })
+    finish: () => ({ refreshing: enumRefreshStatus.finish, translateY: 0 })
   },
 
   state: {
-    refreshing: enumRefreshing.deactivate,
+    refreshing: enumRefreshStatus.deactivate,
     startY: 0,
     translateY: 0,
     isTracking: false,
@@ -174,17 +213,99 @@ function getTransformObj (y) {
   }
 }
 
-function attachPullToRefresh (el, actions, distance) {
-  const {
-    doTouchStart,
-    doTouchMove,
-    doTouchEnd,
-    doDeactivate
-  } = actions
+// function attachPullToRefresh (el, actions, distance) {
+//   const {
+//     doTouchStart,
+//     doTouchMove,
+//     doTouchEnd,
+//     doDeactivate
+//   } = actions
 
-  on(el, 'touchstart', e => doTouchStart(e.touches))
-  on(el, 'touchmove', e => doTouchMove({ touches: e.touches, distance }))
-  on(el, 'touchend', e => doTouchEnd(distance))
-  on(el, 'touchcancel', e => doTouchEnd(distance))
-  on(el, 'transitionend', doDeactivate)
+//   on(el, 'touchstart', e => doTouchStart(e.touches))
+//   on(el, 'touchmove', e => doTouchMove({ touches: e.touches, distance }))
+//   on(el, 'touchend', e => doTouchEnd(distance))
+//   on(el, 'touchcancel', e => doTouchEnd(distance))
+//   on(el, 'transitionend', doDeactivate)
+// }
+
+function attachPullToRefresh ({ container, content, distance, onRefreshChange }) {
+  const refresh = {
+    status: enumRefreshStatus.deactivate,
+    changeStatus (status) {
+      refresh.status = status
+      onRefreshChange(status, refresh.finish)
+    },
+    finish: () => {
+      runAndCleanUp(
+        content,
+        () => {
+          refresh.changeStatus(enumRefreshStatus.finish)
+          content.classList.add('pull-to-refresh-transition')
+        },
+        () => {
+          content.classList.remove('pull-to-refresh-transition')
+          if (refresh.status === enumRefreshStatus.finish) {
+            refresh.changeStatus(enumRefreshStatus.deactivate)
+          }
+        }
+      )
+    }
+  }
+
+  const scroller = new BaseScroller()
+  scroller.setSize(0, 0)
+  scroller.setCallback((translate, isMove) => {
+    const isActivate = refresh.status === enumRefreshStatus.activate
+
+    let newRefreshing
+    let newTranslate
+
+    if (isMove) {
+      newTranslate = translate
+      newRefreshing = translate > distance
+        ? enumRefreshStatus.activate
+        : enumRefreshStatus.deactivate
+    } else {
+      newTranslate = isActivate ? distance : 0
+      newRefreshing = isActivate
+        ? enumRefreshStatus.release
+        : enumRefreshStatus.deactivate
+    }
+
+    css(content, getTransformObj(newTranslate))
+
+    if (newRefreshing !== refresh.status) {
+      refresh.changeStatus(newRefreshing)
+    }
+  })
+
+  const scrolling = {
+    status: false,
+    changeStatus (status) {
+      scrolling.status = status
+    }
+  }
+
+  on(container, 'scroll', (e) => {
+    scrolling.changeStatus(e.target.scrollTop !== 0)
+  })
+
+  const events = {
+    touchstart: (e) => {
+      !scrolling.status && scroller.onTouchStart(e.touches, Date.now())
+    },
+    touchmove: (e) => {
+      !scrolling.status && scroller.onTouchMove(e.touches, Date.now())
+    },
+    touchend: (e) => {
+      !scrolling.status && scroller.onTouchEnd(e.touches, Date.now())
+    },
+    touchcancel: (e) => {
+      !scrolling.status && scroller.onTouchEnd(e.touches, Date.now())
+    }
+  }
+
+  for (let { eventName, eventListener } in events) {
+    on(eventName === 'scroll' ? container : content, eventName, eventListener)
+  }
 }

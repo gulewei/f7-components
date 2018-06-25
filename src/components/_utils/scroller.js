@@ -27,6 +27,9 @@ export default class BaseScroller {
      */
     this.state = {
       isTouched: false,
+      /**
+       * move end
+       */
       isMoved: false,
       startY: 0,
       startTime: n,
@@ -73,7 +76,7 @@ export default class BaseScroller {
    * @param {Touch[]} touches
    * @param {number} startTime
    */
-  onTouchStart (touches, startTime, callback) {
+  onTouchStart (touches, startTime) {
     this._setState({
       isTouched: true,
       startY: touches[0].pageY,
@@ -174,12 +177,9 @@ export default class BaseScroller {
       velocityTranslate: v
     } = this.state
 
-    let newTranslate
-    if (endTime - startTime > 300) {
-      newTranslate = curr
-    } else {
-      newTranslate = curr + v * momentumRatio
-    }
+    const newTranslate = endTime - startTime > 300
+      ? curr
+      : curr + v * momentumRatio
 
     return newTranslate
   }

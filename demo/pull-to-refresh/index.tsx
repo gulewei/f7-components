@@ -2,7 +2,7 @@
 import { h, app } from 'hyperapp'
 // eslint-disable-next-line
 import Page from '../../src/components/page'
-import pullToRefresh from '../../src/components/pull-to-refresh'
+import pullToRefresh from '../../src/components/_pull-to-refresh'
 
 const mocker = {
   length: 30,
