@@ -62,36 +62,35 @@ export class PullToRefreshScroller extends BaseScroller {
     ) {
       this.setCallback((translate, isMove) => {
         const isActivate = translate > props.distance
-        const newRefresh = this._getNewRefresh(isMove, isActivate)
-        const newTranslate = isMove
-          ? translate
-          : this._getNewTranslate(isActivate, props.distance)
-
-        if (newTranslate !== translate) {
-          this.updateTranslate(newTranslate)
-        }
-
-        render(contentEl, newTranslate)
-
-        if (newRefresh !== props.refreshStatus) {
-          props.updateRefreshStatus(newRefresh)
-          if (newRefresh === enumRefreshStatus.release) {
-            const finish = this._getFinish(contentEl, props)
-            props.onRefresh(finish)
-          }
-        }
+        this[isMove ? '_drag' : '_drop'](contentEl, translate, props, isActivate)
       })
     }
   }
 
-  _getNewTranslate (isActivate, distance) {
-    return isActivate ? distance : 0
+  _drag (contentEl, translate, props, isActivate) {
+    render(contentEl, translate)
+
+    const newRefresh = isActivate ? enumRefreshStatus.activate : enumRefreshStatus.deactivate
+    if (newRefresh !== props.refreshStatus) {
+      props.updateRefreshStatus(newRefresh)
+    }
   }
 
-  _getNewRefresh (isMove, isActivate) {
-    return isActivate
-      ? isMove ? enumRefreshStatus.activate : enumRefreshStatus.release
-      : enumRefreshStatus.deactivate
+  _drop (contentEl, translate, props, isActivate) {
+    const newTranslate = isActivate ? props.distance : 0
+    render(contentEl, newTranslate)
+    if (newTranslate !== translate) {
+      this.updateTranslate(newTranslate)
+    }
+
+    const newRefresh = isActivate ? enumRefreshStatus.release : enumRefreshStatus.deactivate
+    if (newRefresh !== props.refreshStatus) {
+      props.updateRefreshStatus(newRefresh)
+      if (newRefresh === enumRefreshStatus.release) {
+        const finish = this._getFinish(contentEl, props)
+        props.onRefresh(finish)
+      }
+    }
   }
 
   _getFinish (contentEl, props) {
