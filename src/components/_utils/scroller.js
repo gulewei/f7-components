@@ -183,4 +183,16 @@ export default class BaseScroller {
 
     return newTranslate
   }
+
+  // bindEvents () {
+  //   throw new Error('bindEvents should be implemented by subClass')
+  // }
+
+  // update () {
+  //   throw new Error('update should be implemented by subClass')
+  // }
+
+  // render () {
+  //   throw new Error('render should be implemented by sub-class')
+  // }
 }
