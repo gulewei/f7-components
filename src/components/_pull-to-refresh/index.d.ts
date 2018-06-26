@@ -31,11 +31,8 @@ export interface PullToRefreshProperties extends ElementProperties {
 
   refreshStatus: string
 
-  inScrolling: boolean
-  
-  updateRefreshStatus: (refreshStatus: string) => Object
+  onRefreshChange: (status: string) => any
 
-  updateInScrolling: (inScrolling: boolean) => Object
 }
 
 declare const PullToRefresh: Component<PullToRefreshProperties>
@@ -43,11 +40,9 @@ declare const PullToRefresh: Component<PullToRefreshProperties>
 export default PullToRefresh
 
 export const state: {
-  refreshStatus: string,
-  inScrolling: boolean
+  refreshStatus: string
 }
 
 export const actions: {
-  updateRefreshStatus: (refreshStatus: string) => Object
-  updateInScrolling: (inScrolling: boolean) => Object
+  onRefreshChange: (status: string) => any
 }

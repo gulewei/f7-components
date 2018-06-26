@@ -9,7 +9,7 @@ export const state = {
 }
 
 export const actions = {
-  updateRefreshStatus: (refreshStatus) => ({ refreshStatus })
+  onRefreshChange: (refreshStatus) => ({ refreshStatus })
 }
 
 const defaultIndicator = {
@@ -20,21 +20,23 @@ const defaultIndicator = {
 }
 
 /**
- *
+ * @typedef {Object} PullToRefreshProps
+ * @prop {number} distance
+ * @prop {Object<any>} [indicator]
+ * @prop {(scrollTop: number, clientHeight: number) => void} [onContainerScroll]
+ * @prop {(finish: () => void) => void} onRefresh
+ * @prop {string} refreshStatus this prop must be controled
+ * @prop {(status: string) => any} onRefreshChange
  */
 const PullToRefresh = (props, children) => {
   const {
     // props
     distance = 25,
     indicator = {},
-    onRefresh,
     onContainerScroll,
 
     // state & actions
     refreshStatus = enumRefreshStatus.deactivate,
-    inScrolling,
-    updateRefreshStatus,
-    updateInScrolling,
 
     ...rests
   } = props

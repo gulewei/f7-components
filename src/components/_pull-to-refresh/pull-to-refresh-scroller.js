@@ -49,7 +49,7 @@ export class PullToRefreshScroller extends BaseScroller {
    * @typedef {Object} Props
    * @prop {number} distance
    * @prop {string} refreshStatus
-   * @prop {(status: string) => any} updateRefreshStatus
+   * @prop {(status: string) => any} onRefreshChange
    * @prop {(finish: () => void) => void} onRefresh
    *
    * @param {HTMLElement} contentEl
@@ -72,7 +72,7 @@ export class PullToRefreshScroller extends BaseScroller {
 
     const newRefresh = isActivate ? enumRefreshStatus.activate : enumRefreshStatus.deactivate
     if (newRefresh !== props.refreshStatus) {
-      props.updateRefreshStatus(newRefresh)
+      props.onRefreshChange(newRefresh)
     }
   }
 
@@ -85,7 +85,7 @@ export class PullToRefreshScroller extends BaseScroller {
 
     const newRefresh = isActivate ? enumRefreshStatus.release : enumRefreshStatus.deactivate
     if (newRefresh !== props.refreshStatus) {
-      props.updateRefreshStatus(newRefresh)
+      props.onRefreshChange(newRefresh)
       if (newRefresh === enumRefreshStatus.release) {
         const finish = this._getFinish(contentEl, props)
         props.onRefresh(finish)
@@ -98,14 +98,14 @@ export class PullToRefreshScroller extends BaseScroller {
       runAndCleanUp(
         contentEl,
         () => {
-          props.updateRefreshStatus(enumRefreshStatus.finish)
+          props.onRefreshChange(enumRefreshStatus.finish)
           window.requestAnimationFrame(() => {
             render(contentEl, 0)
-            this.updateTranslate(0)
           })
         },
         () => {
-          props.updateRefreshStatus(enumRefreshStatus.deactivate)
+          props.onRefreshChange(enumRefreshStatus.deactivate)
+          this.updateTranslate(0)
         }
       )
     }
