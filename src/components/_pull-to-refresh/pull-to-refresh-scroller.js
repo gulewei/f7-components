@@ -11,27 +11,33 @@ export class PullToRefreshScroller extends BaseScroller {
   }
 
   bindEvents (containerEl, contentEl) {
-    let inScrolling = false
-    on(containerEl, 'scroll', (e) => {
-      inScrolling = e.target.scrollTop !== 0
-    })
-
+    let isOnEdge = true
+    const scroll = (e) => {
+      isOnEdge = containerEl.scrollTop === 0
+    }
     const touchstart = (e) => {
-      if (!inScrolling) {
+      if (isOnEdge) {
         this.onTouchStart(e.touches, Date.now())
         contentEl.classList.remove(transitionCls)
       }
     }
     const touchmove = (e) => {
-      !inScrolling && this.onTouchMove(e.touches, Date.now())
+      if (isOnEdge) {
+        if (this._checkDirection(e.touches[0].pageY)) {
+          this.onTouchMove(e.touches, Date.now())
+        } else {
+          touchend({ touches: [] })
+        }
+      }
     }
     const touchend = (e) => {
-      if (!inScrolling) {
+      if (isOnEdge) {
         this.onTouchEnd(e.touches, Date.now())
         contentEl.classList.add(transitionCls)
       }
     }
     const events = {
+      scroll,
       touchstart,
       touchmove,
       touchend,
@@ -39,10 +45,14 @@ export class PullToRefreshScroller extends BaseScroller {
     }
 
     for (let eventName in events) {
-      on(contentEl, eventName, events[eventName])
+      on(containerEl, eventName, events[eventName])
     }
 
     return this
+  }
+
+  _checkDirection (currentY) {
+    return currentY > this.state.startY
   }
 
   /**

@@ -111,7 +111,7 @@ export default class BaseScroller {
   }
 
   /**
-   * @param {Touch[]} touches
+   * @param {Touch[]} [touches]
    * @param {number} endTime
    */
   onTouchEnd (touches, endTime) {
