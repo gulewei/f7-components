@@ -4,12 +4,11 @@ import { runAndCleanUp } from '../../animation/run-transition'
 import { enumRefreshStatus, transitionCls } from './constant'
 
 export class PullToRefreshScroller extends BaseScroller {
-  constructor () {
-    super()
-    this.initializeState(0)
-    this.setSize(0, 0)
-  }
-
+  /**
+   * run on create
+   * @param {HTMLElement} containerEl
+   * @param {HTMLElement} contentEl
+   */
   bindEvents (containerEl, contentEl) {
     let isOnEdge = true
     const scroll = (e) => {
@@ -56,6 +55,7 @@ export class PullToRefreshScroller extends BaseScroller {
   }
 
   /**
+   * run on create and update
    * @typedef {Object} Props
    * @prop {number} distance
    * @prop {string} refreshStatus
@@ -97,14 +97,13 @@ export class PullToRefreshScroller extends BaseScroller {
     if (newRefresh !== props.refreshStatus) {
       props.onRefreshChange(newRefresh)
       if (newRefresh === enumRefreshStatus.release) {
-        const finish = this._getFinish(contentEl, props)
-        props.onRefresh(finish)
+        this._release(contentEl, props)
       }
     }
   }
 
-  _getFinish (contentEl, props) {
-    return () => {
+  _release (contentEl, props) {
+    const finish = () => {
       runAndCleanUp(
         contentEl,
         () => {
@@ -118,6 +117,26 @@ export class PullToRefreshScroller extends BaseScroller {
           this.updateTranslate(0)
         }
       )
+    }
+    props.onRefresh(finish)
+  }
+
+  /**
+   * run on create
+   * @param {HTMLElement} contentEl
+   * @param {Props} props
+   */
+  ready (contentEl, props) {
+    this.setSize(0, 0)
+
+    if (props.refreshStatus === enumRefreshStatus.release) {
+      this.initializeState(props.distance)
+      render(contentEl, props.distance)
+      this._release(contentEl, props)
+    } else if (props.refreshStatus === enumRefreshStatus.deactivate) {
+      this.initializeState(0)
+    } else {
+      throw new Error(`F7cError in PullToRefresh: Initial state can only be 'deactivate' or 'release'`)
     }
   }
 }

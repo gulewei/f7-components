@@ -2,15 +2,15 @@
 import { h, app } from 'hyperapp'
 // eslint-disable-next-line no-unused-vars
 import Page from '../../src/components/page'
-import '../../src/components/page/index.less'
+import '../../src/components/page/style'
 // eslint-disable-next-line no-unused-vars
-import PullToRefresh, { state as ptrState, actions as ptrAction } from '../../src/components/pull-to-refresh'
+import PullToRefresh, { enumRefreshStatus } from '../../src/components/pull-to-refresh'
 import '../../src/components/pull-to-refresh/style'
 
 const mocker = {
   length: 30,
 
-  deffer: 1500,
+  deffer: 2200,
 
   next: () => {
     let m = []
@@ -29,26 +29,27 @@ const mocker = {
 app(
   // state
   {
-    ptr: ptrState,
-    mocks: mocker.next()
+    refreshStatus: enumRefreshStatus.release,
+    mocks: []
   },
 
   // actions
   {
-    ptr: ptrAction,
+    onRefreshChange: (refreshStatus) => ({ refreshStatus }),
     resetMocks: (mocks) => ({ mocks })
   },
 
   // view
   (state, actions) => {
-    window.$ptr = {state, actions}
+    window.$ptr = { state, actions }
 
     return (
       <Page>
         <PullToRefresh
           class="ptr"
-          {...{ ...state.ptr, ...actions.ptr }}
           indicator={{ deactivate: 'pull down' }}
+          refreshStatus={state.refreshStatus}
+          onRefreshChange={actions.onRefreshChange}
           onRefresh={finish => mocker.async(mocks => {
             actions.resetMocks(mocks)
             finish()

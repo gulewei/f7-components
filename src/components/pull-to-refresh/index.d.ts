@@ -28,7 +28,9 @@ export interface PullToRefreshProperties extends ElementProperties {
   onRefresh: (finish: () => void) => void
 
   onContainerScroll?: (e: HTMLElement) => void
-
+  /**
+   * Initial state can only be 'deactivate' or 'release'.
+   */
   refreshStatus: string
 
   onRefreshChange: (status: string) => any
@@ -38,11 +40,3 @@ export interface PullToRefreshProperties extends ElementProperties {
 declare const PullToRefresh: Component<PullToRefreshProperties>
 
 export default PullToRefresh
-
-export const state: {
-  refreshStatus: string
-}
-
-export const actions: {
-  onRefreshChange: (status: string) => any
-}

@@ -1,16 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import { enumRefreshStatus } from './constant'
 import { PullToRefreshScroller } from './pull-to-refresh-scroller'
 
-export const state = {
-  refreshStatus: enumRefreshStatus.deactivate
-}
-
-export const actions = {
-  onRefreshChange: (refreshStatus) => ({ refreshStatus })
-}
+export { enumRefreshStatus } from './constant'
 
 const defaultIndicator = {
   deactivate: '下拉刷新',
@@ -22,11 +15,13 @@ const defaultIndicator = {
 /**
  * @typedef {Object} PullToRefreshProps
  * @prop {number} distance
- * @prop {Object<any>} [indicator]
- * @prop {(scrollTop: number, clientHeight: number) => void} [onContainerScroll]
+ * @prop {Object} [indicator]
+ * @prop {(e: HTMLElement) => void} [onContainerScroll]
  * @prop {(finish: () => void) => void} onRefresh
  * @prop {string} refreshStatus this prop must be controled
  * @prop {(status: string) => any} onRefreshChange
+ *
+ * @param {PullToRefreshProps} props
  */
 const PullToRefresh = (props, children) => {
   const {
@@ -34,9 +29,8 @@ const PullToRefresh = (props, children) => {
     distance = 25,
     indicator = {},
     onContainerScroll,
-
-    // state & actions
-    refreshStatus = enumRefreshStatus.deactivate,
+    // state
+    refreshStatus,
 
     ...rests
   } = props
@@ -52,9 +46,9 @@ const PullToRefresh = (props, children) => {
         <div
           class="pull-to-refresh-content"
           oncreate={el => {
-            el._scroller = new PullToRefreshScroller()
-              .bindEvents(el.parentNode.parentNode, el)
-              .update(el, props, {})
+            el._scroller = new PullToRefreshScroller().bindEvents(el.parentNode.parentNode, el)
+            el._scroller.update(el, props, {})
+            el._scroller.ready(el, props)
           }}
           onupdate={(el, oldAttr) => {
             try {
