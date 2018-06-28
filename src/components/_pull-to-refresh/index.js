@@ -46,9 +46,7 @@ const PullToRefresh = (props, children) => {
   return (
     <div {...rests}
       class={cc('pull-to-refresh', rests.class)}
-      onscroll={e => {
-        onContainerScroll && onContainerScroll(e.target.scrollTop, e.target.clientHeight)
-      }}
+      onscroll={onContainerScroll}
     >
       <div class="pull-to-refresh-wraper">
         <div

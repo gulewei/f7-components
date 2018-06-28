@@ -27,7 +27,7 @@ export interface PullToRefreshProperties extends ElementProperties {
 
   onRefresh: (finish: () => void) => void
 
-  onContainerScroll?: (scrollTop: number, clientHeight: number) => void
+  onContainerScroll?: (e: HTMLElement) => void
 
   refreshStatus: string
 
