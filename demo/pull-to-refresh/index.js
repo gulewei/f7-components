@@ -4,8 +4,8 @@ import { h, app } from 'hyperapp'
 import Page from '../../src/components/page'
 import '../../src/components/page/index.less'
 // eslint-disable-next-line no-unused-vars
-import PullToRefresh, { state as ptrState, actions as ptrAction } from '../../src/components/_pull-to-refresh'
-import '../../src/components/_pull-to-refresh/style'
+import PullToRefresh, { state as ptrState, actions as ptrAction } from '../../src/components/pull-to-refresh'
+import '../../src/components/pull-to-refresh/style'
 
 const mocker = {
   length: 30,
