@@ -4,7 +4,6 @@ import { h } from 'hyperapp'
 import Overlay from '../overlay'
 // eslint-disable-next-line
 import CSSTransition from '../../animation'
-// import anim from '../_utils/animations'
 import { sizeEl, ANIM_NAMES } from '../_utils'
 import cc from 'classnames'
 

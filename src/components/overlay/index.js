@@ -4,7 +4,6 @@ import cc from 'classnames'
 // eslint-disable-next-line
 import CSSTransition from '../../animation'
 import { ANIM_NAMES } from '../_utils'
-// import './index.less'
 
 /**
  * @type {h7Components.OVERLAY_TYPES}

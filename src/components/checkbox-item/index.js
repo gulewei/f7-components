@@ -5,7 +5,6 @@ import cc from 'classnames'
 import Icon from '../img-icon'
 // eslint-disable-next-line
 import { ListItem } from '../list'
-// import './index.less'
 
 const checkboxIcon = <Icon name="form-checkbox" />
 

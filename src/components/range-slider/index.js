@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
-// import './index.less'
 
 /**
  * @typedef {Object} RangeSliderProps

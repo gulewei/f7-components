@@ -1,7 +1,6 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
-// import './style.less'
 
 /**
  * List block
