@@ -77,9 +77,7 @@ const view = (state, actions) => {
   return (
     <Dialog
       {...rest}
-      onButtonsClick={e => {
-        actions.close()
-      }}
+      onButtonsClick={onButtonsClick || actions.close}
     />
   )
 }
@@ -107,13 +105,18 @@ const api = (actions) => {
       return actions.close
     },
 
-    custom: (text, title, buttons) => {
+    action: (text, title, buttons) => {
       if (Array.isArray(title)) {
         buttons = title
         title = undefined
       }
 
       actions.dialog({ text, title, buttons })
+      return actions.close
+    },
+
+    custom: (props) => {
+      actions.open(props)
       return actions.close
     },
 

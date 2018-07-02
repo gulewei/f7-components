@@ -48,10 +48,12 @@ export interface DialogProperties extends WraperProperties, TransitionProperties
   verticalButtons?: boolean
 }
 
+
 export interface DialogComponent<P> extends Component<P> {
-  alert: (text: string, title?: string, onOk?: () => void) => void
-  confirm: (text: string, title?: string, onOk?: () => void, onCancel?: () => void) => void,
-  custom: (text: string, title?: string, buttons?: DialogButtonProperties[]) => void,
+  alert: (text: string, title?: string, onOk?: () => void) => () => void
+  confirm: (text: string, title?: string, onOk?: () => void, onCancel?: () => void) => () => void
+  action: (text: string, title?: string, buttons?: DialogButtonProperties[]) => () => void
+  custom: (props: DialogProperties) => () => void
   setDefault: (options: { title?: string, okText?: string, cancelText?: string }) => void
 }
 

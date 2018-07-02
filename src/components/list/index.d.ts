@@ -1,5 +1,4 @@
-import { Component } from 'hyperapp'
-import { ElementProperties, OuterHairlines, InnerHairlines } from '../_utils/interfaces'
+import { ElementProperties, OuterHairlines, InnerHairlines, Component } from '../_utils/interfaces'
 
 export interface ListProperties extends ElementProperties, OuterHairlines, InnerHairlines {
   /**
