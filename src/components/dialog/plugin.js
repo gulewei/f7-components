@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Dialog from '../components/dialog'
+import Dialog from './Dialog'
 
 const defaultState = {
   show: false,
@@ -18,7 +18,7 @@ let OPTIONS = {
   cancleText: 'Cancle'
 }
 
-const setOptions = (newOptions) => {
+const setDefault = (newOptions) => {
   OPTIONS = {
     ...OPTIONS,
     ...newOptions
@@ -26,23 +26,23 @@ const setOptions = (newOptions) => {
 }
 
 const actions = {
-  alert: ({ text, title = OPTIONS.title, onclick }) => {
+  alert: ({ text, title = OPTIONS.title, onOk }) => {
     return {
       show: true,
       title,
       text,
-      buttons: [{ text: OPTIONS.okText, onclick }]
+      buttons: [{ text: OPTIONS.okText, onclick: onOk }]
     }
   },
 
-  confirm: ({ text, title = OPTIONS.title, onclickOk, onclickCancle }) => {
+  confirm: ({ text, title = OPTIONS.title, onOk, onCancel }) => {
     return {
       show: true,
       title,
       text,
       buttons: [
-        { text: OPTIONS.cancleText, onclick: onclickCancle },
-        { text: OPTIONS.okText, onclick: onclickOk }
+        { text: OPTIONS.cancleText, onclick: onCancel },
+        { text: OPTIONS.okText, onclick: onOk }
       ]
     }
   },
@@ -86,28 +86,28 @@ const view = (state, actions) => {
 
 const api = (actions) => {
   return {
-    alert: (text, title, onclick) => {
+    alert: (text, title, onOk) => {
       if (typeof title === 'function') {
-        onclick = title
+        onOk = title
         title = undefined
       }
 
-      actions.alert({ text, title, onclick })
+      actions.alert({ text, title, onOk })
       return actions.close
     },
 
-    confirm: (text, title, onclickOk, onclickCancle) => {
+    confirm: (text, title, onOk, onCancel) => {
       if (typeof title === 'function') {
-        onclickCancle = onclickOk
-        onclickOk = title
+        onCancel = onOk
+        onOk = title
         title = undefined
       }
 
-      actions.confirm({ text, title, onclickOk, onclickCancle })
+      actions.confirm({ text, title, onOk, onCancel })
       return actions.close
     },
 
-    dialog: (text, title, buttons) => {
+    custom: (text, title, buttons) => {
       if (Array.isArray(title)) {
         buttons = title
         title = undefined
@@ -117,12 +117,7 @@ const api = (actions) => {
       return actions.close
     },
 
-    customDialog: (props) => {
-      actions.open(props)
-      return actions.close
-    },
-
-    setOptions: setOptions
+    setDefault
   }
 }
 

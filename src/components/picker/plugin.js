@@ -1,7 +1,8 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Picker, { PickerToolbar, PickerToolbarLink as PickerLink } from '../components/picker'
+// import Picker, { PickerToolbar, PickerToolbarLink as PickerLink } from '../components/picker'
+// import Picker, { } from './Picker'
 
 const DEFAULT = {
   toolbar: (

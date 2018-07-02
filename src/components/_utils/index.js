@@ -1,3 +1,22 @@
+import { app } from 'hyperapp'
+
+export function install ({ state, actions, view, api }) {
+  const el = document.createElement('div')
+  const appActions = app(state, actions, view, el)
+  document.body.appendChild(el)
+
+  return api(appActions)
+}
+
+export function apiMixin (Component, apis) {
+  const newComponent = Component
+  for (let name in apis) {
+    newComponent[name] = apis[name]
+  }
+
+  return newComponent
+}
+
 /**
  * 修改样式
  * @param {HTMLElement} el

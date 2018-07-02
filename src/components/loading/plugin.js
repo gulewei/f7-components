@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Loading from '../components/loading'
+import Loading from './Loading'
 
 const state = {
   show: false
@@ -17,8 +17,8 @@ const view = (state, actions) => (
 
 const api = ({ loading }) => {
   return {
-    showLoading: () => loading(true),
-    hideLoading: () => loading(false)
+    show: () => loading(true),
+    hide: () => loading(false)
   }
 }
 

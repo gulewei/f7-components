@@ -1,5 +1,4 @@
-import { Component } from 'hyperapp'
-import { WraperProperties, TransitionProperties } from '../_utils/interfaces'
+import { WraperProperties, TransitionProperties, Component } from '../_utils/interfaces'
 
 
 export interface ToastProperties extends WraperProperties, TransitionProperties {
@@ -18,11 +17,13 @@ export interface ToastProperties extends WraperProperties, TransitionProperties 
   toastClass?: string
 }
 
+export interface ToastComponent<P> extends Component<P> {
+  text: (msg: string, duration?: number) => void
+}
+
 /**
  * Toast componet
  */
-declare const Toast: Component<{
-  
-}>
+declare const Toast: ToastComponent<ToastProperties>
 
 export default Toast

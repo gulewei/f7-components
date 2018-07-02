@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import Toast from '../components/toast'
+import Toast from './Toast'
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 
@@ -32,7 +32,7 @@ const view = (state, actions) => (
 
 const api = ({ toast }) => {
   return {
-    toast: (msg, duration) => toast({ msg, duration })
+    text: (msg, duration) => toast({ msg, duration })
   }
 }
 

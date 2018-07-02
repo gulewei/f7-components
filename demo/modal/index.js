@@ -129,8 +129,8 @@ app(
           title="Predefined Modals"
         >
           <p onclick={e => {
-            // modals.alert('Here goes alert text')
-            actions.alert.show({ text: 'Here goes alert text' })
+            // actions.alert.show({ text: 'Here goes alert text' })
+            Dialog.alert('Here goes alert text')
           }}>
             <a>Alert With Text</a>
           </p>
