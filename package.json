@@ -1,5 +1,5 @@
 {
-  "name": "components",
+  "name": "@gulw/components",
   "version": "0.7.2",
   "description": "framework7 components with hyperapp",
   "main": "dist/index.js",
