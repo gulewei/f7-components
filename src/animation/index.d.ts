@@ -5,14 +5,19 @@ import { Component } from 'hyperapp'
 /**
  * Perform an animation
  */
-export function runAndCleanUp(): {
+export function runAndCleanUp (): {
   (element: HTMLElement, startAnimation: () => void, finishAnimation: () => void): void
 }
 
-/**
- * Transition decarator component
- */
-declare const CSSTransition: Component<{
+export function runEnter (): {
+  (element: HTMLElement, enterAnimationActive: string, enterAnimation: string): void
+}
+
+export function runExit (): {
+  (element: HTMLElement, enterAnimationActive: string, enterAnimation: string, removeNode: () => void): void
+}
+
+export interface CSSTransitionProperties {
   /**
    * Enter class name
    */
@@ -23,6 +28,11 @@ declare const CSSTransition: Component<{
   exit?: string
 
   exitActive?: string
-}>
+}
+
+/**
+ * Transition decarator component
+ */
+declare const CSSTransition: Component<CSSTransitionProperties>
 
 export default CSSTransition

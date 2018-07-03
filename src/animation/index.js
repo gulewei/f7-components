@@ -1,2 +1,2 @@
 export { default } from './CSSTransition'
-export { runAndCleanUp } from './run-transition'
+export { runAndCleanUp, runEnter, runExit } from './run-transition'

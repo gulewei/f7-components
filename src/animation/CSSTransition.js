@@ -1,5 +1,5 @@
 import cc from 'classnames'
-import run from './run-transition'
+import { runEnter, runExit } from './run-transition'
 
 /**
  * @typedef {Object} CSSTransitionProps
@@ -32,7 +32,7 @@ const CSSTransition = (props, children) => {
     replaceAttr.class = cc(attr.class, { [enter]: enter })
     replaceAttr.oncreate = (el) => {
       if (enter) {
-        run.enter(el, enterActive, enter)
+        runEnter(el, enterActive, enter)
       }
       if (attr.oncreate) {
         attr.oncreate(el)
@@ -43,7 +43,7 @@ const CSSTransition = (props, children) => {
   if (exit) {
     replaceAttr.onremove = (el, done) => {
       if (exit) {
-        run.exit(el, exitActive, exit, done)
+        runExit(el, exitActive, exit, done)
       }
       if (attr.onremove) {
         attr.onremove(el, () => { })

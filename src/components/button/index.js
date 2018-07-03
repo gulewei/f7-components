@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { h } from 'hyperapp'
 import cc from 'classnames'
-// import './index.less'
 
 /**
  * @typedef {Object} ButtonProps
@@ -17,7 +16,7 @@ import cc from 'classnames'
  * @param {ButtonProps} props
  * @param {JSX.Element[]} children
  */
-const Button = (props, children) => {
+export default (props, children) => {
   const {
     fill,
     big,
@@ -38,5 +37,3 @@ const Button = (props, children) => {
     >{text || children}</a>
   )
 }
-
-export default Button

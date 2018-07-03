@@ -4,9 +4,9 @@ import babel from 'rollup-plugin-babel'
 
 export default {
   output: {
-    file: 'dist/components.js',
+    file: 'dist/hyperapp-views.js',
     format: 'umd',
-    name: 'HyperappComponents',
+    name: 'HyperappViews',
     globals: {
       hyperapp: 'hyperapp'
     }

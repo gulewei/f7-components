@@ -46,7 +46,7 @@ export function runAndCleanUp (element, startAnimation, finishAnimation) {
   element.addEventListener(transitionEndName, transitionEnd)
 }
 
-function exit (node, exitAnimationActive, exitAnimation, removeNode) {
+export function runExit (node, exitAnimationActive, exitAnimation, removeNode) {
   const activeClass = exitAnimationActive || `${exitAnimation}-active`
 
   runAndCleanUp(
@@ -64,7 +64,7 @@ function exit (node, exitAnimationActive, exitAnimation, removeNode) {
   )
 }
 
-function enter (node, enterAnimationActive, enterAnimation) {
+export function runEnter (node, enterAnimationActive, enterAnimation) {
   const activeClass = enterAnimationActive || `${enterAnimation}-active`
 
   runAndCleanUp(
@@ -81,9 +81,4 @@ function enter (node, enterAnimationActive, enterAnimation) {
       node.classList.remove(activeClass)
     }
   )
-}
-
-export default {
-  enter,
-  exit
 }
