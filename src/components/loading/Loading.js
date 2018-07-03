@@ -3,7 +3,7 @@ import { h } from 'hyperapp'
 // eslint-disable-next-line
 import Preloader from '../preloader'
 // eslint-disable-next-line
-import Overlay, { OVERLAY_TYPES } from '../overlay'
+import Overlay, { enumOverlayTypes } from '../overlay'
 
 /**
  * @typedef {Object} LoadingProps
@@ -24,7 +24,7 @@ const Loading = props => {
     <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay
-          type={OVERLAY_TYPES.preloader}
+          type={enumOverlayTypes.preloader}
           notAnimated
         />,
         <div class="preloader-indicator-modal">
