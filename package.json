@@ -4,6 +4,11 @@
   "description": "framework7 components with hyperapp",
   "main": "dist/hyperapp-views.js",
   "typings": "hyperapp-views.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "hyperapp-views.d.ts"
+  ],
   "scripts": {
     "demo": "parcel demo/index.html",
     "ks": "parcel build demo/index.html -d kitchen-sink",

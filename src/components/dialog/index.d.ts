@@ -1,5 +1,4 @@
-import { Component } from 'hyperapp'
-import { TransitionProperties, WraperProperties } from '../_utils/interfaces'
+import { TransitionProperties, WraperProperties, Component } from '../_utils/interfaces'
 
 export interface DialogButtonProperties {
   /**

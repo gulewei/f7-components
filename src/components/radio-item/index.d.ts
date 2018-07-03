@@ -1,5 +1,4 @@
-import { Component } from 'hyperapp'
-import { CheckProperties } from '../_utils/interfaces';
+import { CheckProperties, Component } from '../_utils/interfaces';
 import { ListItemProperties } from '../list'
 
 export interface RadioItemProperties extends CheckProperties,  ListItemProperties {}

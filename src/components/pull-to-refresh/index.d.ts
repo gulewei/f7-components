@@ -1,5 +1,4 @@
-import { ElementProperties } from '../_utils/interfaces'
-import { VNode, Component } from 'hyperapp'
+import { ElementProperties, VNode, Component } from '../_utils/interfaces'
 
 export const enumRefreshStatus: {
   deactivate: 'deactivate',
