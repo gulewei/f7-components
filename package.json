@@ -1,5 +1,5 @@
 {
-  "name": "hyperapp-views",
+  "name": "@gulw/views",
   "version": "0.7.2",
   "description": "framework7 components with hyperapp",
   "main": "dist/hyperapp-views.js",
