@@ -12,7 +12,8 @@
   "scripts": {
     "demo": "parcel demo/index.html",
     "ks": "parcel build demo/index.html -d kitchen-sink",
-    "build": "rollup -c && parcel build src/index.less --no-minify --no-source-maps --out-file hyperapp-views.css"
+    "build": "rollup -c && parcel build src/index.less --no-minify --no-source-maps --out-file hyperapp-views.css",
+    "realse": "npm run build && npm publish --access=public"
   },
   "repository": {
     "type": "git",
