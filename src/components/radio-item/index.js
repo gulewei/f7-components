@@ -2,7 +2,7 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 // eslint-disable-next-line
-import { Item } from '../list'
+import { ListItem } from '../list'
 // eslint-disable-next-line
 import Icon from '../img-icon'
 // import './index.less'
@@ -37,7 +37,7 @@ const RadioItem = (props, children) => {
   } = props
 
   return (
-    <Item
+    <ListItem
       {...itemProps}
       useLabel
       class={cc('label-radio', itemProps.class)}
@@ -49,7 +49,7 @@ const RadioItem = (props, children) => {
           key="content-start"
         />
       }
-    > {children}</Item >
+    > {children}</ListItem >
   )
 }
 

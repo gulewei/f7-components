@@ -1,5 +1,4 @@
-import { Component } from "hyperapp"
-import { WraperProperties, TransitionProperties } from '../_utils/interfaces'
+import { WraperProperties, TransitionProperties, Component } from '../_utils/interfaces'
 
 export interface PickerItemProperites {
   /**

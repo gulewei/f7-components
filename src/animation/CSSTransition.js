@@ -1,5 +1,3 @@
-// eslint-disable-next-line
-import { h } from 'hyperapp'
 import cc from 'classnames'
 import run from './run-transition'
 

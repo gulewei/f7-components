@@ -82,7 +82,7 @@ export const ContentPicker = (props, children) => {
   )
 }
 
-export const InliePicker = (props) => {
+export const InlinePicker = (props) => {
   const {
     modalClass,
     toolbar,
