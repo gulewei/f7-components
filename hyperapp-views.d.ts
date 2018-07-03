@@ -6,8 +6,8 @@ export as namespace HyperappViews
 
 export type Fragment = Array<VNode | string | number | boolean | null>
 
-export interface Component<P extends ElementProperties = {}, C = any> {
-  (props: P, children: Array<C>): VNode | Fragment
+export interface Component<P extends ElementProperties = {}> {
+  (props: P, children: Array<VNode>): VNode | Fragment
 }
 
 export interface ElementProperties {
@@ -110,8 +110,8 @@ export interface CSSTransitionProperties {
   exitActive?: string
 }
 /**
-* Transition decarator component
-*/
+ * Transition decarator component
+ */
 export const CSSTransition: Component<CSSTransitionProperties>
 
 //// ======== Button ======== ////
@@ -135,7 +135,7 @@ export interface ButtonProperties extends ElementProperties {
   text?: string | JSX.Element
 
   disabled?: boolean
-  
+
 }
 /**
  * Buttons ready to use
@@ -144,7 +144,7 @@ export const Button: Component<ButtonProperties>
 
 //// ======== CheckboxItem ======== ////
 
-export interface CheckboxItemProperties extends CheckProperties,  ListItemProperties {}
+export interface CheckboxItemProperties extends CheckProperties, ListItemProperties { }
 /**
  * Checkboxes & Radios is not a separate component, but just a particular case of using <List> and <ListItem> components.
  */
@@ -152,7 +152,7 @@ export const CheckboxItem: Component<CheckboxItemProperties>
 
 //// ======== ContentBlock ======== ////
 
-interface ContentBlockProperties extends ElementProperties, OuterHairlines {
+export interface ContentBlockProperties extends ElementProperties, OuterHairlines {
   /**
    * Adds additional "inner" element for content extra highlighting
    */
@@ -196,7 +196,7 @@ export interface ListItemProperties extends ElementProperties {
   isLink?: boolean
 
   alignTop?: boolean
-  
+
   useLabel?: boolean
 
   contentStart?: JSX.Element
@@ -284,7 +284,7 @@ export const ImgIcon: Component<ImgIconProperties>
 
 //// ======== Loading ======== ////
 
-export interface LoadingProperties extends WraperProperties {}
+export interface LoadingProperties extends WraperProperties { }
 export interface LoadingComponent<P> extends Component<P> {
   show: () => void,
   hide: () => void
@@ -296,13 +296,10 @@ export const Loading: LoadingComponent<LoadingProperties>
 
 //// ======== Overlay ======== ////
 
-/**
- * Possible overlay type
- */
-export const OVERLAY_TYPES: {
+interface PossibleOverlayTypes {
   /**
- * Default overlay for most modals
- */
+   * Default overlay for most modals
+   */
   modal: 'modal',
   /**
    * Invisible overlay
@@ -317,6 +314,10 @@ export const OVERLAY_TYPES: {
    */
   picker: 'picker-modal'
 }
+/**
+ * Possible overlay types
+ */
+export const enumOverlayTypes: PossibleOverlayTypes
 
 export interface OverlayProperties {
   /**
@@ -446,12 +447,12 @@ export interface PickerProperties extends PickerWraperProperties, PickerModalPro
  * Picker component
  */
 export const Picker: Component<PickerProperties>
-export interface ContentPickerProperties extends PickerWraperProperties, PickerModalProperties {}
+export interface ContentPickerProperties extends PickerWraperProperties, PickerModalProperties { }
 /**
  * Custom picker content
  */
 export const ContentPicker: Component<ContentPickerProperties>
-export interface InlinePickerProperties extends PickerModalProperties, PickerColumnsProperties {}
+export interface InlinePickerProperties extends PickerModalProperties, PickerColumnsProperties { }
 /**
  * Inline picker
  */
@@ -464,7 +465,7 @@ export interface PickerToolbarProperties {
 
   center?: JSX.Element
 
-  toolbarClass?:  string
+  toolbarClass?: string
 }
 export const PickerToolbar: Component<PickerToolbarProperties>
 
@@ -483,12 +484,13 @@ export const Preloader: Component<PreloaderProperties>
 
 //// ======== PullToRefresh ======== ////
 
-export const enumRefreshStatus: {
+interface PossibleRefreshStatus {
   deactivate: 'deactivate',
   activate: 'activate',
   release: 'release',
   finish: 'finish'
 }
+export const enumRefreshStatus: PossibleRefreshStatus
 export interface IPullToRefreshIndicator {
   deactivate?: VNode
   activate?: VNode
@@ -520,7 +522,7 @@ export const PullToRefresh: Component<PullToRefreshProperties>
 
 //// ======== RadioItem ======== ////
 
-export interface RadioItemProperties extends CheckProperties,  ListItemProperties {}
+export interface RadioItemProperties extends CheckProperties, ListItemProperties { }
 /**
  * Checkboxes & Radios is not a separate component, but just a particular case of using <List> and <ListItem> components.
  */
@@ -528,7 +530,7 @@ export const RadioItem: Component<RadioItemProperties>
 
 //// ======== RangeSlider ======== ////
 
-export interface RangeSliderProperties extends ElementProperties {}
+export interface RangeSliderProperties extends ElementProperties { }
 export const RangeSlider: Component<ElementProperties>
 
 //// ======== Toast ======== ////
@@ -561,13 +563,12 @@ export const Toast: ToastComponent<ToastProperties>
 interface Bordered {
   noBorder?: boolean
 }
-
 export interface NavbarProperties extends Bordered, ElementProperties { }
 /**
  * Navbar is a fixed (with Fixed and Through layout types) area at the top of a screen that contains Page title and navigation elements.
  */
 export const Navbar: Component<NavbarProperties>
-export interface ToolbarProperties extends Bordered, ElementProperties {}
+export interface ToolbarProperties extends Bordered, ElementProperties { }
 /**
  * Toolbar is a fixed (with Fixed and Through layout types) area at the bottom of a screen that contains navigation elements.
  */
@@ -579,5 +580,5 @@ export const ToolbarLink: Component<ElementProperties>
 
 //// ======== Views ======== ////
 
-export interface ViewProperties extends ElementProperties {}
+export interface ViewProperties extends ElementProperties { }
 export const View: Component<ViewProperties>

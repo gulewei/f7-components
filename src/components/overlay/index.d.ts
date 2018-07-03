@@ -1,10 +1,7 @@
 import { Component } from 'hyperapp'
 import { TransitionProperties } from '../_utils/interfaces'
 
-/**
- * Possible overlay type
- */
-export const OVERLAY_TYPES: {
+interface EnumOverlayTypes {
   /**
  * Default overlay for most modals
  */
@@ -22,6 +19,11 @@ export const OVERLAY_TYPES: {
    */
   picker: 'picker-modal'
 }
+
+/**
+ * Possible overlay type
+ */
+export const enumOverlayTypes: EnumOverlayTypes
 
 export interface OverlayProperties {
   /**

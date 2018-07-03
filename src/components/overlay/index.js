@@ -5,10 +5,7 @@ import cc from 'classnames'
 import CSSTransition from '../../animation'
 import { ANIM_NAMES } from '../_utils'
 
-/**
- * @type {h7Components.OVERLAY_TYPES}
- */
-export const OVERLAY_TYPES = {
+export const enumOverlayTypes = {
   modal: 'modal',
   preloader: 'preloader-indicator',
   popup: 'popup',
@@ -29,7 +26,7 @@ export const OVERLAY_TYPES = {
  */
 const Overlay = (props) => {
   const {
-    type = OVERLAY_TYPES.modal,
+    type = enumOverlayTypes.modal,
     notAnimated,
     onOverlayClick,
     key,
@@ -38,7 +35,7 @@ const Overlay = (props) => {
     exitClass = ANIM_NAMES.fadeOut
   } = props
 
-  const noAnim = notAnimated || type === OVERLAY_TYPES.preloader
+  const noAnim = notAnimated || type === enumOverlayTypes.preloader
 
   return (
     <CSSTransition
