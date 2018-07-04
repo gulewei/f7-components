@@ -1,12 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { h, app } from 'hyperapp'
-// import Page from '../../src/components/page'
-// import ContentBlock from '../../src/components/content-block'
-// import List from '../../src/components/list'
-// import InputItem from '../../src/components/input-item'
-// import Picker, { PickerToolbar, PickerLink } from '../../src/components/picker'
+import { h } from 'hyperapp'
 import { Page, ContentBlock, List, ListItem, Picker, PickerToolbar } from '../../src'
-import '../../src/index.less'
+import Layout from './Layout'
 
 const pickerItem = (label, value) => {
   return { label, value }
@@ -59,14 +54,14 @@ const mocker = {
 const singleColumn = mocker.data()
 const cascadeColumn = mocker.cascadeDate()
 
-app(
-  {
+export default {
+  state: {
     date: [5, 18],
     picker: {
       show: false
     }
   },
-  {
+  actions: {
     pickeDate: (date) => {
       return { date }
     },
@@ -79,13 +74,32 @@ app(
       }
     }
   },
-  (state, actions) => {
+  view: (state, actions) => {
     window.$_picker = { state, actions }
 
     return (
-      <Page outside={
-        <Outsides />
-      } >
+      <Layout
+        key='picker'
+        title='Picker'
+        outside={
+          <Picker
+            show={state.picker.show}
+            items={cascadeColumn}
+            cascade={true}
+            values={state.date}
+            onOverlayClick={actions.picker.close}
+            onChange={values => {
+              actions.pickeDate(values)
+            }}
+            toolbar={
+              <PickerToolbar right={
+                // <PickerLink text="Done" onclick={actions.picker.close} />
+                <a class="link" onclick={actions.picker.close}>Done</a>
+              } />
+            }
+          />
+        }
+      >
         <ContentBlock title="Picker" />
         <List>
           <ListItem
@@ -101,29 +115,7 @@ app(
             }
           />
         </List>
-      </Page>
+      </Layout>
     )
-  },
-  document.body
-)
-
-const Outsides = () => (state, actions) => {
-  return (
-    <Picker
-      show={state.picker.show}
-      items={cascadeColumn}
-      cascade={true}
-      values={state.date}
-      onOverlayClick={actions.picker.close}
-      onChange={values => {
-        actions.pickeDate(values)
-      }}
-      toolbar={
-        <PickerToolbar right={
-          // <PickerLink text="Done" onclick={actions.picker.close} />
-          <a class="link" onclick={actions.picker.close}>Done</a>
-        } />
-      }
-    />
-  )
+  }
 }

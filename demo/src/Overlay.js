@@ -1,18 +1,18 @@
 /* eslint-disable no-unused-vars */
-import { h, app } from 'hyperapp'
-import { Page, Overlay, enumOverlayTypes, ContentBlock } from '../../src'
-import '../../src/index.less'
+import { h } from 'hyperapp'
+import { Overlay, enumOverlayTypes, ContentBlock } from '../../src'
+import Layout from './Layout'
 
-app(
-  {
+export default {
+  state: {
     show: false
   },
-  {
+  actions: {
     show: show => ({ show })
   },
-  (state, actions) => {
+  view: (state, actions) => {
     return (
-      <Page>
+      <Layout key='overlay' title='Overlay'>
         <ContentBlock title="Overlay">
           <p onclick={e => { actions.show(true) }}>
             <a>Overlay</a>
@@ -22,8 +22,7 @@ app(
             onOverlayClick={e => actions.show(false)}
           />}
         </ContentBlock>
-      </Page>
+      </Layout>
     )
-  },
-  document.body
-)
+  }
+}

@@ -1,16 +1,14 @@
 /* eslint-disable no-unused-vars */
-import { h, app } from 'hyperapp'
-import { Page, ContentBlock, Button } from '../../src'
-import '../../src/index.less'
+import { h } from 'hyperapp'
+import { ContentBlock, Button } from '../../src'
+import Layout from './Layout'
 
-const demo = {
+export default {
   state: {},
-
   actions: {},
-
-  view: (state, actions) => {
+  view: () => {
     return (
-      <Page>
+      <Layout key='btn' title='Button'>
         <ContentBlock title="USUAL BUTTONS">
           <p><Button>Usual Button 1</Button></p>
           <p><Button>Usual Button 2</Button></p>
@@ -34,9 +32,7 @@ const demo = {
           <p><Button big round>Big Round Button</Button></p>
           <p><Button big round fill>Big Round Fill Button</Button></p>
         </ContentBlock>
-      </Page>
+      </Layout>
     )
   }
 }
-
-app(demo.state, demo.actions, demo.view, document.body)
