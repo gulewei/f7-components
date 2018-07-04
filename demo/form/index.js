@@ -1,15 +1,26 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
-import Page from '../../src/components/page'
-import ContentBlock from '../../src/components/content-block'
-import List, { Item } from '../../src/components/list'
-import InputItem from '../../src/components/input-item'
-import Icon from '../../src/components/icon'
-import RangeSlider from '../../src/components/range-slider'
-import CheckboxItem from '../../src/components/checkbox-item'
-import RadioItem from '../../src/components/radio-item'
+// import Page from '../../src/components/page'
+// import ContentBlock from '../../src/components/content-block'
+// import List, { Item } from '../../src/components/list'
+// import InputItem from '../../src/components/input-item'
+// import Icon from '../../src/components/icon'
+// import RangeSlider from '../../src/components/range-slider'
+// import CheckboxItem from '../../src/components/checkbox-item'
+// import RadioItem from '../../src/components/radio-item'
+import {
+  Page,
+  ContentBlock,
+  List,
+  ListItem,
+  ImgIcon,
+  RangeSlider,
+  CheckboxItem,
+  RadioItem
+} from '../../src'
+import '../../src/index.less'
 
-const F7Icon = <Icon name='f7' />
+const F7Icon = <ImgIcon name='f7' />
 
 const toArray = state => {
   let a = []
@@ -24,12 +35,16 @@ const InputElements = ({ elements, inputAction }) => {
 
   return items.map(({ name, filed, ...item }, i) => {
     return (
-      <InputItem
+      <ListItem
         key={filed}
         media={F7Icon}
         title={name}
-        {...item}
-        oninput={value => inputAction({ value, filed })}
+        input={
+          <input
+            {...item}
+            oninput={e => inputAction({ value: e.target.value, filed })}
+          />
+        }
       />
     )
   })
@@ -152,7 +167,7 @@ app(
         <ContentBlock title="FULL LAYOUT" />
         <List>
           <InputElements elements={elements} inputAction={actions.input} />
-          <Item
+          <ListItem
             key={gender.filed}
             media={F7Icon}
             title={gender.name}
@@ -166,7 +181,7 @@ app(
               </select>
             }
           />
-          <Item
+          <ListItem
             key={range.filed}
             media={F7Icon}
             title={range.name}
@@ -180,7 +195,7 @@ app(
               />
             }
           />
-          <Item
+          <ListItem
             key={text.filed}
             media={F7Icon}
             title={text.name}

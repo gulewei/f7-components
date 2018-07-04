@@ -1,21 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
-// import Page from '../../src/components/page'
-// import '../../src/components/page/style'
-// import ContentBlock from '../../src/components/content-block'
-// import '../../src/components/content-block/style'
-// import Preloader from '../../src/components/preloader'
-// import '../../src/components/preloader/style'
-// import Overlay from '../../src/components/overlay'
-// import '../../src/components/overlay/style'
-// import Toast from '../../src/components/toast'
-// import '../../src/components/toast/style'
-// import Loading from '../../src/components/loading'
-// import '../../src/components/loading/style'
-// import Dialog from '../../src/components/dialog'
-// import '../../src/components/dialog/style'
-import { Page, ContentBlock, Preloader, Overlay, Toast, Loading, Dialog } from '../../dist/components'
-import '../../dist/components.css'
+import { Page, ContentBlock, Preloader, Overlay, Toast, Loading, Dialog } from '../../src'
+import '../../src/index.less'
 
 app(
   {
