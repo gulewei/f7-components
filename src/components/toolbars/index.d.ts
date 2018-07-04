@@ -1,15 +1,19 @@
-import { ElementProperties, Component } from '../_utils/interfaces'
+import { ElementProperties, Component, VNode } from '../_utils/interfaces'
 
 interface Bordered {
   noBorder?: boolean
 }
 
-export interface NavbarProperties extends Bordered, ElementProperties { }
+export interface NavbarProperties extends Bordered, ElementProperties { 
+  left?: VNode | string
+  center?: VNode | string
+  right?: VNode | string
+}
 
 /**
  * Navbar is a fixed (with Fixed and Through layout types) area at the top of a screen that contains Page title and navigation elements.
  */
-declare const Navbar: Component<NavbarProperties>
+export const Navbar: Component<NavbarProperties>
 
 export default Navbar
 
