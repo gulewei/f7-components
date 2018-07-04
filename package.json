@@ -11,9 +11,9 @@
   ],
   "scripts": {
     "start": "parcel demo/main.html --out-dir .cache/demo",
-    "ks": "parcel build demo/main.html -d docs/kitchen-sink --public-url /kitchen-sink",
-    "build": "rollup -c && parcel build src/index.less --no-minify --no-source-maps --out-file f7-components.css",
-    "release": "npm run build && npm publish --access=public"
+    "build:ks": "parcel build demo/main.html -d docs/kitchen-sink --public-url /kitchen-sink && git add docs/kitchen-sink/ && git commit -m \"ks build\"",
+    "build:prod": "rollup -c && parcel build src/index.less --no-minify --no-source-maps --out-file f7-components.css && git add dist/ && git commit -m \"prod build\"",
+    "release": "npm run build:prod && && npm version patch && npm publish --access=public"
   },
   "repository": {
     "type": "git",
