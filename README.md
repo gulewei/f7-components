@@ -1,5 +1,5 @@
-## Hyperapp components lib based on Framework7 styles
+## Framewrok7 Components With Hyperapp
 
-## See [Demo Page](https://venecy.github.io/f7c/)
+Mobile UI for Hyperapp
 
-### Note: Not Fully Covered, Only Concentrate on Feedback Components
+Have a look at [kitchen-sink](https://venecy.github.io/f7c/kitchen-sink/)
