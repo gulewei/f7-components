@@ -19,7 +19,26 @@ export default {
     }),
     resolve(),
     babel({
-      exclude: 'node_modules/**'
+      babelrc: false,
+      exclude: 'node_modules/**',
+      presets: [
+        [
+          'es2015',
+          {
+            'modules': false
+          }
+        ]
+      ],
+      plugins: [
+        [
+          'transform-react-jsx',
+          {
+            'pragma': 'h'
+          }
+        ],
+        'transform-object-rest-spread',
+        'external-helpers'
+      ]
     })
   ]
 }
