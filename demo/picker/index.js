@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
-import Page from '../../src/components/page'
-import ContentBlock from '../../src/components/content-block'
-import List from '../../src/components/list'
-import InputItem from '../../src/components/input-item'
-import Picker, { PickerToolbar, PickerLink } from '../../src/components/picker'
-// import install, { pickerPlugin } from '../../src/plugins'
-
-// const $picker = install(pickerPlugin)
+// import Page from '../../src/components/page'
+// import ContentBlock from '../../src/components/content-block'
+// import List from '../../src/components/list'
+// import InputItem from '../../src/components/input-item'
+// import Picker, { PickerToolbar, PickerLink } from '../../src/components/picker'
+import { Page, ContentBlock, List, ListItem, Picker, PickerToolbar } from '../../src'
+import '../../src/index.less'
 
 const pickerItem = (label, value) => {
   return { label, value }
@@ -89,12 +88,17 @@ app(
       } >
         <ContentBlock title="Picker" />
         <List>
-          <InputItem
-            title="Picker-Item"
-            value={state.date.join(' - ')}
-            onclick={actions.picker.open}
-            readonly
+          <ListItem
             isLink
+            title="Picker Item"
+            input={
+              <input
+                type="text"
+                value={state.date.join(' - ')}
+                onclick={actions.picker.open}
+                readonly
+              />
+            }
           />
         </List>
       </Page>
@@ -116,7 +120,8 @@ const Outsides = () => (state, actions) => {
       }}
       toolbar={
         <PickerToolbar right={
-          <PickerLink text="Done" onclick={actions.picker.close} />
+          // <PickerLink text="Done" onclick={actions.picker.close} />
+          <a class="link" onclick={actions.picker.close}>Done</a>
         } />
       }
     />

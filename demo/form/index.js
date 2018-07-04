@@ -1,13 +1,5 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
-// import Page from '../../src/components/page'
-// import ContentBlock from '../../src/components/content-block'
-// import List, { Item } from '../../src/components/list'
-// import InputItem from '../../src/components/input-item'
-// import Icon from '../../src/components/icon'
-// import RangeSlider from '../../src/components/range-slider'
-// import CheckboxItem from '../../src/components/checkbox-item'
-// import RadioItem from '../../src/components/radio-item'
 import {
   Page,
   ContentBlock,

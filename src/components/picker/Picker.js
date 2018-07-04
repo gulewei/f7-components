@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Overlay from '../overlay'
+import Overlay, { enumOverlayTypes } from '../overlay'
 // eslint-disable-next-line
 import PickerModal from './Modal'
 // eslint-disable-next-line
@@ -51,7 +51,7 @@ const Picker = (props, children) => {
   return (
     <div key={wraperKey} class={wraperClass}>
       {show && [
-        <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
+        <Overlay type={enumOverlayTypes.picker} onOverlayClick={onOverlayClick} />,
         <PickerModal {...{ modalClass, toolbar }}>
           <PickerColumns {...columnsProps} />
         </PickerModal>
@@ -73,7 +73,7 @@ export const ContentPicker = (props, children) => {
   return (
     <div key={wraperKey} class={wraperClass}>
       {show && [
-        <Overlay type={Overlay.TYPE.picker} onOverlayClick={onOverlayClick} />,
+        <Overlay type={enumOverlayTypes.picker} onOverlayClick={onOverlayClick} />,
         <PickerModal {...{ modalClass, toolbar, noColumns: true }}>
           {children}
         </PickerModal>

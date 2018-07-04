@@ -95,7 +95,7 @@ class ScrollerHandler extends BaseScroller {
   }
 
   _emitValue () {
-    console.log('emit value', { ...this.props })
+    // console.log('emit value', { ...this.props })
     this.props.onChange && this.props.onChange(this.props.value)
   }
 
