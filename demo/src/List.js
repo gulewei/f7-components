@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { app, h } from 'hyperapp'
-import { Page, ContentBlock, List, ListItem, ImgIcon } from '../../src'
-import '../../src/index.less'
+import { h } from 'hyperapp'
+import { ContentBlock, List, ListItem, ImgIcon } from '../../src'
+import Layout from './Layout'
 
 const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sagittis tellus ut turpis condimentum, ut dignissim lacus tincidunt. Cras dolor metus, ultrices condimentum sodales sit amet, pharetra sodales eros. Phasellus vel felis tellus. Mauris rutrum ligula nec dapibus feugiat. In vel dui laoreet, commodo augue id, pulvinar lacus.'
 
-app(
-  {
+export default {
+  state: {
     basic: [
       { title: 'Item Title', after: 'Label', icon: 'f7', isLink: false },
       { title: 'Item Title', after: 'Label', icon: 'f7', isLink: false },
@@ -37,10 +37,10 @@ app(
       { title: 'Billie Jean', subTitle: 'Michael Jackson', isLink: true, icon: 'f7' }
     ]
   },
-  {},
-  (state, actions) => {
+  actions: {},
+  view: (state, actions) => {
     return (
-      <Page>
+      <Layout key='d_list' title='List'>
         <ContentBlock title="Full Layout" />
         <List label={state.label}>
           {state.basic.map(({ title, after, icon, isLink }, i) => (
@@ -91,13 +91,12 @@ app(
         </List>
 
         <ContentBlock title="Inset" />
-        <List inset>
+        <List inset label={state.label}>
           {state.simples.map(({ icon, ...item }, i) => (
             <ListItem key={i} media={<ImgIcon name={icon} />} {...item} />
           ))}
         </List>
-      </Page>
+      </Layout>
     )
-  },
-  document.body
-)
+  }
+}

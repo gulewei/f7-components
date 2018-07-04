@@ -1,11 +1,7 @@
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
-// eslint-disable-next-line no-unused-vars
-import Page from '../../src/components/page'
-import '../../src/components/page/style'
-// eslint-disable-next-line no-unused-vars
-import PullToRefresh, { enumRefreshStatus } from '../../src/components/pull-to-refresh'
-import '../../src/components/pull-to-refresh/style'
+import { PullToRefresh, enumRefreshStatus } from '../../src'
+import Layout from './Layout'
 
 const mocker = {
   length: 30,
@@ -26,25 +22,29 @@ const mocker = {
   }
 }
 
-app(
+// eslint-disable-next-line no-unused-vars
+const MockList = ({ mocks }) => {
+  return (
+    mocks.map((item, i) => <div key={i} class="mock-item">{i}:&nbsp;&nbsp;{item}</div>)
+  )
+}
+
+export default {
   // state
-  {
+  state: {
     refreshStatus: enumRefreshStatus.release,
     mocks: []
   },
-
   // actions
-  {
+  actions: {
     onRefreshChange: (refreshStatus) => ({ refreshStatus }),
     resetMocks: (mocks) => ({ mocks })
   },
-
   // view
-  (state, actions) => {
+  view: (state, actions) => {
     window.$ptr = { state, actions }
-
     return (
-      <Page>
+      <Layout key='ptr' title='PullToRefresh'>
         <PullToRefresh
           class="ptr"
           indicator={{ deactivate: 'pull down' }}
@@ -56,17 +56,7 @@ app(
           })}>
           <MockList mocks={state.mocks} />
         </PullToRefresh>
-      </Page>
+      </Layout>
     )
-  },
-
-  // root
-  document.getElementById('root')
-)
-
-// eslint-disable-next-line no-unused-vars
-const MockList = ({ mocks }) => {
-  return (
-    mocks.map((item, i) => <div key={i} class="mock-item">{i}:&nbsp;&nbsp;{item}</div>)
-  )
+  }
 }

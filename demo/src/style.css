@@ -16,3 +16,19 @@ i.icon.icon-f7 {
   background-image: url("./i-f7-ios.png");
   border-radius: 6px;
 }
+
+/* ptr */
+
+.mock-item {
+  padding-left: 35px;
+  height: 50px;
+  line-height: 50px;
+}
+
+.mock-item:nth-child(even) {
+  background-color: #efefef;
+}
+
+.ptr {
+  background-color: #fff;
+}

@@ -1,28 +1,26 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
-import { Page, ContentBlock, Preloader, Overlay, Toast, Loading, Dialog } from '../../src'
-import '../../src/index.less'
+import { ContentBlock, Preloader, Overlay, Toast, Loading, Dialog } from '../../src'
+import Layout from './Layout'
 
-app(
-  {
+export default {
+  state: {
     overlay: {
       show: false
     }
   },
-  {
+  actions: {
     overlay: {
       show: show => ({ show })
     }
   },
-  (state, actions) => {
+  view: (state, actions) => {
     window.$_modal = { state, actions }
 
     return (
-      <Page
-        outside={[
-          state.overlay.show && <Overlay key="overlay" onOverlayClick={() => actions.overlay.show(false)} />
-        ]}
-      >
+      <Layout key='modals' title='Modals' outside={[
+        state.overlay.show && <Overlay key="overlay" onOverlayClick={() => actions.overlay.show(false)} />
+      ]}>
         <ContentBlock title="Predefined Modals">
           <p onclick={e => {
             Dialog.alert('Here goes alert text')
@@ -111,8 +109,7 @@ app(
           }}
           ><a>loading</a></p>
         </ContentBlock>
-      </Page >
+      </Layout>
     )
-  },
-  document.body
-)
+  }
+}

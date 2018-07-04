@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { h, app } from 'hyperapp'
+import { h } from 'hyperapp'
 import {
-  Page,
   ContentBlock,
   List,
   ListItem,
@@ -10,7 +9,7 @@ import {
   CheckboxItem,
   RadioItem
 } from '../../src'
-import '../../src/index.less'
+import Layout from './Layout'
 
 const F7Icon = <ImgIcon name='f7' />
 
@@ -85,8 +84,8 @@ const RadioItemGrop = ({ radioValue, radios, selectActon }) => {
   )
 }
 
-app(
-  {
+export default {
+  state: {
     // input-item
     person: { value: '', name: 'Person', placeholder: 'Your Name', type: 'text', filed: 'person' },
     email: { value: '', name: 'E-mail', placeholder: 'E-mail', type: 'email', filed: 'email' },
@@ -117,7 +116,7 @@ app(
       drinks: { value: 'Drinks', filed: 'drinks' }
     }
   },
-  {
+  actions: {
     input: ({ filed, value }) => state => {
       return {
         [filed]: { ...state[filed], value }
@@ -134,7 +133,7 @@ app(
       }
     }
   },
-  (state, actions) => {
+  view: (state, actions) => {
     const {
       gender,
       switcher,
@@ -155,7 +154,7 @@ app(
     window.$form = { state, actions }
 
     return (
-      <Page>
+      <Layout key='forms' title='Form Items'>
         <ContentBlock title="FULL LAYOUT" />
         <List>
           <InputElements elements={elements} inputAction={actions.input} />
@@ -204,8 +203,7 @@ app(
         <CheckboxItemGroup checks={{ book, movie, food, drinks }} checkAction={actions.check} />
 
         <RadioItemGrop radioValue={radioValue} radios={radios} selectActon={actions.select} />
-      </Page>
+      </Layout>
     )
-  },
-  document.body
-)
+  }
+}
