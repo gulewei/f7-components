@@ -96,7 +96,7 @@ export const ListItem = (props, children) => {
               {renderTitle(title, input, after)}
             </div>,
             <div key="sub" class="item-subtitle">{subTitle}</div>,
-            <div key="text" class="item-text">{text}</div>
+            text && <div key="text" class="item-text">{text}</div>
           ]
           : renderTitle(title, input, after)
         }
