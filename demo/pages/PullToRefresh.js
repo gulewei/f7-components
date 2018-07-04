@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
 import { PullToRefresh, enumRefreshStatus } from '../../src'
-import Layout from './Layout'
+import Layout from '../Layout'
 
 const mocker = {
   length: 30,

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
 import { Page, ContentBlock, List, ListItem, Picker, PickerToolbar } from '../../src'
-import Layout from './Layout'
+import Layout from '../Layout'
 
 const pickerItem = (label, value) => {
   return { label, value }

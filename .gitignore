@@ -1,7 +1,4 @@
 node_modules/
-dist/
-kitchen-sink/
-
 .cache/
 .vscode/*
 !.vscode/settings.json

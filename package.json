@@ -2,17 +2,17 @@
   "name": "@gulw/components",
   "version": "0.7.6",
   "description": "framework7 components with hyperapp",
-  "main": "dist/hyperapp-views.js",
-  "typings": "hyperapp-views.d.ts",
+  "main": "dist/f7-components.js",
+  "typings": "f7-components.d.ts",
   "files": [
     "dist",
     "src",
-    "hyperapp-views.d.ts"
+    "f7-components.d.ts"
   ],
   "scripts": {
-    "demo": "parcel demo/index.html",
-    "ks": "parcel build demo/index.html -d kitchen-sink",
-    "build": "rollup -c && parcel build src/index.less --no-minify --no-source-maps --out-file hyperapp-views.css",
+    "start": "parcel demo/main.html --out-dir .cache/demo",
+    "ks": "parcel build demo/main.html -d docs/kitchen-sink --public-url /kitchen-sink",
+    "build": "rollup -c && parcel build src/index.less --no-minify --no-source-maps --out-file f7-components.css",
     "release": "npm run build && npm publish --access=public"
   },
   "repository": {

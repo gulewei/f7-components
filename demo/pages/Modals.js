@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
 import { ContentBlock, Preloader, Overlay, Toast, Loading, Dialog } from '../../src'
-import Layout from './Layout'
+import Layout from '../Layout'
 
 export default {
   state: {

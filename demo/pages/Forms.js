@@ -9,7 +9,7 @@ import {
   CheckboxItem,
   RadioItem
 } from '../../src'
-import Layout from './Layout'
+import Layout from '../Layout'
 
 const F7Icon = <ImgIcon name='f7' />
 
