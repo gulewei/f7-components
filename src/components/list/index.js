@@ -29,17 +29,17 @@ const List = (props, children) => {
     'no-hairlines': noHairlines,
     'no-hairlines-between': noHairlinesBetween
   })
-  const wraperEl = useForm ? 'form' : 'div' // eslint-disable-line
+  const WraperEl = useForm ? 'form' : 'div' // eslint-disable-line
 
   return (
-    <wraperEl {...rests} class={wraperCls}>
+    <WraperEl {...rests} class={wraperCls}>
       <ul>
         {children.map(child => (
           <li key={child.key}>{child}</li>
         ))}
       </ul>
       {label && <div class="list-block-label">{label}</div>}
-    </wraperEl>
+    </WraperEl>
   )
 }
 
@@ -83,10 +83,10 @@ export const ListItem = (props, children) => {
     'align-top': alignTop,
     'media-item': isMedia
   })
-  const wraperEl = useLabel ? 'label' : 'div' // eslint-disable-line
+  const WraperEl = useLabel ? 'label' : 'div' // eslint-disable-line
 
   return (
-    <wraperEl {...wraperProps} class={wraperCls}>
+    <WraperEl {...wraperProps} class={wraperCls}>
       {contentStart}
       {media && <div key="media" class="item-media">{media}</div>}
       <div key="inner" class="item-inner">
@@ -101,7 +101,7 @@ export const ListItem = (props, children) => {
           : renderTitle(title, input, after)
         }
       </div>
-    </wraperEl>
+    </WraperEl>
   )
 }
 
