@@ -10,9 +10,9 @@
     "f7-components.d.ts"
   ],
   "scripts": {
-    "start": "parcel demo/main.html --out-dir .cache/demo",
+    "start": "parcel kitchen-sink/main.html --out-dir .ksdist",
     "commit:ks": "git add docs/kitchen-sink/ && git commit -m \"ks build\"",
-    "build:ks": "parcel build demo/main.html -d docs/kitchen-sink --public-url ./ --out-file index.html && npm run commit:ks",
+    "build:ks": "parcel build kitchen-sink/main.html -d docs/kitchen-sink --public-url ./ --out-file index.html && npm run commit:ks",
     "commit:prod": "git add dist/ && git commit -m \"prod build\"",
     "build:prod": "rollup -c && parcel build src/index.less --no-minify --no-source-maps --out-file f7-components.css && npm run commit:prod",
     "release": "npm run build:prod && npm version patch && npm publish --access=public"

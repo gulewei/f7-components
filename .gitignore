@@ -1,5 +1,6 @@
 node_modules/
 .cache/
+.ksdist/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
