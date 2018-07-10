@@ -11,7 +11,7 @@ export default {
       hyperapp: 'hyperapp'
     }
   },
-  input: 'src/index.js',
+  input: 'components/index.js',
   external: ['hyperapp'],
   plugins: [
     commonjs({
