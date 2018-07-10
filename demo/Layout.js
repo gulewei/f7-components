@@ -10,7 +10,7 @@ export default ({ key, title, outside }, children) => {
       navbar={
         <Navbar
           left={
-            <Link to='/'><ImgIcon name='back' /></Link>
+            <a onclick={() => window.history.back()}><ImgIcon name='back' /></a>
           }
           center={title}
         />

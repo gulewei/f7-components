@@ -443,10 +443,19 @@ export interface PickerColumnsProperties {
   onChange: (values: string[]) => any
 }
 export interface PickerProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties { }
+export interface PickerMethodProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties {
+  content?: JSX.Element
+  toolbarText?: string
+}
+export interface PickerComponent<P> extends Component<P> {
+  open: (props: PickerMethodProperties) => void,
+  openConent: (props: PickerColumnProperties) => void,
+  close: () => void
+}
 /**
  * Picker component
  */
-export const Picker: Component<PickerProperties>
+export const Picker: PickerComponent<PickerProperties>
 export interface ContentPickerProperties extends PickerWraperProperties, PickerModalProperties { }
 /**
  * Custom picker content

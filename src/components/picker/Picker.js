@@ -6,6 +6,7 @@ import Overlay, { enumOverlayTypes } from '../overlay'
 import PickerModal from './Modal'
 // eslint-disable-next-line
 import PickerColumns from './Columns'
+import cc from 'classnames'
 
 /**
  * @typedef {Object} PickerItem
@@ -49,7 +50,7 @@ const Picker = (props, children) => {
   } = props
 
   return (
-    <div key={wraperKey} class={wraperClass}>
+    <div key={wraperKey} class={cc('protal-picker', wraperClass)}>
       {show && [
         <Overlay type={enumOverlayTypes.picker} onOverlayClick={onOverlayClick} />,
         <PickerModal {...{ modalClass, toolbar }}>

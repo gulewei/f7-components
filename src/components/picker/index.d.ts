@@ -86,21 +86,32 @@ export interface PickerColumnsProperties {
 
 export interface PickerProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties { }
 
+export interface PickerMethodProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties {
+  content?: JSX.Element
+  toolbarText?: string
+}
+
+export interface PickerComponent<P> extends Component<P> {
+  open: (props: PickerMethodProperties) => void,
+  openConent: (props: PickerColumnProperties) => void,
+  close: () => void
+}
+
 /**
  * Picker component
  */
-declare const Picker: Component<PickerProperties>
+declare const Picker: PickerComponent<PickerProperties>
 
 export default Picker
 
-export interface ContentPickerProperties extends PickerWraperProperties, PickerModalProperties {}
+export interface ContentPickerProperties extends PickerWraperProperties, PickerModalProperties { }
 
 /**
  * Custom picker content
  */
 export const ContentPicker: Component<ContentPickerProperties>
 
-export interface InlinePickerProperties extends PickerModalProperties, PickerColumnsProperties {}
+export interface InlinePickerProperties extends PickerModalProperties, PickerColumnsProperties { }
 
 /**
  * Inline picker
@@ -115,7 +126,7 @@ export interface PickerToolbarProperties {
 
   center?: JSX.Element
 
-  toolbarClass?:  string
+  toolbarClass?: string
 }
 
 export const PickerToolbar: Component<PickerToolbarProperties>

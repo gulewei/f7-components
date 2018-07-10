@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { Page, ContentBlock, List, ListItem, Picker, PickerToolbar } from '../../src'
+import { ContentBlock, List, ListItem, Picker, PickerToolbar } from '../../src'
 import Layout from '../Layout'
 
 const pickerItem = (label, value) => {
@@ -57,6 +57,7 @@ const cascadeColumn = mocker.cascadeDate()
 export default {
   state: {
     date: [5, 18],
+    date2: [7, 10],
     picker: {
       show: false
     }
@@ -64,6 +65,9 @@ export default {
   actions: {
     pickeDate: (date) => {
       return { date }
+    },
+    pickeDate2: (date2) => {
+      return { date2 }
     },
     picker: {
       open: () => {
@@ -76,6 +80,7 @@ export default {
   },
   view: (state, actions) => {
     window.$_picker = { state, actions }
+    window.$_internal_picker = Picker.internalState
 
     return (
       <Layout
@@ -93,7 +98,6 @@ export default {
             }}
             toolbar={
               <PickerToolbar right={
-                // <PickerLink text="Done" onclick={actions.picker.close} />
                 <a class="link" onclick={actions.picker.close}>Done</a>
               } />
             }
@@ -104,12 +108,31 @@ export default {
         <List>
           <ListItem
             isLink
-            title="Picker Item"
+            title="Picker"
             input={
               <input
                 type="text"
                 value={state.date.join(' - ')}
                 onclick={actions.picker.open}
+                readonly
+              />
+            }
+          />
+          <ListItem
+            isLink
+            title="Method"
+            input={
+              <input
+                type="text"
+                value={state.date2.join(' - ')}
+                onclick={() => {
+                  Picker.open({
+                    items: cascadeColumn,
+                    cascade: true,
+                    values: state.date2,
+                    onChange: actions.pickeDate2
+                  })
+                }}
                 readonly
               />
             }
