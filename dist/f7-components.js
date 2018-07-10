@@ -1849,7 +1849,7 @@
 
 	  return hyperapp.h(
 	    'div',
-	    { key: wraperKey, 'class': wraperClass },
+	    { key: wraperKey, 'class': classnames('protal-picker', wraperClass) },
 	    show && [hyperapp.h(Overlay, { type: enumOverlayTypes.picker, onOverlayClick: onOverlayClick }), hyperapp.h(
 	      PickerModal,
 	      { modalClass: modalClass, toolbar: toolbar },
@@ -2000,6 +2000,110 @@
 	    )
 	  );
 	};
+
+	var state$1 = {
+	  // internal
+	  isColumnPicker: true,
+	  // extra props
+	  content: null,
+	  toolbarText: 'Done',
+	  // wraper
+	  show: false,
+	  wraperClass: '',
+	  wraperKey: '',
+	  onOverlayClick: null,
+	  // modal
+	  modalClass: '',
+	  toolbar: null,
+	  // columns
+	  cascade: false,
+	  items: [],
+	  values: [],
+	  columns: null,
+	  onChange: function onChange() {}
+	};
+
+	var actions$2 = {
+	  openPicker: function openPicker(props) {
+	    return _extends({}, props, {
+	      show: true,
+	      isColumnPicker: true
+	    });
+	  },
+	  openContent: function openContent(props) {
+	    return _extends({}, props, {
+	      show: true,
+	      isColumnPicker: false
+	    });
+	  },
+	  close: function close() {
+	    return state$1;
+	  },
+	  readState: function readState(reader) {
+	    return function (state) {
+	      return reader(state);
+	    };
+	  }
+	};
+
+	var view$2 = function view(state, actions) {
+	  var isColumnPicker = state.isColumnPicker,
+	      content = state.content,
+	      toolbarText = state.toolbarText,
+	      onOverlayClick = state.onOverlayClick,
+	      toolbar = state.toolbar,
+	      rest = objectWithoutProperties(state, ['isColumnPicker', 'content', 'toolbarText', 'onOverlayClick', 'toolbar']);
+
+
+	  var handleOverlayClick = onOverlayClick || actions.close;
+	  var toolbarVNode = toolbar || hyperapp.h(PickerToolbar, { right: hyperapp.h(
+	      'a',
+	      { 'class': 'link', onclick: actions.close },
+	      toolbarText
+	    ) });
+
+	  return isColumnPicker ? hyperapp.h(Picker, _extends({}, rest, {
+	    onOverlayClick: handleOverlayClick,
+	    toolbar: toolbarVNode
+	  })) : hyperapp.h(
+	    ContentPicker,
+	    _extends({}, rest, {
+	      onOverlayClick: handleOverlayClick,
+	      toolbar: toolbarVNode
+	    }),
+	    content
+	  );
+	};
+
+	var api$2 = function api(_ref) {
+	  var open = _ref.openPicker,
+	      openContent = _ref.openContent,
+	      close = _ref.close,
+	      readState = _ref.readState;
+
+	  var methods = { open: open, openContent: openContent, close: close
+	    // for debug only
+	  };var internalState = void 0;
+	  Object.defineProperty(methods, 'internalState', {
+	    get: function get$$1() {
+	      readState(function (state) {
+	        internalState = state;
+	      });
+	      return _extends({}, internalState);
+	    }
+	  });
+	  return methods;
+	};
+
+	var plugin$2 = {
+	  state: state$1,
+	  actions: actions$2,
+	  view: view$2,
+	  api: api$2
+	};
+
+	var apis$2 = install(plugin$2);
+	var Picker$1 = apiMixin(Picker, apis$2);
 
 	var transitionCls = 'pull-to-refresh-transition';
 
@@ -2385,7 +2489,7 @@
 	  duration: defaultDuration
 	};
 
-	var actions$2 = {
+	var actions$3 = {
 	  toast: function toast(_ref) {
 	    var msg = _ref.msg,
 	        _ref$duration = _ref.duration,
@@ -2409,11 +2513,11 @@
 	  }
 	};
 
-	var view$2 = function view(state, actions) {
+	var view$3 = function view(state, actions) {
 	  return hyperapp.h(Toast, { show: state.show, msg: state.msg });
 	};
 
-	var api$2 = function api(_ref2) {
+	var api$3 = function api(_ref2) {
 	  var toast = _ref2.toast;
 
 	  return {
@@ -2423,15 +2527,15 @@
 	  };
 	};
 
-	var plugin$2 = {
+	var plugin$3 = {
 	  state: defaultState$1,
-	  actions: actions$2,
-	  view: view$2,
-	  api: api$2
+	  actions: actions$3,
+	  view: view$3,
+	  api: api$3
 	};
 
-	var apis$2 = install(plugin$2);
-	var Toast$1 = apiMixin(Toast, apis$2);
+	var apis$3 = install(plugin$3);
+	var Toast$1 = apiMixin(Toast, apis$3);
 
 	// eslint-disable-next-line
 
@@ -2460,7 +2564,7 @@
 	exports.Overlay = Overlay;
 	exports.enumOverlayTypes = enumOverlayTypes;
 	exports.Page = Page;
-	exports.Picker = Picker;
+	exports.Picker = Picker$1;
 	exports.ContentPicker = ContentPicker;
 	exports.InlinePicker = InlinePicker;
 	exports.PickerToolbar = PickerToolbar;
