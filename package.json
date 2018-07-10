@@ -10,11 +10,11 @@
     "f7-components.d.ts"
   ],
   "scripts": {
-    "start": "parcel kitchen-sink/main.html --out-dir .ksdist",
+    "start": "parcel kitchen-sink/main.html --out-dir .ksdist --no-autoinstall",
     "commit:ks": "git add docs/kitchen-sink/ && git commit -m \"ks build\"",
     "build:ks": "parcel build kitchen-sink/main.html -d docs/kitchen-sink --public-url ./ --out-file index.html && npm run commit:ks",
     "commit:prod": "git add dist/ && git commit -m \"prod build\"",
-    "build:prod": "rollup -c && parcel build src/index.less --no-minify --no-source-maps --out-file f7-components.css && npm run commit:prod",
+    "build:prod": "rollup -c && parcel build conponents/index.less --no-minify --no-source-maps --out-file f7-components.css && npm run commit:prod",
     "release": "npm run build:prod && npm version patch && npm publish --access=public"
   },
   "repository": {
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/venecy/f7c#readme",
   "peerDependencies": {
-    "hyperapp": "^1.2.5"
+    "hyperapp": "^1.2.6"
   },
   "engines": {
     "node": ">= 4.0.0",
@@ -72,7 +72,6 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
-    "hyperapp": "^1.2.6"
+    "classnames": "^2.2.6"
   }
 }

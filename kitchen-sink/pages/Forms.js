@@ -8,7 +8,7 @@ import {
   RangeSlider,
   CheckboxItem,
   RadioItem
-} from '../../src'
+} from '../../components'
 import Layout from '../Layout'
 
 const F7Icon = <ImgIcon name='f7' />

@@ -11,7 +11,7 @@ import Modals from './pages/Modals'
 import Overlay from './pages/Overlay'
 import Picker from './pages/Picker'
 import PullToRefresh from './pages/PullToRefresh'
-import '../src/index.less'
+import '../components/index.less'
 
 withRouter(app, createHashHistory())(
   {

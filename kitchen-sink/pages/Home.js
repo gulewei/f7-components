@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import { Page, ContentBlock, List, ListItem, Navbar, ImgIcon } from '../../src'
+import { Page, ContentBlock, List, ListItem, Navbar, ImgIcon } from '../../components'
 // eslint-disable-next-line
 import { Link } from 'hyperapp-hoa-router'
 
