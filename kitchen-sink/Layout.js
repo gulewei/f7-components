@@ -1,23 +1,24 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { Link } from 'hyperapp-hoa-router'
-import { Page, Navbar, ImgIcon } from '../components'
+import { Page, Navbar, ImgIcon, CSSTransition } from '../components'
 
 export default ({ key, title, outside }, children) => {
   return (
-    <Page
-      key={key}
-      navbar={
-        <Navbar
-          left={
-            <a onclick={() => window.history.back()}><ImgIcon name='back' /></a>
-          }
-          center={title}
-        />
-      }
-      outside={outside}
-    >
-      {children}
-    </Page>
+    <CSSTransition>
+      <Page
+        key={key}
+        navbar={
+          <Navbar
+            left={
+              <a onclick={() => window.history.back()}><ImgIcon name='back' /></a>
+            }
+            center={title}
+          />
+        }
+        outside={outside}
+      >
+        {children}
+      </Page>
+    </CSSTransition>
   )
 }

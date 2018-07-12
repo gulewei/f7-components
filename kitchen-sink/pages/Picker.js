@@ -118,6 +118,9 @@ export default {
               />
             }
           />
+        </List>
+        <ContentBlock title="Open by method" />
+        <List>
           <ListItem
             isLink
             title="Method"
