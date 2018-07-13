@@ -15,7 +15,8 @@ const routerList = [
   { title: 'Modals', to: '/modals' },
   { title: 'Overlay', to: '/overlay' },
   { title: 'Picker', to: '/picker' },
-  { title: 'PullToRefresh', to: '/pull-to-refresh' }
+  { title: 'PullToRefresh', to: '/pull-to-refresh' },
+  { title: 'Animation', to: '/animation' }
 ]
 
 export default {

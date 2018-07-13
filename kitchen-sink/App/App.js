@@ -10,6 +10,7 @@ import Modals from './Modals'
 import Overlay from './Overlay'
 import Picker from './Picker'
 import PullToRefresh from './PullToRefresh'
+import Animation from './Animation'
 
 export default {
   state: {
@@ -18,7 +19,8 @@ export default {
     modals: Modals.state,
     overlay: Overlay.state,
     picker: Picker.state,
-    ptr: PullToRefresh.state
+    ptr: PullToRefresh.state,
+    anim: Animation.state
   },
   actions: {
     forms: Forms.actions,
@@ -26,7 +28,8 @@ export default {
     modals: Modals.actions,
     overlay: Overlay.actions,
     picker: Picker.actions,
-    ptr: PullToRefresh.actions
+    ptr: PullToRefresh.actions,
+    anim: Animation.actions
   },
   view: (state, actions) => {
     return (
@@ -39,6 +42,7 @@ export default {
         <Route path="/overlay" render={() => Overlay.view(state.overlay, actions.overlay)} />
         <Route path="/picker" render={() => Picker.view(state.picker, actions.picker)} />
         <Route path="/pull-to-refresh" render={() => PullToRefresh.view(state.ptr, actions.ptr)} />
+        <Route path="/animation" render={() => Animation.view(state.anim, actions.anim)} />
       </Switch>
     )
   }

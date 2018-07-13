@@ -32,3 +32,17 @@ i.icon.icon-f7 {
 .ptr {
   background-color: #fff;
 }
+
+/* transtion */
+.test-slidein {
+  transform: translateX(100%);
+}
+.test-slidein-active {
+  transform: translatex(0);
+  transition: all ease .4s;
+}
+.test-slideout {}
+.test-slideout-active {
+  transform: translateX(-100%);
+  transition: all ease-in-out .4s;
+}
