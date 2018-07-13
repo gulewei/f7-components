@@ -2,6 +2,7 @@
 import { h } from 'hyperapp'
 // eslint-disable-next-line
 import { Route, Switch } from 'hyperapp-hoa-router'
+import { View } from '../../components'
 import Home from './Home'
 import Button from './Button'
 import Forms from './Forms'
@@ -33,17 +34,19 @@ export default {
   },
   view: (state, actions) => {
     return (
-      <Switch>
-        <Route path="/" render={Home.view} />
-        <Route path="/button" render={Button.view} />
-        <Route path="/forms" render={() => Forms.view(state.forms, actions.forms)} />
-        <Route path="/list" render={() => List.view(state.list, actions.list)} />
-        <Route path="/modals" render={() => Modals.view(state.modals, actions.modals)} />
-        <Route path="/overlay" render={() => Overlay.view(state.overlay, actions.overlay)} />
-        <Route path="/picker" render={() => Picker.view(state.picker, actions.picker)} />
-        <Route path="/pull-to-refresh" render={() => PullToRefresh.view(state.ptr, actions.ptr)} />
-        <Route path="/animation" render={() => Animation.view(state.anim, actions.anim)} />
-      </Switch>
+      <View>
+        <Switch>
+          <Route path="/" render={Home.view} />
+          <Route path="/button" render={Button.view} />
+          <Route path="/forms" render={() => Forms.view(state.forms, actions.forms)} />
+          <Route path="/list" render={() => List.view(state.list, actions.list)} />
+          <Route path="/modals" render={() => Modals.view(state.modals, actions.modals)} />
+          <Route path="/overlay" render={() => Overlay.view(state.overlay, actions.overlay)} />
+          <Route path="/picker" render={() => Picker.view(state.picker, actions.picker)} />
+          <Route path="/pull-to-refresh" render={() => PullToRefresh.view(state.ptr, actions.ptr)} />
+          <Route path="/animation" render={() => Animation.view(state.anim, actions.anim)} />
+        </Switch>
+      </View>
     )
   }
 }

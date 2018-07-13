@@ -97,6 +97,12 @@ export interface CheckProperties {
 export function runAndCleanUp (): {
   (element: HTMLElement, startAnimation: () => void, finishAnimation: () => void): void
 }
+export function runEnter (): {
+  (element: HTMLElement, enterAnimationActive: string, enterAnimation: string): void
+}
+export function runExit (): {
+  (element: HTMLElement, enterAnimationActive: string, enterAnimation: string, removeNode: () => void): void
+}
 export interface CSSTransitionProperties {
   /**
    * Enter class name

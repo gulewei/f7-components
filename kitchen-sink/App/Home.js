@@ -1,9 +1,10 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import { Page, ContentBlock, List, ListItem, Navbar, ImgIcon } from '../../components'
+import { ContentBlock, List, ListItem, ImgIcon } from '../../components'
 // eslint-disable-next-line
 import { Link } from 'hyperapp-hoa-router'
+import Layout from '../Layout'
 
 // eslint-disable-next-line
 const F7Icon = <ImgIcon name='f7' />
@@ -24,12 +25,7 @@ export default {
   actions: {},
   view: () => {
     return (
-      <Page
-        key='home'
-        navbar={
-          <Navbar center='F7 Components' />
-        }
-      >
+      <Layout key="home" title="F7 Components">
         <ContentBlock title='Components' />
         <List>
           {
@@ -42,7 +38,7 @@ export default {
             })
           }
         </List>
-      </Page>
+      </Layout>
     )
   }
 }

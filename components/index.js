@@ -1,4 +1,4 @@
-export { default as CSSTransition, runAndCleanUp } from './animation'
+export { default as CSSTransition, runAndCleanUp, runEnter, runExit } from './animation'
 export { default as Button } from './button'
 export { default as CheckboxItem } from './checkbox-item'
 export { default as ContentBlock } from './content-block'
