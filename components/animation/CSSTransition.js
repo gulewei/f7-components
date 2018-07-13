@@ -29,7 +29,6 @@ const CSSTransition = (props, children) => {
   let replaceAttr = {}
 
   if (enter) {
-    replaceAttr.class = cc(attr.class, { [enter]: enter })
     replaceAttr.oncreate = (el) => {
       if (enter) {
         runEnter(el, enterActive, enter)

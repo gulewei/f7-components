@@ -70,10 +70,13 @@ export function runEnter (node, enterAnimationActive, enterAnimation) {
   runAndCleanUp(
     node,
     () => {
-      // node.classList.add(enterAnimation)
+      node.classList.add(enterAnimation)
 
       requestAnimationFrame(function () {
-        node.classList.add(activeClass)
+        // bug: add active-class in this frome won't perform transition as expected, but add in next frame will
+        requestAnimationFrame(function () {
+          node.classList.add(activeClass)
+        })
       })
     },
     () => {
