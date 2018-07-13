@@ -128,10 +128,13 @@
 	  var activeClass = enterAnimationActive || enterAnimation + '-active';
 
 	  runAndCleanUp(node, function () {
-	    // node.classList.add(enterAnimation)
+	    node.classList.add(enterAnimation);
 
 	    requestAnimationFrame(function () {
-	      node.classList.add(activeClass);
+	      // bug: add active-class in this frome won't perform transition as expected, but add in next frame will
+	      requestAnimationFrame(function () {
+	        node.classList.add(activeClass);
+	      });
 	    });
 	  }, function () {
 	    node.classList.remove(enterAnimation);
@@ -261,7 +264,6 @@
 	  var replaceAttr = {};
 
 	  if (enter) {
-	    replaceAttr.class = classnames(attr.class, defineProperty({}, enter, enter));
 	    replaceAttr.oncreate = function (el) {
 	      if (enter) {
 	        runEnter(el, enterActive, enter);
