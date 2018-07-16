@@ -21,7 +21,7 @@ const ContentBlock = (props, children) => {
     ...rests
   } = props
 
-  const elClass = cc(
+  const classes = cc(
     rests.class,
     'content-block',
     {
@@ -31,7 +31,7 @@ const ContentBlock = (props, children) => {
   )
 
   const content = (
-    <div {...rests} class={elClass}>
+    <div {...rests} class={classes}>
       {inner
         ? <div class="content-block-inner">{children}</div>
         : children
