@@ -68,7 +68,7 @@ export const ListItem = (props, children) => {
     useLabel,
     contentStart,
     media,
-    title = children,
+    title,
     input,
     after,
     subTitle,
@@ -107,8 +107,8 @@ export const ListItem = (props, children) => {
 
 const renderTitle = (title, input, after) => {
   return [
-    <div key="title" class={cc('item-title', { label: !!input })}>{title}</div>,
-    input && <div class="item-input">{input}</div>,
-    <div key="after" class="item-after">{after}</div>
+    title && <div key="title" class={cc('item-title', { label: !!input })}>{title}</div>,
+    input && <div key="input" class="item-input">{input}</div>,
+    after && <div key="after" class="item-after">{after}</div>
   ]
 }
