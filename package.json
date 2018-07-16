@@ -11,11 +11,12 @@
   ],
   "scripts": {
     "start": "parcel kitchen-sink/main.html --out-dir .ksdist --no-autoinstall",
+    "build": "npm run build:ks && npm run commit:ks && npm run build:prod && npm run commit:prod",
     "commit:ks": "git add docs/kitchen-sink/ && git commit -m \"ks build\"",
-    "build:ks": "git rm docs/kitchen-sink -r && parcel build kitchen-sink/main.html -d docs/kitchen-sink --public-url ./ --out-file index.html && npm run commit:ks",
+    "build:ks": "git rm docs/kitchen-sink -r && parcel build kitchen-sink/main.html -d docs/kitchen-sink --public-url ./ --out-file index.html",
     "commit:prod": "git add dist/ && git commit -m \"prod build\"",
-    "build:prod": "rollup -c && parcel build components/index.less --no-minify --no-source-maps --out-file f7-components.css && npm run commit:prod",
-    "release": "npm run build:prod && npm version patch && npm publish --access=public"
+    "build:prod": "git rm dist/ -r && rollup -c && parcel build components/index.less --no-minify --no-source-maps --out-file f7-components.css",
+    "release": "npm run build && npm version patch && npm publish --access=public"
   },
   "repository": {
     "type": "git",
