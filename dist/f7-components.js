@@ -414,8 +414,7 @@
 	      useLabel = props.useLabel,
 	      contentStart = props.contentStart,
 	      media = props.media,
-	      _props$title = props.title,
-	      title = _props$title === undefined ? children : _props$title,
+	      title = props.title,
 	      input = props.input,
 	      after = props.after,
 	      subTitle = props.subTitle,
@@ -461,15 +460,15 @@
 	  );
 	};
 	var renderTitle = function renderTitle(title, input, after) {
-	  return [hyperapp.h(
+	  return [title && hyperapp.h(
 	    'div',
 	    { key: 'title', 'class': classnames('item-title', { label: !!input }) },
 	    title
 	  ), input && hyperapp.h(
 	    'div',
-	    { 'class': 'item-input' },
+	    { key: 'input', 'class': 'item-input' },
 	    input
-	  ), hyperapp.h(
+	  ), after && hyperapp.h(
 	    'div',
 	    { key: 'after', 'class': 'item-after' },
 	    after
@@ -1804,7 +1803,7 @@
 	 * @returns {PickerItem[][]}
 	 */
 	function compatDatas(data) {
-	  return data[0].value ? data : [data];
+	  return data[0].value ? [data] : data;
 	}
 
 	// eslint-disable-next-line
@@ -2009,6 +2008,7 @@
 	  // extra props
 	  content: null,
 	  toolbarText: 'Done',
+	  onDone: function onDone() {},
 	  // wraper
 	  show: false,
 	  wraperClass: '',
@@ -2026,6 +2026,9 @@
 	};
 
 	var actions$2 = {
+	  changValue: function changValue(values) {
+	    return { values: values };
+	  },
 	  openPicker: function openPicker(props) {
 	    return _extends({}, props, {
 	      show: true,
@@ -2043,7 +2046,7 @@
 	  },
 	  readState: function readState(reader) {
 	    return function (state) {
-	      return reader(state);
+	      reader(state);
 	    };
 	  }
 	};
@@ -2052,21 +2055,32 @@
 	  var isColumnPicker = state.isColumnPicker,
 	      content = state.content,
 	      toolbarText = state.toolbarText,
+	      onDone = state.onDone,
 	      onOverlayClick = state.onOverlayClick,
 	      toolbar = state.toolbar,
-	      rest = objectWithoutProperties(state, ['isColumnPicker', 'content', 'toolbarText', 'onOverlayClick', 'toolbar']);
+	      _onChange = state.onChange,
+	      values = state.values,
+	      rest = objectWithoutProperties(state, ['isColumnPicker', 'content', 'toolbarText', 'onDone', 'onOverlayClick', 'toolbar', 'onChange', 'values']);
 
 
 	  var handleOverlayClick = onOverlayClick || actions.close;
 	  var toolbarVNode = toolbar || hyperapp.h(PickerToolbar, { right: hyperapp.h(
 	      'a',
-	      { 'class': 'link', onclick: actions.close },
+	      { 'class': 'link', onclick: function onclick() {
+	          actions.close();
+	          onDone(values);
+	        } },
 	      toolbarText
 	    ) });
 
 	  return isColumnPicker ? hyperapp.h(Picker, _extends({}, rest, {
+	    values: values,
 	    onOverlayClick: handleOverlayClick,
-	    toolbar: toolbarVNode
+	    toolbar: toolbarVNode,
+	    onChange: function onChange(values) {
+	      actions.changValue(values);
+	      _onChange(values);
+	    }
 	  })) : hyperapp.h(
 	    ContentPicker,
 	    _extends({}, rest, {
@@ -2555,6 +2569,8 @@
 
 	exports.CSSTransition = CSSTransition;
 	exports.runAndCleanUp = runAndCleanUp;
+	exports.runEnter = runEnter;
+	exports.runExit = runExit;
 	exports.Button = index;
 	exports.CheckboxItem = CheckboxItem;
 	exports.ContentBlock = ContentBlock;
