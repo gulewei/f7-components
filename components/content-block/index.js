@@ -18,11 +18,11 @@ const ContentBlock = (props, children) => {
     inset,
     title,
     noHairlines,
-    ...elProps
+    ...rests
   } = props
 
   const elClass = cc(
-    elProps.class,
+    rests.class,
     'content-block',
     {
       inset,
@@ -30,22 +30,19 @@ const ContentBlock = (props, children) => {
     }
   )
 
-  return renderWithTitle(title,
-    children.length > 0 && <div {...elProps} class={elClass}>
-      {renderContent(inner, children)}
+  const content = (
+    <div {...rests} class={elClass}>
+      {inner
+        ? <div class="content-block-inner">{children}</div>
+        : children
+      }
     </div>
   )
-}
 
-function renderWithTitle (title, content) {
-  return title ? [
-    <div class="content-block-title">{title}</div>,
-    content
-  ] : content
-}
-
-function renderContent (inner, content) {
-  return inner ? <div class="content-block-inner">{content}</div> : content
+  return [
+    title && <div class="content-block-title">{title}</div>,
+    children.length > 0 && content
+  ]
 }
 
 export default ContentBlock
