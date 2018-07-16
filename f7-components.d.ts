@@ -452,10 +452,11 @@ export interface PickerProperties extends PickerWraperProperties, PickerModalPro
 export interface PickerMethodProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties {
   content?: JSX.Element
   toolbarText?: string
+  onDone?: (values: string[]) => void
 }
 export interface PickerComponent<P> extends Component<P> {
   open: (props: PickerMethodProperties) => void,
-  openConent: (props: PickerColumnProperties) => void,
+  openConent: (props: PickerMethodProperties) => void,
   close: () => void
 }
 /**
