@@ -8,6 +8,7 @@ const state = {
   // extra props
   content: null,
   toolbarText: 'Done',
+  onDone: () => { },
   // wraper
   show: false,
   wraperClass: '',
@@ -25,6 +26,9 @@ const state = {
 }
 
 const actions = {
+  changValue: (values) => {
+    return {values}
+  },
   openPicker: (props) => {
     return {
       ...props,
@@ -52,22 +56,33 @@ const view = (state, actions) => {
     isColumnPicker,
     content,
     toolbarText,
+    onDone,
     onOverlayClick,
     toolbar,
+    onChange,
+    values,
     ...rest
   } = state
 
   const handleOverlayClick = onOverlayClick || actions.close
   const toolbarVNode = toolbar || <PickerToolbar right={
-    <a class="link" onclick={actions.close}>{toolbarText}</a>
+    <a class="link" onclick={() => {
+      actions.close()
+      onDone(values)
+    }}>{toolbarText}</a>
   } />
 
   return (
     isColumnPicker
       ? <Picker
         {...rest}
+        values={values}
         onOverlayClick={handleOverlayClick}
         toolbar={toolbarVNode}
+        onChange={(values) => {
+          actions.changValue(values)
+          onChange(values)
+        }}
       />
       : <ContentPicker
         {...rest}
