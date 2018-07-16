@@ -17,7 +17,7 @@ const routerList = [
   { title: 'Overlay', to: '/overlay' },
   { title: 'Picker', to: '/picker' },
   { title: 'PullToRefresh', to: '/pull-to-refresh' },
-  { title: 'Animation', to: '/animation' }
+  { title: 'Transition', to: '/transition' }
 ]
 
 export default {
@@ -31,7 +31,7 @@ export default {
           {
             routerList.map(({ title, to }) => {
               return (
-                <Link to={to}>
+                <Link to={to} key={title}>
                   <ListItem media={F7Icon} title={title} isLink />
                 </Link>
               )

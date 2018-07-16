@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { ContentBlock, List, ListItem, Picker, PickerToolbar } from '../../components'
+import { ContentBlock, List, ListItem, Picker, PickerToolbar, ContentPicker, InlinePicker } from '../../components'
 import Layout from '../Layout'
 
 const pickerItem = (label, value) => {
@@ -8,19 +8,17 @@ const pickerItem = (label, value) => {
 }
 
 const mocker = {
-  range (start, end) {
+  _range (start, end) {
     let ranges = []
     for (let i = start; i <= end; i++) {
       ranges.push(i)
     }
     return ranges
   },
-
-  mons () {
-    return mocker.range(1, 12).map(m => pickerItem(`${m}月`, m))
+  _mons () {
+    return mocker._range(1, 12).map(m => pickerItem(`${m}月`, m))
   },
-
-  dates (mon) {
+  _dates (mon) {
     const a = [4, 6, 9, 11]
     const b = 2
     const maper = (date) => {
@@ -28,54 +26,76 @@ const mocker = {
     }
 
     if (a.indexOf(mon) > -1) {
-      return mocker.range(1, 30).map(maper)
+      return mocker._range(1, 30).map(maper)
     } else if (mon === b) {
-      return mocker.range(1, 28).map(maper)
+      return mocker._range(1, 28).map(maper)
     } else {
-      return mocker.range(1, 31).map(maper)
+      return mocker._range(1, 31).map(maper)
     }
   },
-
-  cascadeDate () {
-    return mocker.mons().map(({ value, label }) => {
+  cascade () {
+    return mocker._mons().map(({ value, label }) => {
       return {
         label,
         value,
-        children: mocker.dates(value)
+        children: mocker._dates(value)
       }
     })
   },
-
-  data () {
-    return mocker.range(1, 12).map(m => pickerItem(`${m} mon`, m))
+  simple () {
+    return [
+      'Super Lex Amazing Bat Iron Rocket Lex Cool Beautiful Wonderful Raining Happy Amazing Funny Cool Hot'.split(' ')
+        .map(label => pickerItem(label, label)),
+      'Man Luthor Woman Boy Girl Person Cutie Babe Raccoon'.split(' ').map(label => pickerItem(label, label))
+    ]
+  },
+  single () {
+    return ['iPhone 4', 'iPhone 4S', 'iPhone 5', 'iPhone 5S', 'iPhone 6', 'iPhone 6 Plus', 'iPad 2', 'iPad Retina', 'iPad Air', 'iPad mini', 'iPad mini 2', 'iPad mini 3'].map(label => pickerItem(label, label))
   }
 }
 
-const singleColumn = mocker.data()
-const cascadeColumn = mocker.cascadeDate()
+const singelData = mocker.single()
+const simpleData = mocker.simple()
+const cascadeData = mocker.cascade()
 
 export default {
   state: {
-    date: [5, 18],
-    date2: [7, 10],
-    picker: {
+    contentShow: false,
+    outside: {
       show: false
-    }
+    },
+    cascade: [5, 18],
+    two: ['Super', 'Man'],
+    single: ['iPhone 4'],
+    custom: ['Super', 'Man'],
+    inline: ['Super', 'Man']
   },
   actions: {
-    pickeDate: (date) => {
-      return { date }
+    contentAction: (show) => {
+      return { contentShow: show }
     },
-    pickeDate2: (date2) => {
-      return { date2 }
-    },
-    picker: {
+    outside: {
       open: () => {
         return { show: true }
       },
       close: () => {
         return { show: false }
       }
+    },
+    cascadeAction: (value) => {
+      return { cascade: value }
+    },
+    twoAction: (value) => {
+      return { two: value }
+    },
+    singleAction: (value) => {
+      return { single: value }
+    },
+    customAction: (value) => {
+      return { custom: value }
+    },
+    inlineAction: (value) => {
+      return { inline: value }
     }
   },
   view: (state, actions) => {
@@ -86,54 +106,54 @@ export default {
       <Layout
         key='picker'
         title='Picker'
-        outside={
+        outside={[
           <Picker
-            show={state.picker.show}
-            items={cascadeColumn}
-            cascade={true}
-            values={state.date}
-            onOverlayClick={actions.picker.close}
-            onChange={values => {
-              actions.pickeDate(values)
-            }}
+            show={state.outside.show}
+            items={simpleData}
+            values={state.custom}
+            onOverlayClick={actions.outside.close}
+            onChange={actions.customAction}
             toolbar={
-              <PickerToolbar right={
-                <a class="link" onclick={actions.picker.close}>Done</a>
-              } />
-            }
-          />
-        }
-      >
-        <ContentBlock title="Picker" />
-        <List>
-          <ListItem
-            isLink
-            title="Picker"
-            input={
-              <input
-                type="text"
-                value={state.date.join(' - ')}
-                onclick={actions.picker.open}
-                readonly
+              <PickerToolbar
+                left={
+                  <a class="link">Give up</a>
+                }
+                right={
+                  <a class="link" onclick={actions.outside.close}>Ok</a>
+                }
               />
             }
-          />
-        </List>
-        <ContentBlock title="Open by method" />
+          />,
+          <ContentPicker
+            show={state.contentShow}
+            onOverlayClick={() => actions.contentAction(false)}
+            toolbar={
+              <PickerToolbar
+                right={
+                  <a class="link" onclick={() => actions.contentAction(false)}>Done</a>
+                }
+              />
+            }
+          >
+            <ContentBlock>
+              <h4>Info 1</h4>
+              <p>Lorem ipsum dolor...</p>
+            </ContentBlock>
+          </ContentPicker>
+        ]}
+      >
+        <ContentBlock title="Picker With Single Value" />
         <List>
           <ListItem
-            isLink
-            title="Method"
             input={
               <input
                 type="text"
-                value={state.date2.join(' - ')}
+                value={state.single.join('')}
                 onclick={() => {
                   Picker.open({
-                    items: cascadeColumn,
-                    cascade: true,
-                    values: state.date2,
-                    onChange: actions.pickeDate2
+                    items: singelData,
+                    values: state.single,
+                    onChange: actions.singleAction
                   })
                 }}
                 readonly
@@ -141,7 +161,79 @@ export default {
             }
           />
         </List>
-      </Layout>
+        <ContentBlock title="Two Values" />
+        <List>
+          <ListItem
+            input={
+              <input
+                type="text"
+                value={state.two.join(' ')}
+                onclick={() => {
+                  Picker.open({
+                    items: simpleData,
+                    values: state.two,
+                    onChange: actions.twoAction
+                  })
+                }}
+                readonly
+              />
+            }
+          />
+        </List>
+        <ContentBlock title="Cascade Values" />
+        <List>
+          <ListItem
+            input={
+              <input
+                type="text"
+                value={state.cascade.join(' - ')}
+                onclick={() => {
+                  Picker.open({
+                    items: cascadeData,
+                    values: state.cascade,
+                    onChange: actions.cascadeAction,
+                    cascade: true
+                  })
+                }}
+                readonly
+              />
+            }
+          />
+        </List>
+        <ContentBlock title="Custom toolbar" />
+        <List>
+          <ListItem
+            input={
+              <input
+                type="text"
+                value={state.custom.join(' ')}
+                onclick={actions.outside.open}
+                readonly
+              />
+            }
+          />
+        </List>
+        <ContentBlock title="Content Picker">
+          <a class="link" onclick={() => actions.contentAction(true)}>open content</a>
+        </ContentBlock>
+        {/* <ContentBlock title="Inline toolbar" />
+        <List>
+          <ListItem
+            input={
+              <input
+                type="text"
+                readonly
+                value={state.inline.join(' ')}
+              />
+            }
+          />
+        </List>
+        <InlinePicker
+          items={simpleData}
+          values={state.inline}
+          onChange={actions.inlineAction}
+        /> */}
+      </Layout >
     )
   }
 }

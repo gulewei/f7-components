@@ -17,7 +17,10 @@ export default {
   view: (state, actions) => {
     const isIn = state.status === 'in'
     return (
-      <Layout>
+      <Layout
+        key="transition"
+        title="Transition"
+      >
         <ContentBlock title="CSS Transtion">
           <a class="link" onclick={e => {
             isIn ? actions.out() : actions.in()
