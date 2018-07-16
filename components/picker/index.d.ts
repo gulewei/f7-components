@@ -69,7 +69,7 @@ export interface PickerColumnsProperties {
   /**
    * Picker data
    */
-  items: Array<PickerItemProperites>
+  items: Array<PickerItemProperites> | Array<Array<PickerItemProperites>>
   /**
    * Picker value
    */

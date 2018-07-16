@@ -43,7 +43,7 @@ const actions = {
     return state
   },
   readState: (reader) => (state) => {
-    return reader(state)
+    reader(state)
   }
 }
 

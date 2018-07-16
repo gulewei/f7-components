@@ -129,5 +129,5 @@ function getCascadeDatas (items, value) {
  * @returns {PickerItem[][]}
  */
 function compatDatas (data) {
-  return data[0].value ? data : [data]
+  return data[0].value ? [data] : data
 }
