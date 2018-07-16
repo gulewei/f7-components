@@ -12,7 +12,7 @@
   "scripts": {
     "start": "parcel kitchen-sink/main.html --out-dir .ksdist --no-autoinstall",
     "commit:ks": "git add docs/kitchen-sink/ && git commit -m \"ks build\"",
-    "build:ks": "parcel build kitchen-sink/main.html -d docs/kitchen-sink --public-url ./ --out-file index.html && npm run commit:ks",
+    "build:ks": "git rm docs/kitchen-sink -r && parcel build kitchen-sink/main.html -d docs/kitchen-sink --public-url ./ --out-file index.html && npm run commit:ks",
     "commit:prod": "git add dist/ && git commit -m \"prod build\"",
     "build:prod": "rollup -c && parcel build components/index.less --no-minify --no-source-maps --out-file f7-components.css && npm run commit:prod",
     "release": "npm run build:prod && npm version patch && npm publish --access=public"
