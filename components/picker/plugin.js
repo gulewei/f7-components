@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import Picker, { ContentPicker } from './Picker'
 import PickerToolbar from './Toolbar'
 import { h } from 'hyperapp'
+/* eslint-enable no-unused-vars */
 
 const state = {
   // internal
