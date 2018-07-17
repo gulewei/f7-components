@@ -6,7 +6,8 @@
   "typings": "f7-components.d.ts",
   "files": [
     "dist",
-    "src",
+    "components",
+    "lib",
     "f7-components.d.ts"
   ],
   "scripts": {
