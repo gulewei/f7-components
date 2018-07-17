@@ -3,7 +3,7 @@ import { h } from 'hyperapp'
 // eslint-disable-next-line
 import { Route, Switch } from 'hyperapp-hoa-router'
 // eslint-disable-next-line
-import { View } from '../../components'
+import { View, runEnter, runExit } from '../../components'
 import Home from './Home'
 import Button from './Button'
 import Forms from './Forms'
@@ -22,7 +22,10 @@ export default {
     overlay: Overlay.state,
     picker: Picker.state,
     ptr: PullToRefresh.state,
-    transition: Transition.state
+    transition: Transition.state,
+    pageAnim: {
+      direction: 'center'
+    }
   },
   actions: {
     forms: Forms.actions,
@@ -31,13 +34,33 @@ export default {
     overlay: Overlay.actions,
     picker: Picker.actions,
     ptr: PullToRefresh.actions,
-    transition: Transition.actions
+    transition: Transition.actions,
+    pageAnim: {
+      changeDirection: (direction) => {
+        return { direction }
+      },
+      pageCreate: (el) => ({ direction }) => {
+        if (direction === 'center') {
+          return
+        }
+        direction === 'forward'
+          ? runEnter(el, 'page-from-right-to-center', 'page-on-right', () => { })
+          : runEnter(el, 'page-from-left-to-center', 'page-on-left', () => { })
+      },
+      pageRemove: ({ el, done }) => ({ direction }) => {
+        direction === 'forward'
+          ? runExit(el, 'page-from-center-to-left', 'page-on-center', done)
+          : runExit(el, 'page-from-center-to-right', 'page-on-center', done)
+      }
+    }
   },
   view: (state, actions) => {
+    window.$app = { state, actions }
+
     return (
       <View>
         <Switch>
-          <Route path="/" render={Home.view} />
+          <Route path="/" render={() => Home.view(state, actions)} />
           <Route path="/button" render={Button.view} />
           <Route path="/forms" render={() => Forms.view(state.forms, actions.forms)} />
           <Route path="/list" render={() => ListView.view(state.list, actions.list)} />

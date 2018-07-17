@@ -4,6 +4,7 @@ import { h } from 'hyperapp'
 import { ContentBlock, List, ListItem, ImgIcon } from '../../components'
 // eslint-disable-next-line
 import { Link } from 'hyperapp-hoa-router'
+// eslint-disable-next-line
 import Layout from '../Layout'
 
 // eslint-disable-next-line
@@ -23,15 +24,21 @@ const routerList = [
 export default {
   state: {},
   actions: {},
-  view: () => {
+  view: (_, { pageAnim }) => {
     return (
-      <Layout key="home" title="F7 Components">
+      <Layout noBackIcon key="home" title="F7 Components">
         <ContentBlock title='Components' />
         <List>
           {
             routerList.map(({ title, to }) => {
               return (
-                <Link to={to} key={title}>
+                <Link
+                  key={title}
+                  to={to}
+                  onclick={() => {
+                    pageAnim.changeDirection('forward')
+                  }}
+                >
                   <ListItem media={F7Icon} title={title} isLink />
                 </Link>
               )

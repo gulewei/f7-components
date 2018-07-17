@@ -1,21 +1,26 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { Page, Navbar, ImgIcon, runEnter, runExit } from '../components'
+import { Page, Navbar, ImgIcon } from '../components'
 
-export default ({ key, title, outside }, children) => {
+export default ({ key, title, outside, noBackIcon }, children) => (_, { pageAnim }) => {
   return (
     <Page
       key={key}
-      // oncreate={(el) => {
-      //   runEnter(el, 'page-from-right-to-center', 'page-on-right')
-      // }}
-      // onremove={(el, done) => {
-      //   runExit(el, 'page-from-center-to-left', 'page-on-center', done)
-      // }}
+      oncreate={pageAnim.pageCreate}
+      onremove={(el, done) => { pageAnim.pageRemove({ el, done }) }}
       navbar={
         <Navbar
           left={
-            <a onclick={() => window.history.back()}><ImgIcon name='back' /></a>
+            !noBackIcon && (
+              <a
+                onclick={() => {
+                  pageAnim.changeDirection('backward')
+                  window.history.back()
+                }}
+              >
+                <ImgIcon name='back' />
+              </a>
+            )
           }
           center={title}
         />
