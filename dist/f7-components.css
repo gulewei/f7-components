@@ -1261,6 +1261,7 @@ html.android .page-from-center-to-right:before {
   animation: none;
 }
 .page-from-right-to-center {
+  z-index: 5001;
   -webkit-animation: pageFromRightToCenter 400ms forwards;
   animation: pageFromRightToCenter 400ms forwards;
 }
@@ -1269,6 +1270,7 @@ html.android .page-from-center-to-right:before {
   animation: pageFromRightToCenterShadow 400ms forwards;
 }
 .page-from-center-to-right {
+  z-index: 5001;
   -webkit-animation: pageFromCenterToRight 400ms forwards;
   animation: pageFromCenterToRight 400ms forwards;
 }

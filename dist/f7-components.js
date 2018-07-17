@@ -124,7 +124,7 @@
 	  });
 	}
 
-	function runEnter(node, enterAnimationActive, enterAnimation) {
+	function runEnter(node, enterAnimationActive, enterAnimation, afterEnter) {
 	  var activeClass = enterAnimationActive || enterAnimation + '-active';
 
 	  runAndCleanUp(node, function () {
@@ -139,6 +139,7 @@
 	  }, function () {
 	    node.classList.remove(enterAnimation);
 	    node.classList.remove(activeClass);
+	    afterEnter(node);
 	  });
 	}
 
@@ -241,6 +242,10 @@
 	 * @prop {string} [enterActive]
 	 * @prop {string} [exit]
 	 * @prop {string} [exitActive]
+	 * @prop {(el: HTMLElement) => void} [beforeEnter]
+	 * @prop {(el: HTMLElement) => void} [afterEnter]
+	 * @prop {(el: HTMLElement) => void} [beforeExit]
+	 * @prop {(el: HTMLElement, removeNode: () => void) => void} [afterExit]
 	 *
 	 * @param {CSSTransitionProps} props
 	 * @param {JSX.Element[]} children
@@ -251,7 +256,12 @@
 	      enterActive = _props$enterActive === undefined ? enter + '-active' : _props$enterActive,
 	      exit = props.exit,
 	      _props$exitActive = props.exitActive,
-	      exitActive = _props$exitActive === undefined ? exit + '-active' : _props$exitActive;
+	      exitActive = _props$exitActive === undefined ? exit + '-active' : _props$exitActive,
+	      beforeEnter = props.beforeEnter,
+	      _props$afterEnter = props.afterEnter,
+	      afterEnter = _props$afterEnter === undefined ? function () {} : _props$afterEnter,
+	      beforeExit = props.beforeExit,
+	      afterExit = props.afterExit;
 
 
 	  var child = children[0];
@@ -266,21 +276,24 @@
 	  if (enter) {
 	    replaceAttr.oncreate = function (el) {
 	      if (enter) {
-	        runEnter(el, enterActive, enter);
+	        runEnter(el, enterActive, enter, afterEnter);
 	      }
-	      if (attr.oncreate) {
-	        attr.oncreate(el);
+	      // TOOD: why put this before runEnter can affect Toast animation
+	      if (beforeEnter) {
+	        beforeEnter(el);
 	      }
 	    };
 	  }
 
 	  if (exit) {
 	    replaceAttr.onremove = function (el, done) {
-	      if (exit) {
-	        runExit(el, exitActive, exit, done);
+	      if (beforeExit) {
+	        beforeExit(el);
 	      }
-	      if (attr.onremove) {
-	        attr.onremove(el, function () {});
+	      if (exit) {
+	        runExit(el, exitActive, exit, afterExit ? function () {
+	          return afterExit(el, done);
+	        } : done);
 	      }
 	    };
 	  }
@@ -771,11 +784,12 @@
 	      CSSTransition,
 	      {
 	        enter: enterClass,
-	        exit: exitClass
+	        exit: exitClass,
+	        beforeEnter: sizeModal
 	      },
 	      hyperapp.h(
 	        'div',
-	        { 'class': 'modal', oncreate: sizeModal },
+	        { 'class': 'modal' },
 	        hyperapp.h(
 	          'div',
 	          { 'class': 'modal-inner' },
@@ -2472,15 +2486,15 @@
 	      CSSTransition,
 	      {
 	        enter: enterClass,
-	        exit: exitClass
+	        exit: exitClass,
+	        beforeEnter: function beforeEnter(el) {
+	          sizeEl(el, true, true);
+	        }
 	      },
 	      hyperapp.h(
 	        'div',
 	        {
 	          'class': classnames('toast toast-transition', toastClass),
-	          oncreate: function oncreate(el) {
-	            sizeEl(el, true, true);
-	          },
 	          onclick: onToastClick
 	        },
 	        msg
