@@ -88,12 +88,14 @@
 }
 // From/to Right To/from Center animations
 .page-from-right-to-center {
+  z-index: 5001;
   &:before {
       .animation(pageFromRightToCenterShadow @pageDuration forwards);
   }
   .animation(pageFromRightToCenter @pageDuration forwards);
 }
 .page-from-center-to-right {
+  z-index: 5001;
   &:before {
       .animation(pageFromCenterToRightShadow @pageDuration forwards);
   }
