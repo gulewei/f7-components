@@ -7,6 +7,10 @@ import { runEnter, runExit } from './run-transition'
  * @prop {string} [enterActive]
  * @prop {string} [exit]
  * @prop {string} [exitActive]
+ * @prop {(el: HTMLElement) => void} [beforeEnter]
+ * @prop {(el: HTMLElement) => void} [afterEnter]
+ * @prop {(el: HTMLElement) => void} [beforeExit]
+ * @prop {(el: HTMLElement, removeNode: () => void) => void} [afterExit]
  *
  * @param {CSSTransitionProps} props
  * @param {JSX.Element[]} children
@@ -16,7 +20,11 @@ const CSSTransition = (props, children) => {
     enter,
     enterActive = `${enter}-active`,
     exit,
-    exitActive = `${exit}-active`
+    exitActive = `${exit}-active`,
+    beforeEnter,
+    afterEnter = () => { },
+    beforeExit,
+    afterExit
   } = props
 
   const child = children[0]
@@ -31,21 +39,22 @@ const CSSTransition = (props, children) => {
   if (enter) {
     replaceAttr.oncreate = (el) => {
       if (enter) {
-        runEnter(el, enterActive, enter)
+        runEnter(el, enterActive, enter, afterEnter)
       }
-      if (attr.oncreate) {
-        attr.oncreate(el)
+      // TOOD: why put this before runEnter can affect Toast animation
+      if (beforeEnter) {
+        beforeEnter(el)
       }
     }
   }
 
   if (exit) {
     replaceAttr.onremove = (el, done) => {
-      if (exit) {
-        runExit(el, exitActive, exit, done)
+      if (beforeExit) {
+        beforeExit(el)
       }
-      if (attr.onremove) {
-        attr.onremove(el, () => { })
+      if (exit) {
+        runExit(el, exitActive, exit, afterExit ? () => afterExit(el, done) : done)
       }
     }
   }

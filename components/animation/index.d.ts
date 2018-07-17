@@ -10,7 +10,7 @@ export function runAndCleanUp (): {
 }
 
 export function runEnter (): {
-  (element: HTMLElement, enterAnimationActive: string, enterAnimation: string): void
+  (element: HTMLElement, enterAnimationActive: string, enterAnimation: string, afterEnter: (node: HTMLElement) => void): void
 }
 
 export function runExit (): {
@@ -28,10 +28,19 @@ export interface CSSTransitionProperties {
   exit?: string
 
   exitActive?: string
+
+  beforeEnter: (el: HTMLElement) => void
+
+  afterEnter: (el: HTMLElement) => void
+
+  beforeExit: (el: HTMLElement) => void
+
+  afterExit: (el: HTMLElement, removeNode: () => void) => void
 }
 
 /**
  * Transition decarator component
+ * Note: lifecyle hook `oncreate` and `onremove` of child will be repleaced, don't use them on child.
  */
 declare const CSSTransition: Component<CSSTransitionProperties>
 

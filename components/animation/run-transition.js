@@ -64,7 +64,7 @@ export function runExit (node, exitAnimationActive, exitAnimation, removeNode) {
   )
 }
 
-export function runEnter (node, enterAnimationActive, enterAnimation) {
+export function runEnter (node, enterAnimationActive, enterAnimation, afterEnter) {
   const activeClass = enterAnimationActive || `${enterAnimation}-active`
 
   runAndCleanUp(
@@ -82,6 +82,7 @@ export function runEnter (node, enterAnimationActive, enterAnimation) {
     () => {
       node.classList.remove(enterAnimation)
       node.classList.remove(activeClass)
+      afterEnter(node)
     }
   )
 }
