@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
 import { CSSTransition, ContentBlock, Button } from '../../components'
 import Layout from '../Layout'
+/* eslint-enable no-unused-vars */
 
 export default {
   state: {
@@ -21,14 +23,20 @@ export default {
         key="transition"
         title="Transition"
       >
-        <ContentBlock title="CSS Transtion">
-          <a class="link" onclick={e => {
-            isIn ? actions.out() : actions.in()
-          }}>{state.status}</a>
-          {isIn &&
+        <ContentBlock title="CSS Transtion" style={{ position: 'relative' }}>
+          <a
+            class="link"
+            onclick={e => {
+              isIn ? actions.out() : actions.in()
+            }}
+          >{state.status}</a>
+          {isIn && (
             <CSSTransition enter="test-slidein" exit="test-slideout">
-              <Button>I'm a Button</Button>
+              <p key="a" style={{ position: 'absolute', left: '0', right: '0' }}>
+                <Button>I'm a Button</Button>
+              </p>
             </CSSTransition>
+          )
           }
         </ContentBlock>
       </Layout>

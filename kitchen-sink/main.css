@@ -39,10 +39,10 @@ i.icon.icon-f7 {
 }
 .test-slidein-active {
   transform: translatex(0);
-  transition: all ease .4s;
+  transition: all linear .4s;
 }
 .test-slideout {}
 .test-slideout-active {
   transform: translateX(-100%);
-  transition: all ease-in-out .4s;
+  transition: all linear .4s;
 }
