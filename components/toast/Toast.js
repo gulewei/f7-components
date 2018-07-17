@@ -44,12 +44,12 @@ const Toast = (props) => {
         <CSSTransition
           enter={enterClass}
           exit={exitClass}
+          beforeEnter={el => {
+            sizeEl(el, true, true)
+          }}
         >
           <div
             class={cc('toast toast-transition', toastClass)}
-            oncreate={el => {
-              sizeEl(el, true, true)
-            }}
             onclick={onToastClick}
           >
             {msg}

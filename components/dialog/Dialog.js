@@ -65,8 +65,9 @@ const Dialog = (props) => {
         <CSSTransition
           enter={enterClass}
           exit={exitClass}
+          beforeEnter={sizeModal}
         >
-          <div class="modal" oncreate={sizeModal}>
+          <div class="modal">
             <div class="modal-inner">
               <div class="modal-title">{title}</div>
               <div class="modal-text">{text}</div>
