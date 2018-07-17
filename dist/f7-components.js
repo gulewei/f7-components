@@ -538,36 +538,30 @@
 	      inset = props.inset,
 	      title = props.title,
 	      noHairlines = props.noHairlines,
-	      elProps = objectWithoutProperties(props, ['inner', 'inset', 'title', 'noHairlines']);
+	      rests = objectWithoutProperties(props, ['inner', 'inset', 'title', 'noHairlines']);
 
 
-	  var elClass = classnames(elProps.class, 'content-block', {
+	  var classes = classnames(rests.class, 'content-block', {
 	    inset: inset,
 	    'no-hairlines': noHairlines
 	  });
 
-	  return renderWithTitle(title, children.length > 0 && hyperapp.h(
+	  var content = hyperapp.h(
 	    'div',
-	    _extends({}, elProps, { 'class': elClass }),
-	    renderContent(inner, children)
-	  ));
-	};
+	    _extends({}, rests, { 'class': classes }),
+	    inner ? hyperapp.h(
+	      'div',
+	      { 'class': 'content-block-inner' },
+	      children
+	    ) : children
+	  );
 
-	function renderWithTitle(title, content) {
-	  return title ? [hyperapp.h(
+	  return [title && hyperapp.h(
 	    'div',
 	    { 'class': 'content-block-title' },
 	    title
-	  ), content] : content;
-	}
-
-	function renderContent(inner, content) {
-	  return inner ? hyperapp.h(
-	    'div',
-	    { 'class': 'content-block-inner' },
-	    content
-	  ) : content;
-	}
+	  ), children.length > 0 && content];
+	};
 
 	function install(_ref) {
 	  var state = _ref.state,
