@@ -37,8 +37,14 @@ export function css (el, obj) {
  * @returns {Function}
  */
 export function on (el, type, fn, options) {
-  el.addEventListener(type, fn, options)
-  return () => el.removeEventListener(type, fn, options)
+  const types = type.split(' ')
+  const offs = types.map(type => {
+    el.addEventListener(type, fn, options)
+    return () => el.removeEventListener(type, fn, options)
+  })
+  return () => {
+    offs.map(off => off())
+  }
 }
 
 export const requestAnimationFrame = window.requestAnimationFrame
