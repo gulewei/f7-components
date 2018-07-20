@@ -4,7 +4,7 @@ import { on, css } from '../_util'
  *
  * @param {HTMLElement} textareaEl
  */
-export function resizable (textareaEl) {
+export function resizableTextarea (textareaEl) {
   let textareaTimeout
   function handleTextarea () {
     clearTimeout(textareaTimeout)
@@ -22,12 +22,12 @@ export function resizable (textareaEl) {
 function resizeTextarea (textareaEl) {
   css(textareaEl, { 'height': '' })
 
-  const height = textareaEl[0].offsetHeight
-  const diff = height - textareaEl[0].clientHeight
-  const scrollHeight = textareaEl[0].scrollHeight
+  const height = textareaEl.offsetHeight
+  const diff = height - textareaEl.clientHeight
+  const scrollHeight = textareaEl.scrollHeight
 
   if (scrollHeight + diff > height) {
     const newAreaHeight = scrollHeight + diff
-    css({ height: newAreaHeight + 'px' })
+    css(textareaEl, { height: newAreaHeight + 'px' })
   }
 }

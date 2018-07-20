@@ -18,7 +18,8 @@ const routerList = [
   { title: 'Overlay', to: '/overlay' },
   { title: 'Picker', to: '/picker' },
   { title: 'PullToRefresh', to: '/pull-to-refresh' },
-  { title: 'Transition', to: '/transition' }
+  { title: 'Transition', to: '/transition' },
+  { title: 'Textarea', to: '/textarea' }
 ]
 
 export default {

@@ -13,6 +13,7 @@ import Overlay from './Overlay'
 import Picker from './Picker'
 import PullToRefresh from './PullToRefresh'
 import Transition from './Transition'
+import Textarea from './Textarea'
 
 export default {
   state: {
@@ -23,6 +24,7 @@ export default {
     picker: Picker.state,
     ptr: PullToRefresh.state,
     transition: Transition.state,
+    textarea: Textarea.state,
     pageAnim: {
       direction: 'center'
     }
@@ -35,6 +37,7 @@ export default {
     picker: Picker.actions,
     ptr: PullToRefresh.actions,
     transition: Transition.actions,
+    textarea: Textarea.actions,
     pageAnim: {
       changeDirection: (direction) => {
         return { direction }
@@ -69,6 +72,7 @@ export default {
           <Route path="/picker" render={() => Picker.view(state.picker, actions.picker)} />
           <Route path="/pull-to-refresh" render={() => PullToRefresh.view(state.ptr, actions.ptr)} />
           <Route path="/transition" render={() => Transition.view(state.transition, actions.transition)} />
+          <Route path="/textarea" render={() => Textarea.view(state.textarea, actions.textarea)} />
         </Switch>
       </View>
     )

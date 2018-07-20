@@ -558,6 +558,27 @@ export const RadioItem: Component<RadioItemProperties>
 export interface RangeSliderProperties extends ElementProperties { }
 export const RangeSlider: Component<ElementProperties>
 
+//// ======== Textarea ======== ////
+
+export function resizableTextarea(): {
+  (el: HTMLElement): void
+}
+export interface TextareaItemProperties extends ListItemProperties {
+  value?: string
+  name?: string
+  id?: string
+  placeholder?: string
+  rows?: number
+  disabled?: boolean
+  readonly?: boolean
+  maxlength?: number
+  resizable?: boolean
+  onChange?: (val: string) => void
+  onFocus?: (val: string) => void
+  onBlur?: (val: string) => void
+}
+export const TextareaItem: Component<TextareaItemProperties>
+
 //// ======== Toast ======== ////
 
 export interface ToastProperties extends WraperProperties, TransitionProperties {
