@@ -613,9 +613,17 @@
 	 * @returns {Function}
 	 */
 	function on(el, type, fn, options) {
-	  el.addEventListener(type, fn, options);
+	  var types = type.split(' ');
+	  var offs = types.map(function (type) {
+	    el.addEventListener(type, fn, options);
+	    return function () {
+	      return el.removeEventListener(type, fn, options);
+	    };
+	  });
 	  return function () {
-	    return el.removeEventListener(type, fn, options);
+	    offs.map(function (off) {
+	      return off();
+	    });
 	  };
 	}
 
@@ -2443,6 +2451,80 @@
 	  );
 	};
 
+	/**
+	 *
+	 * @param {HTMLElement} textareaEl
+	 */
+	function resizableTextarea(textareaEl) {
+	  var textareaTimeout = void 0;
+	  function handleTextarea() {
+	    clearTimeout(textareaTimeout);
+	    textareaTimeout = setTimeout(function () {
+	      resizeTextarea(textareaEl);
+	    }, 0);
+	  }
+	  return on(textareaEl, 'change keydown keypress keyup paste cut', handleTextarea);
+	}
+
+	/**
+	 *
+	 * @param {HTMLElement} textareaEl
+	 */
+	function resizeTextarea(textareaEl) {
+	  css(textareaEl, { 'height': '' });
+
+	  var height = textareaEl.offsetHeight;
+	  var diff = height - textareaEl.clientHeight;
+	  var scrollHeight = textareaEl.scrollHeight;
+
+	  if (scrollHeight + diff > height) {
+	    var newAreaHeight = scrollHeight + diff;
+	    css(textareaEl, { height: newAreaHeight + 'px' });
+	  }
+	}
+
+	var index$1 = (function (props) {
+	  var value = props.value,
+	      name = props.name,
+	      id = props.id,
+	      placeholder = props.placeholder,
+	      rows = props.rows,
+	      disabled = props.disabled,
+	      readonly = props.readonly,
+	      maxlength = props.maxlength,
+	      _props$onChange = props.onChange,
+	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
+	      _props$onFocus = props.onFocus,
+	      onFocus = _props$onFocus === undefined ? function () {} : _props$onFocus,
+	      _props$onBlur = props.onBlur,
+	      onBlur = _props$onBlur === undefined ? function () {} : _props$onBlur,
+	      resizable = props.resizable,
+	      rest = objectWithoutProperties(props, ['value', 'name', 'id', 'placeholder', 'rows', 'disabled', 'readonly', 'maxlength', 'onChange', 'onFocus', 'onBlur', 'resizable']);
+
+
+	  return hyperapp.h(ListItem, _extends({}, rest, {
+	    input: hyperapp.h(
+	      'textarea',
+	      _extends({ name: name, id: id, placeholder: placeholder, rows: rows, disabled: disabled, readonly: readonly, maxlength: maxlength }, {
+	        'class': classnames({ resizable: resizable }),
+	        onchange: function onchange(e) {
+	          return onChange(e.target.value);
+	        },
+	        onfoucs: function onfoucs(e) {
+	          return onFocus(e.target.value);
+	        },
+	        onblur: function onblur(e) {
+	          return onBlur(e.target.value);
+	        },
+	        oncreate: function oncreate(el) {
+	          return resizable && resizableTextarea(el);
+	        }
+	      }),
+	      value
+	    )
+	  }));
+	});
+
 	// eslint-disable-next-line
 
 	var WRAPER = 'toast-wraper';
@@ -2597,6 +2679,8 @@
 	exports.enumRefreshStatus = enumRefreshStatus;
 	exports.RadioItem = RadioItem;
 	exports.RangeSlider = RangeSlider;
+	exports.TextareaItem = index$1;
+	exports.resizableTextarea = resizableTextarea;
 	exports.Toast = Toast$1;
 	exports.Navbar = Navbar;
 	exports.Toolbar = Toolbar;

@@ -973,8 +973,7 @@ html.pixel-ratio-3 .list-block li:last-child li .item-inner:after {
 .list-block input[type="datetime-local"],
 .list-block input[type="time"],
 .list-block input[type="number"],
-.list-block select,
-.list-block textarea {
+.list-block select {
   -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
@@ -998,16 +997,6 @@ html.pixel-ratio-3 .list-block li:last-child li .item-inner:after {
 .list-block select {
   -webkit-appearance: none;
   appearance: none;
-}
-.list-block textarea {
-  height: 100px;
-  resize: none;
-  line-height: 1.4;
-  padding-top: 8px;
-  padding-bottom: 7px;
-}
-.list-block textarea.resizable {
-  height: 43px;
 }
 .modal .preloader {
   width: 34px;
@@ -1875,6 +1864,31 @@ label.label-radio.active-state .item-inner:after {
 }
 .range-slider input[type="range"]::-ms-fill-upper {
   background: #b7b8b7;
+}
+.list-block textarea {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  border: none;
+  background: none;
+  border-radius: 0 0 0 0;
+  box-shadow: none;
+  display: block;
+  padding: 0px;
+  margin: 0;
+  width: 100%;
+  height: 43px;
+  color: #000;
+  font-size: 17px;
+  font-family: inherit;
+  height: 100px;
+  resize: none;
+  line-height: 1.4;
+  padding-top: 8px;
+  padding-bottom: 7px;
+}
+.list-block textarea.resizable {
+  height: 43px;
 }
 /* === toast === */
 .toast {
