@@ -325,10 +325,10 @@
 	  return hyperapp.h(
 	    'a',
 	    _extends({}, restProps, {
-	      'class': classnames(restProps.class, 'hm-button', {
-	        'hm-button-big': big,
-	        'hm-button-fill': fill,
-	        'hm-button-round': round
+	      'class': classnames(restProps.class, 'button', {
+	        'button-big': big,
+	        'button-fill': fill,
+	        'button-round': round
 	      })
 	    }),
 	    text || children
@@ -422,7 +422,8 @@
 	      useLabel = props.useLabel,
 	      contentStart = props.contentStart,
 	      media = props.media,
-	      title = props.title,
+	      _props$title = props.title,
+	      title = _props$title === undefined ? children.length > 0 ? children : props.title : _props$title,
 	      input = props.input,
 	      after = props.after,
 	      subTitle = props.subTitle,
@@ -431,7 +432,6 @@
 
 
 	  var isMedia = !!(subTitle || text);
-
 	  var wraperCls = classnames(wraperProps.class, 'item-content', {
 	    'item-link': isLink,
 	    'align-top': alignTop,
@@ -441,7 +441,9 @@
 
 	  return hyperapp.h(
 	    WraperEl,
-	    _extends({}, wraperProps, { 'class': wraperCls }),
+	    _extends({}, wraperProps, {
+	      'class': wraperCls
+	    }),
 	    contentStart,
 	    media && hyperapp.h(
 	      'div',
@@ -490,41 +492,43 @@
 	/**
 	 * @typedef {Object} CheckboxItemProps
 	 * @prop {boolean} checked
-	 * @prop {string} name
-	 * @prop {string} value
-	 * @prop {(e: Event) => void} onchange
+	 * @prop {(checked: boolean) => any} onChange
+	 * @prop {string} [name]
 	 * @prop {boolean} [disabled]
 	 * @prop {boolean} [readonly]
-	 * @prop {boolean} [required]
-	 * @prop {JSX.Element} [media]
+	 * @prop {Object} [checkboxProps]
+	 * @prop {Object} [checkboxMedia]
 	 *
 	 * @param {CheckboxItemProps} props
 	 * @param {JSX.Element[]} children
 	 */
 	var CheckboxItem = function CheckboxItem(props, children) {
 	  var checked = props.checked,
+	      _props$onChange = props.onChange,
+	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
 	      name = props.name,
-	      value = props.value,
-	      onchange = props.onchange,
 	      disabled = props.disabled,
 	      readonly = props.readonly,
-	      required = props.required,
-	      media = props.media,
-	      itemProps = objectWithoutProperties(props, ['checked', 'name', 'value', 'onchange', 'disabled', 'readonly', 'required', 'media']);
+	      checkboxProps = props.checkboxProps,
+	      _props$checkboxMedia = props.checkboxMedia,
+	      checkboxMedia = _props$checkboxMedia === undefined ? checkboxIcon : _props$checkboxMedia,
+	      rests = objectWithoutProperties(props, ['checked', 'onChange', 'name', 'disabled', 'readonly', 'checkboxProps', 'checkboxMedia']);
 
 
 	  return hyperapp.h(
 	    ListItem,
-	    _extends({}, itemProps, {
+	    _extends({}, rests, {
 	      useLabel: true,
-	      'class': classnames('label-checkbox', itemProps.class),
-	      media: media || checkboxIcon,
-	      contentStart: hyperapp.h('input', _extends({ checked: checked, name: name, value: value, onchange: onchange, disabled: disabled, readonly: readonly, required: required }, {
+	      'class': classnames('label-checkbox', rests.class),
+	      media: checkboxMedia,
+	      contentStart: hyperapp.h('input', _extends({}, _extends({}, checkboxProps, { checked: checked, name: name, disabled: disabled, readonly: readonly }), {
+	        onchange: function onchange(e) {
+	          return onChange(e.target.checked);
+	        },
 	        type: 'checkbox',
 	        key: 'content-start'
 	      }))
 	    }),
-	    ' ',
 	    children
 	  );
 	};
@@ -964,6 +968,42 @@
 
 	var apis = install(plugin);
 	var Dialog$1 = apiMixin(Dialog, apis);
+
+	var index$1 = (function (props, children) {
+	  var _props$type = props.type,
+	      type = _props$type === undefined ? 'text' : _props$type,
+	      value = props.value,
+	      placeholder = props.placeholder,
+	      disabled = props.disabled,
+	      readonly = props.readonly,
+	      name = props.name,
+	      _props$onChange = props.onChange,
+	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
+	      _props$onFocus = props.onFocus,
+	      onFocus = _props$onFocus === undefined ? function () {} : _props$onFocus,
+	      _props$onBlur = props.onBlur,
+	      onBlur = _props$onBlur === undefined ? function () {} : _props$onBlur,
+	      inputProps = props.inputProps,
+	      rest = objectWithoutProperties(props, ['type', 'value', 'placeholder', 'disabled', 'readonly', 'name', 'onChange', 'onFocus', 'onBlur', 'inputProps']);
+
+	  return hyperapp.h(
+	    ListItem,
+	    _extends({}, rest, {
+	      input: hyperapp.h('input', _extends({}, _extends({}, inputProps, { type: type, value: value, placeholder: placeholder, disabled: disabled, readonly: readonly, name: name }), {
+	        oninput: function oninput(e) {
+	          return onChange(e.target.value);
+	        },
+	        onfoucs: function onfoucs(e) {
+	          return onFocus(e.target.value);
+	        },
+	        onblur: function onblur(e) {
+	          return onBlur(e.target.value);
+	        }
+	      }))
+	    }),
+	    children
+	  );
+	});
 
 	// eslint-disable-next-line
 
@@ -2392,42 +2432,43 @@
 
 	/**
 	 * @typedef {Object} RadioItemProps
-	 * @prop {boolean} checked
-	 * @prop {string} name
-	 * @prop {string} value
-	 * @prop {(e: Event) => void} onchange
+	 * @prop {boolean} [checked]
+	 * @prop {(value?: string) => any} [onChange]
+	 * @prop {string} [value]
+	 * @prop {string} [name]
 	 * @prop {boolean} [disabled]
 	 * @prop {boolean} [readonly]
-	 * @prop {boolean} [required]
-	 * @prop {JSX.Element} [media]
+	 * @prop {Object} [radioProps]
+	 * @prop {Object} [radioMedia]
 	 *
 	 * @param {RadioItemProps} props
 	 * @param {JSX.Element[]} children
 	 */
 	var RadioItem = function RadioItem(props, children) {
 	  var checked = props.checked,
-	      name = props.name,
+	      onChange = props.onChange,
 	      value = props.value,
-	      onchange = props.onchange,
+	      name = props.name,
 	      disabled = props.disabled,
 	      readonly = props.readonly,
-	      required = props.required,
-	      media = props.media,
-	      itemProps = objectWithoutProperties(props, ['checked', 'name', 'value', 'onchange', 'disabled', 'readonly', 'required', 'media']);
+	      radioProps = props.radioProps,
+	      _props$radioMedia = props.radioMedia,
+	      radioMedia = _props$radioMedia === undefined ? radioIcon : _props$radioMedia,
+	      rests = objectWithoutProperties(props, ['checked', 'onChange', 'value', 'name', 'disabled', 'readonly', 'radioProps', 'radioMedia']);
 
 
 	  return hyperapp.h(
 	    ListItem,
-	    _extends({}, itemProps, {
+	    _extends({}, rests, {
 	      useLabel: true,
-	      'class': classnames('label-radio', itemProps.class),
-	      media: media || radioIcon,
-	      contentStart: hyperapp.h('input', _extends({ checked: checked, name: name, value: value, onchange: onchange, disabled: disabled, readonly: readonly, required: required }, {
+	      'class': classnames('label-radio', rests.class),
+	      media: radioMedia,
+	      contentStart: hyperapp.h('input', _extends({}, _extends({}, radioProps, { name: name, value: value, checked: checked, disabled: disabled, readonly: readonly }), {
+	        onchange: onChange,
 	        type: 'radio',
 	        key: 'content-start'
 	      }))
 	    }),
-	    ' ',
 	    children
 	  );
 	};
@@ -2440,16 +2481,69 @@
 	 * @prop {number} max
 	 * @prop {number} step
 	 * @prop {number} value
+	 * @prop {(value: string) => any} onChange
+	 * @prop {string} wraperClass
 	 *
 	 * @param {RangeSliderProps} props
 	 */
 	var RangeSlider = function RangeSlider(props) {
+	  var wraperClass = props.wraperClass,
+	      value = props.value,
+	      min = props.min,
+	      max = props.max,
+	      step = props.step,
+	      _props$onChange = props.onChange,
+	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
+	      sliderProps = props.sliderProps,
+	      rests = objectWithoutProperties(props, ['wraperClass', 'value', 'min', 'max', 'step', 'onChange', 'sliderProps']);
+
+
 	  return hyperapp.h(
-	    "div",
-	    { "class": "range-slider" },
-	    hyperapp.h("input", _extends({}, props, { type: "range" }))
+	    'div',
+	    _extends({}, rests, {
+	      'class': classnames('range-slider', wraperClass)
+	    }),
+	    hyperapp.h('input', _extends({}, _extends({}, sliderProps, { value: value, min: min, max: max, step: step }), {
+	      onchange: function onchange(e) {
+	        return onChange(Number(e.target.value));
+	      },
+	      type: 'range'
+	    }))
 	  );
 	};
+
+	/**
+	 * @typedef {Object} SwitchProps
+	 * @prop {boolean} checked
+	 * @prop {(checked: boolean) => any} onChange
+	 * @prop {boolean} [disabled]
+	 * @prop {string} [name]
+	 *
+	 */
+	var index$2 = (function (props) {
+	  var checked = props.checked,
+	      _props$onChange = props.onChange,
+	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
+	      disabled = props.disabled,
+	      name = props.name,
+	      wraperClass = props.wraperClass,
+	      rests = objectWithoutProperties(props, ['checked', 'onChange', 'disabled', 'name', 'wraperClass']);
+
+
+	  return hyperapp.h(
+	    'label',
+	    _extends({}, rests, {
+	      'class': classnames('label-switch', wraperClass)
+	    }),
+	    hyperapp.h('input', _extends({ checked: checked, disabled: disabled, name: name }, {
+	      onchange: function onchange(e) {
+	        return onChange(e.target.checked);
+	      },
+	      type: 'checkbox'
+	    })),
+	    hyperapp.h('div', { 'class': 'checkbox' })
+	  );
+	});
 
 	/**
 	 *
@@ -2483,10 +2577,8 @@
 	  }
 	}
 
-	var index$1 = (function (props) {
+	var index$3 = (function (props, children) {
 	  var value = props.value,
-	      name = props.name,
-	      id = props.id,
 	      placeholder = props.placeholder,
 	      rows = props.rows,
 	      disabled = props.disabled,
@@ -2499,30 +2591,37 @@
 	      _props$onBlur = props.onBlur,
 	      onBlur = _props$onBlur === undefined ? function () {} : _props$onBlur,
 	      resizable = props.resizable,
-	      rest = objectWithoutProperties(props, ['value', 'name', 'id', 'placeholder', 'rows', 'disabled', 'readonly', 'maxlength', 'onChange', 'onFocus', 'onBlur', 'resizable']);
+	      _props$textareaProps = props.textareaProps,
+	      textareaProps = _props$textareaProps === undefined ? {} : _props$textareaProps,
+	      rest = objectWithoutProperties(props, ['value', 'placeholder', 'rows', 'disabled', 'readonly', 'maxlength', 'onChange', 'onFocus', 'onBlur', 'resizable', 'textareaProps']);
 
 
-	  return hyperapp.h(ListItem, _extends({}, rest, {
-	    input: hyperapp.h(
-	      'textarea',
-	      _extends({ name: name, id: id, placeholder: placeholder, rows: rows, disabled: disabled, readonly: readonly, maxlength: maxlength }, {
-	        'class': classnames({ resizable: resizable }),
-	        onchange: function onchange(e) {
-	          return onChange(e.target.value);
-	        },
-	        onfoucs: function onfoucs(e) {
-	          return onFocus(e.target.value);
-	        },
-	        onblur: function onblur(e) {
-	          return onBlur(e.target.value);
-	        },
-	        oncreate: function oncreate(el) {
-	          return resizable && resizableTextarea(el);
-	        }
-	      }),
-	      value
-	    )
-	  }));
+	  return hyperapp.h(
+	    ListItem,
+	    _extends({}, rest, {
+	      input: hyperapp.h(
+	        'textarea',
+	        _extends({}, _extends({}, textareaProps, { placeholder: placeholder, rows: rows, disabled: disabled, readonly: readonly, maxlength: maxlength }), {
+	          'class': classnames({ resizable: resizable }),
+	          onchange: function onchange(e) {
+	            return onChange(e.target.value);
+	          },
+	          onfoucs: function onfoucs(e) {
+	            return onFocus(e.target.value);
+	          },
+	          onblur: function onblur(e) {
+	            return onBlur(e.target.value);
+	          },
+	          oncreate: function oncreate(el) {
+	            resizable && resizableTextarea(el);
+	            textareaProps.oncreate && textareaProps.oncreate(el);
+	          }
+	        }),
+	        value
+	      )
+	    }),
+	    children
+	  );
 	});
 
 	// eslint-disable-next-line
@@ -2664,6 +2763,7 @@
 	exports.ContentBlock = ContentBlock;
 	exports.Dialog = Dialog$1;
 	exports.ImgIcon = Icon;
+	exports.InputItem = index$1;
 	exports.List = List;
 	exports.ListItem = ListItem;
 	exports.Loading = Loading$1;
@@ -2678,8 +2778,9 @@
 	exports.PullToRefresh = PullToRefresh;
 	exports.enumRefreshStatus = enumRefreshStatus;
 	exports.RadioItem = RadioItem;
-	exports.RangeSlider = RangeSlider;
-	exports.TextareaItem = index$1;
+	exports.Slider = RangeSlider;
+	exports.Switch = index$2;
+	exports.TextareaItem = index$3;
 	exports.resizableTextarea = resizableTextarea;
 	exports.Toast = Toast$1;
 	exports.Navbar = Navbar;

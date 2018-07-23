@@ -142,7 +142,7 @@ p {
   -webkit-transform: translate3d(0, 0, 0) scale(1);
   transform: translate3d(0, 0, 0) scale(1);
 }
-.hm-button {
+.button {
   border: 1px solid #007aff;
   color: #007aff;
   text-decoration: none;
@@ -166,29 +166,29 @@ p {
   cursor: pointer;
   outline: 0;
 }
-input[type="submit"].hm-button,
-input[type="button"].hm-button {
+input[type="submit"].button,
+input[type="button"].button {
   width: 100%;
 }
-.hm-button:active,
-.hm-button.active-state {
+.button:active,
+.button.active-state {
   background: rgba(0, 122, 255, 0.15);
 }
-.hm-button.hm-button-round {
+.button.button-round {
   border-radius: 27px;
 }
-.hm-button.hm-button-big {
+.button.button-big {
   font-size: 17px;
   height: 44px;
   line-height: 42px;
 }
-.hm-button.hm-button-fill {
+.button.button-fill {
   color: #fff;
   background: #007aff;
   border-color: transparent;
 }
-.hm-button.hm-button-fill:active,
-.hm-button.hm-button-fill.active-state {
+.button.button-fill:active,
+.button.button-fill.active-state {
   opacity: 0.8;
 }
 .form-checkbox {
@@ -973,7 +973,8 @@ html.pixel-ratio-3 .list-block li:last-child li .item-inner:after {
 .list-block input[type="datetime-local"],
 .list-block input[type="time"],
 .list-block input[type="number"],
-.list-block select {
+.list-block select,
+.list-block textarea {
   -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
@@ -997,6 +998,16 @@ html.pixel-ratio-3 .list-block li:last-child li .item-inner:after {
 .list-block select {
   -webkit-appearance: none;
   appearance: none;
+}
+.list-block textarea {
+  height: 100px;
+  resize: none;
+  line-height: 1.4;
+  padding-top: 8px;
+  padding-bottom: 7px;
+}
+.list-block textarea.resizable {
+  height: 43px;
 }
 .modal .preloader {
   width: 34px;
@@ -1864,28 +1875,6 @@ label.label-radio.active-state .item-inner:after {
 }
 .range-slider input[type="range"]::-ms-fill-upper {
   background: #b7b8b7;
-}
-.list-block textarea {
-  -webkit-appearance: none;
-  appearance: none;
-  box-sizing: border-box;
-  border: none;
-  background: none;
-  border-radius: 0 0 0 0;
-  box-shadow: none;
-  display: block;
-  padding: 0px;
-  margin: 0;
-  width: 100%;
-  height: 43px;
-  color: #000;
-  font-size: 17px;
-  font-family: inherit;
-  height: 100px;
-  resize: none;
-  line-height: 1.4;
-  padding-top: 8px;
-  padding-bottom: 7px;
 }
 .list-block textarea.resizable {
   height: 43px;
