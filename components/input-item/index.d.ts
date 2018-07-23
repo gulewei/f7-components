@@ -2,6 +2,12 @@ import { Component } from '../_util/interfaces'
 import { ListItemProperties } from '../list'
 
 export interface InputItemProperties extends ListItemProperties {
+  type?: 'text'
+  | 'email'
+  | 'password'
+  | 'tel'
+  | 'date'
+  | 'url',
   value?: string
   name?: string
   placeholder?: string
