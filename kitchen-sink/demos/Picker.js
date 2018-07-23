@@ -235,5 +235,7 @@ export default {
         /> */}
       </Layout >
     )
-  }
+  },
+  key: 'picker',
+  title: 'Picker'
 }

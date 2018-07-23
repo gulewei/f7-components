@@ -56,5 +56,7 @@ export default {
         </List>
       </Layout>
     )
-  }
+  },
+  key: 'textareaitem',
+  title: 'TextareaItem'
 }

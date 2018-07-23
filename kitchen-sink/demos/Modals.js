@@ -111,5 +111,7 @@ export default {
         </ContentBlock>
       </Layout>
     )
-  }
+  },
+  key: 'modals',
+  title: 'Modals'
 }

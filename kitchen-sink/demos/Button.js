@@ -34,5 +34,7 @@ export default {
         </ContentBlock>
       </Layout>
     )
-  }
+  },
+  key: 'button',
+  title: 'Button'
 }

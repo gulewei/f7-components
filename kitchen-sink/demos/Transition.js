@@ -41,5 +41,7 @@ export default {
         </ContentBlock>
       </Layout>
     )
-  }
+  },
+  key: 'transition',
+  title: 'CSSTransition'
 }

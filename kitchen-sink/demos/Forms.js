@@ -236,5 +236,7 @@ export default {
         <RadioItemGrop radioValue={radioValue} radios={radios} selectActon={actions.select} />
       </Layout>
     )
-  }
+  },
+  key: 'forms',
+  title: 'Form-Elements'
 }

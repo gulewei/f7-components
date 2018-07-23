@@ -24,5 +24,7 @@ export default {
         </ContentBlock>
       </Layout>
     )
-  }
+  },
+  key: 'overlay',
+  title: 'Overlay'
 }

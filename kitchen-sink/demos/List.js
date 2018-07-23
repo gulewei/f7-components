@@ -98,5 +98,7 @@ export default {
         </List>
       </Layout>
     )
-  }
+  },
+  key: 'list',
+  title: 'List'
 }

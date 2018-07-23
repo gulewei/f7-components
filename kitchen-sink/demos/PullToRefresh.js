@@ -58,5 +58,7 @@ export default {
         </PullToRefresh>
       </Layout>
     )
-  }
+  },
+  key: 'pulltorefresh',
+  title: 'PullToRefresh'
 }
