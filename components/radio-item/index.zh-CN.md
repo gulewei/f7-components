@@ -9,7 +9,7 @@ subtitle: 单选框
 
 ## API
 
-### Radio
+### RadioItem
 
 属性 | 说明 | 类型 | 默认值
 ----|-----|------|------
@@ -21,7 +21,4 @@ subtitle: 单选框
 | radioMedia | 单选图标 | VNode | 预定义单选 |
 | radioProps | 其他属性 | Object | 无 |
 
-### Radio.RadioItem
-
-基于`ListItem`对封装,`ListItem`的`extra`属性固定传入`Radio`,其他属性和`List.Item`一致。
-其他 API 和 Radio 相同。
+基于`ListItem`封装,`ListItem`的`input`、`media`、`contentStart`属性固定传入, 其他属性和`ListItem`一致。
