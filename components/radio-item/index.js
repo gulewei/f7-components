@@ -26,7 +26,7 @@ const radioIcon = <Icon name="form-radio" />
 const RadioItem = (props, children) => {
   const {
     checked,
-    onChange = () => { },
+    onChange,
     value,
     name,
     disabled,
@@ -45,7 +45,7 @@ const RadioItem = (props, children) => {
       contentStart={
         <input
           {...{ ...radioProps, name, value, checked, disabled, readonly }}
-          onchange={e => onChange(e.target.value)}
+          onchange={onChange}
           type="radio"
           key="content-start"
         />

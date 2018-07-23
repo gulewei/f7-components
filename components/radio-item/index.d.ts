@@ -1,9 +1,9 @@
-import { Component } from '../_util/interfaces';
+import { Component, VNode } from '../_util/interfaces';
 import { ListItemProperties } from '../list'
 
 export interface RadioItemProperties extends ListItemProperties {
   checked?: boolean
-  onChange?: (checked: boolean) => any
+  onChange?: () => any
   value?: string
   name?: string
   disabled?: boolean
