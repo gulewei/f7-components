@@ -1,5 +1,4 @@
-import { Component } from 'hyperapp'
-import { ElementProperties, OuterHairlines } from '../_util/interfaces'
+import { ElementProperties, OuterHairlines, Component } from '../_util/interfaces'
 
 interface ContentBlockProperties extends ElementProperties, OuterHairlines {
   /**

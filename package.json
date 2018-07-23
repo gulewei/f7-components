@@ -7,8 +7,7 @@
   "files": [
     "dist",
     "components",
-    "lib",
-    "f7-components.d.ts"
+    "lib"
   ],
   "scripts": {
     "start": "parcel kitchen-sink/main.html --out-dir .ksdist --no-autoinstall",

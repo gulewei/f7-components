@@ -1,5 +1,4 @@
-import { Component } from 'hyperapp'
-import { TransitionProperties } from '../_util/interfaces'
+import { TransitionProperties, Component } from '../_util/interfaces'
 
 interface EnumOverlayTypes {
   /**

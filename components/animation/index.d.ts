@@ -1,6 +1,4 @@
-import { Component } from 'hyperapp'
-
-// export as namespace h7Animation
+import { Component } from '../_util/interfaces'
 
 /**
  * Perform an animation

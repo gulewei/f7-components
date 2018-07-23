@@ -1,5 +1,4 @@
-import { ElementProperties } from '../_util/interfaces';
-import { Component } from 'hyperapp';
+import { ElementProperties, Component } from '../_util/interfaces';
 
 export interface ButtonProperties extends ElementProperties {
   /**

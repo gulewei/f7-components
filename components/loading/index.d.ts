@@ -1,4 +1,3 @@
-// import { Component } from "hyperapp"
 import { WraperProperties, Component } from '../_util/interfaces';
 
 export interface LoadingProperties extends WraperProperties {}
