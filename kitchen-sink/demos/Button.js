@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
 import { ContentBlock, Button } from '../../components'
-import Layout from '../Layout'
 
 export default {
+  key: 'button',
+  title: 'Button',
   state: {},
   actions: {},
   view: () => {
     return (
-      <Layout key='btn' title='Button'>
+      <div>
         <ContentBlock title="USUAL BUTTONS">
           <p><Button>Usual Button 1</Button></p>
           <p><Button>Usual Button 2</Button></p>
@@ -32,9 +33,7 @@ export default {
           <p><Button big round>Big Round Button</Button></p>
           <p><Button big round fill>Big Round Fill Button</Button></p>
         </ContentBlock>
-      </Layout>
+      </div>
     )
-  },
-  key: 'button',
-  title: 'Button'
+  }
 }

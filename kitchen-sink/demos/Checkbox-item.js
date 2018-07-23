@@ -1,15 +1,19 @@
+import { h } from 'hyperapp'
 import { ContentBlock, List, CheckboxItem } from '../../components'
-import Layout from '../Layout'
 
 export default {
+  key: 'checkbox',
+  title: 'CheckboxItem',
   state: {
     books: true,
     movies: false,
     food: false,
-    Drinks: false
+    drinks: false
   },
   actions: {
-    onCheck: () => { }
+    onCheck: (value) => {
+      return value
+    }
   },
   view: (state, actions) => {
     return (
@@ -41,7 +45,5 @@ export default {
         </List>
       </div>
     )
-  },
-  key: 'checkbox',
-  title: 'CheckboxItem'
+  }
 }

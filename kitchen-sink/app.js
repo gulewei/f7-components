@@ -9,41 +9,9 @@ import '../components/index.less'
 import { View, runEnter, runExit, ImgIcon, ContentBlock, List, ListItem } from '../components'
 // eslint-disable-next-line
 import Layout from './Layout'
-
-import Button from './demos/Button'
-import CheckboxItemPage from './demos/Checkbox-item'
-import Forms from './demos/Forms'
-import ListView from './demos/List'
-import Modals from './demos/Modals'
-import Overlay from './demos/Overlay'
-import Picker from './demos/Picker'
-import PullToRefresh from './demos/PullToRefresh'
-import Transition from './demos/Transition'
-import Textarea from './demos/Textarea'
+import pageList from './demos'
 
 const F7Icon = <ImgIcon name='f7' />
-
-/**
- * transform key to path
- * @param {PageModel[]} models
- */
-function transformModels (models) {
-  return models.map(({ key, path = `/${key}`, ...r }) => {
-    return { key, path, ...r }
-  })
-}
-const pageList = transformModels([
-  Button,
-  CheckboxItemPage,
-  Forms,
-  ListView,
-  Modals,
-  Overlay,
-  Picker,
-  PullToRefresh,
-  Transition,
-  Textarea
-])
 
 const Home = {
   path: '/',
@@ -155,6 +123,5 @@ function register (pages) {
     }
   }
 }
-
 const { state, actions, view } = register(pageList.concat(Home, PageAnim))
 withRouter(app, history)(state, actions, view, document.body)

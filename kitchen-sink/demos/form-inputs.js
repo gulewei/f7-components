@@ -238,5 +238,5 @@ export default {
     )
   },
   key: 'forms',
-  title: 'Form-Elements'
+  title: 'Form Elements'
 }
