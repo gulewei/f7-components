@@ -71,20 +71,3 @@ export interface InnerHairlines {
    */
   noHairlinesBetween?: boolean
 }
-
-export interface CheckProperties {
-
-  checked: boolean
-
-  name: string
-
-  value: string
-
-  onchange: (e: Event) => void
-
-  disabled?: boolean
-
-  readonly?: boolean
-
-  required?: boolean
-}

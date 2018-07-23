@@ -11,14 +11,14 @@ const radioIcon = <Icon name="form-radio" />
 
 /**
  * @typedef {Object} RadioItemProps
- * @prop {boolean} checked
- * @prop {string} name
- * @prop {string} value
- * @prop {(e: Event) => void} onchange
+ * @prop {boolean} [checked]
+ * @prop {(value?: string) => any} [onChange]
+ * @prop {string} [value]
+ * @prop {string} [name]
  * @prop {boolean} [disabled]
  * @prop {boolean} [readonly]
- * @prop {boolean} [required]
- * @prop {JSX.Element} [media]
+ * @prop {Object} [radioProps]
+ * @prop {Object} [radioMedia]
  *
  * @param {RadioItemProps} props
  * @param {JSX.Element[]} children
@@ -26,30 +26,33 @@ const radioIcon = <Icon name="form-radio" />
 const RadioItem = (props, children) => {
   const {
     checked,
-    name,
+    onChange = () => { },
     value,
-    onchange,
+    name,
     disabled,
     readonly,
-    required,
-    media,
-    ...itemProps
+    radioProps,
+    radioMedia = radioIcon,
+    ...rests
   } = props
 
   return (
     <ListItem
-      {...itemProps}
+      {...rests}
       useLabel
-      class={cc('label-radio', itemProps.class)}
-      media={media || radioIcon}
+      class={cc('label-radio', rests.class)}
+      media={radioMedia}
       contentStart={
         <input
-          {...{ checked, name, value, onchange, disabled, readonly, required }}
+          {...{ ...radioProps, name, value, checked, disabled, readonly }}
+          onChange={e => onChange(e.target.value)}
           type="radio"
           key="content-start"
         />
       }
-    > {children}</ListItem >
+    >
+      {children}
+    </ListItem>
   )
 }
 

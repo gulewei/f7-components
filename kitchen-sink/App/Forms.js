@@ -5,7 +5,10 @@ import {
   List,
   ListItem,
   ImgIcon,
-  RangeSlider,
+  Slider,
+  Switch,
+  InputItem,
+  TextareaItem,
   CheckboxItem,
   RadioItem
 } from '../../components'
@@ -21,67 +24,137 @@ const toArray = state => {
   return a
 }
 
-const InputElements = ({ elements, inputAction }) => {
+// Input
+const InputGroup = ({ elements, inputAction }) => {
   const items = toArray(elements)
 
-  return items.map(({ name, filed, ...item }, i) => {
-    return (
-      <ListItem
-        key={filed}
-        media={F7Icon}
-        title={name}
-        input={
-          <input
-            {...item}
-            oninput={e => inputAction({ value: e.target.value, filed })}
-          />
-        }
-      />
-    )
-  })
+  return ([
+    <ContentBlock title="Input" />,
+    <List>
+      {
+        items.map(({ name, filed, ...item }, i) => {
+          return (
+            <InputItem
+              key={filed}
+              media={F7Icon}
+              {...item}
+              onChange={value => inputAction({ value, filed })}
+            >
+              {name}
+            </InputItem >
+          )
+        })
+      }
+    </List>
+  ])
 }
 
+// Textarea
+const TextareaGroup = ({ text, inputAction }) => {
+  return (
+    [
+      <ContentBlock title="Textarea"></ContentBlock>,
+      <List>
+        <TextareaItem
+          key={text.filed}
+          media={F7Icon}
+          alignTop
+          placeholder={text.placeholder}
+          value={text.value}
+          onChange={value => inputAction({ value, filed: text.filed })}
+        >
+          {text.name}
+        </TextareaItem>
+      </List>
+    ]
+  )
+}
+
+// Checkbox
 const CheckboxItemGroup = ({ checks, checkAction }) => {
   const items = toArray(checks)
 
-  return (
-    <div>
-      <ContentBlock title="Checkbox Group" />
-      <List>
-        {items.map(({ checked, name, filed }, i) => (
-          <CheckboxItem
-            key={filed}
-            title={name}
-            checked={checked}
-            onchange={checked => checkAction({ filed, checked })}
-            after={
-              <span>123</span>
-            }
-          />
-        ))}
-      </List>
-    </div>
-  )
+  return ([
+    <ContentBlock title="Checkbox"></ContentBlock>,
+    <List>
+      {items.map(({ checked, name, filed }, i) => (
+        <CheckboxItem
+          key={filed}
+          title={name}
+          checked={checked}
+          onChange={checked => checkAction({ filed, checked })}
+          after={
+            <span>123</span>
+          }
+        />
+      ))}
+    </List>
+  ])
 }
 
+// Radio
 const RadioItemGrop = ({ radioValue, radios, selectActon }) => {
   const items = toArray(radios)
-  return (
-    <div>
-      <ContentBlock title="Radio Group" />
-      <List>
-        {items.map(({ filed, value }) => (
-          <RadioItem
-            key={filed}
-            title={value}
-            checked={value === radioValue}
-            name="radio"
-            onchange={() => selectActon(value)}
+  return ([
+    <ContentBlock title="Radio Group" />,
+    <List>
+      {items.map(({ filed, value }) => (
+        <RadioItem
+          key={filed}
+          title={value}
+          checked={value === radioValue}
+          // name="radio"
+          onChange={() => selectActon(value)}
+        />
+      ))}
+    </List>
+  ])
+}
+
+// Select
+const SelectGroup = ({ gender, inputAction }) => {
+  return ([
+    <ContentBlock title="Select"></ContentBlock>,
+    <List>
+      <ListItem
+        key={gender.filed}
+        media={F7Icon}
+        title={gender.name}
+        input={
+          <select
+            onchange={e => inputAction({ value: e.target.value, filed: gender.filed })}
+          >
+            {gender.options.map(gender => (
+              <option>{gender}</option>
+            ))}
+          </select>
+        }
+      />
+    </List>
+  ])
+}
+
+// Slider
+const SliderGroup = ({ range, inputAction }) => {
+  return ([
+    <ContentBlock title="Slider"></ContentBlock>,
+    <List>
+      <ListItem
+        key={range.filed}
+        media={F7Icon}
+        title={range.name}
+        input={
+          <Slider
+            value={range.value}
+            min={range.min}
+            max={range.max}
+            step={range.step}
+            onChange={value => inputAction({ value, filed: range.filed })}
           />
-        ))}
-      </List>
-    </div>
-  )
+        }
+      />
+    </List>
+  ])
 }
 
 export default {
@@ -99,7 +172,7 @@ export default {
     // switch
     switcher: { value: false, name: 'Switcher', filed: 'switcher' },
     // range
-    range: { value: '50', min: '0', max: '100', step: '0.1', name: 'Range', filed: 'range' },
+    range: { value: 50, min: 0, max: 100, step: 0.1, name: 'Range', filed: 'range' },
     // text area
     text: { value: '', name: 'Textarea', placeholder: '', filed: 'text' },
     // checkbox-item
@@ -155,53 +228,11 @@ export default {
 
     return (
       <Layout key='forms' title='Form Items'>
-        <ContentBlock title="FULL LAYOUT" />
-        <List>
-          <InputElements elements={elements} inputAction={actions.input} />
-          <ListItem
-            key={gender.filed}
-            media={F7Icon}
-            title={gender.name}
-            input={
-              <select
-                onchange={e => actions.input({ value: e.target.value, filed: gender.filed })}
-              >
-                {gender.options.map(gender => (
-                  <option>{gender}</option>
-                ))}
-              </select>
-            }
-          />
-          <ListItem
-            key={range.filed}
-            media={F7Icon}
-            title={range.name}
-            input={
-              <RangeSlider
-                value={range.value}
-                min={range.min}
-                max={range.max}
-                step={range.step}
-                onchange={e => actions.input({ value: e.target.value, filed: range.filed })}
-              />
-            }
-          />
-          <ListItem
-            key={text.filed}
-            media={F7Icon}
-            title={text.name}
-            alignTop
-            input={
-              <textarea
-                placeholder={text.placeholder}
-                oninput={e => actions.input({ value: e.target.value, filed: text.filed })}
-              >{text.value}</textarea>
-            }
-          />
-        </List>
-
+        <InputGroup elements={elements} inputAction={actions.input} />
+        <SelectGroup gender={gender} inputAction={actions.input} />
+        <TextareaGroup text={text} inputAction={actions.input} />
+        <SliderGroup range={range} inputAction={actions.input} />
         <CheckboxItemGroup checks={{ book, movie, food, drinks }} checkAction={actions.check} />
-
         <RadioItemGrop radioValue={radioValue} radios={radios} selectActon={actions.select} />
       </Layout>
     )

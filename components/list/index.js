@@ -68,7 +68,7 @@ export const ListItem = (props, children) => {
     useLabel,
     contentStart,
     media,
-    title,
+    title = children.length > 0 ? children : props.title,
     input,
     after,
     subTitle,
@@ -77,7 +77,6 @@ export const ListItem = (props, children) => {
   } = props
 
   const isMedia = !!(subTitle || text)
-
   const wraperCls = cc(wraperProps.class, 'item-content', {
     'item-link': isLink,
     'align-top': alignTop,
@@ -86,7 +85,10 @@ export const ListItem = (props, children) => {
   const WraperEl = useLabel ? 'label' : 'div' // eslint-disable-line
 
   return (
-    <WraperEl {...wraperProps} class={wraperCls}>
+    <WraperEl
+      {...wraperProps}
+      class={wraperCls}
+    >
       {contentStart}
       {media && <div key="media" class="item-media">{media}</div>}
       <div key="inner" class="item-inner">

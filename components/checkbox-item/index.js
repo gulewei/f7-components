@@ -11,13 +11,12 @@ const checkboxIcon = <Icon name="form-checkbox" />
 /**
  * @typedef {Object} CheckboxItemProps
  * @prop {boolean} checked
- * @prop {string} name
- * @prop {string} value
- * @prop {(e: Event) => void} onchange
+ * @prop {(checked: boolean) => any} onChange
+ * @prop {string} [name]
  * @prop {boolean} [disabled]
  * @prop {boolean} [readonly]
- * @prop {boolean} [required]
- * @prop {JSX.Element} [media]
+ * @prop {Object} [checkboxProps]
+ * @prop {Object} [checkboxMedia]
  *
  * @param {CheckboxItemProps} props
  * @param {JSX.Element[]} children
@@ -25,30 +24,32 @@ const checkboxIcon = <Icon name="form-checkbox" />
 const CheckboxItem = (props, children) => {
   const {
     checked,
+    onChange = () => { },
     name,
-    value,
-    onchange,
     disabled,
     readonly,
-    required,
-    media,
-    ...itemProps
+    checkboxProps,
+    checkboxMedia = checkboxIcon,
+    ...rests
   } = props
 
   return (
     <ListItem
-      {...itemProps}
+      {...rests}
       useLabel
-      class={cc('label-checkbox', itemProps.class)}
-      media={media || checkboxIcon}
+      class={cc('label-checkbox', rests.class)}
+      media={checkboxMedia}
       contentStart={
         <input
-          {...{ checked, name, value, onchange, disabled, readonly, required }}
+          {...{ ...checkboxProps, checked, name, disabled, readonly }}
+          onchange={e => onChange(e.target.checked)}
           type="checkbox"
           key="content-start"
         />
       }
-    > {children}</ListItem >
+    >
+      {children}
+    </ListItem>
   )
 }
 

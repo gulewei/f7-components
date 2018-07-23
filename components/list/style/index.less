@@ -270,7 +270,8 @@
     input[type="datetime-local"], 
     input[type="time"], 
     input[type="number"], 
-    select {
+    select,
+    textarea {
         .input-in-list()
     }
     input[type="date"], input[type="datetime-local"] {
@@ -282,5 +283,14 @@
         -ms-appearance: none;
         appearance: none;
     }
- 
+    textarea {
+        height: 100px;
+        resize: none;
+        line-height: 1.4;
+        padding-top: 8px;
+        padding-bottom: 7px;
+        &.resizable {
+            height: 43px;
+        }
+    }
 }
