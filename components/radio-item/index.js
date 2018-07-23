@@ -45,7 +45,7 @@ const RadioItem = (props, children) => {
       contentStart={
         <input
           {...{ ...radioProps, name, value, checked, disabled, readonly }}
-          onChange={e => onChange(e.target.value)}
+          onchange={e => onChange(e.target.value)}
           type="radio"
           key="content-start"
         />
