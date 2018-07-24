@@ -51,6 +51,11 @@
 		if (module.exports) {
 			classNames.default = classNames;
 			module.exports = classNames;
+		} else if (typeof undefined === 'function' && typeof undefined.amd === 'object' && undefined.amd) {
+			// register as 'classnames', consistent with npm package name
+			undefined('classnames', [], function () {
+				return classNames;
+			});
 		} else {
 			window.classNames = classNames;
 		}
