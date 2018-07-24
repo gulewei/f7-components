@@ -11,7 +11,9 @@ export default {
     return (
       <ContentBlock title="Preloader">
         <Preloader />
-        <p><SvgPreloader/></p>
+        <p>
+          <SvgPreloader color='#f5711c'></SvgPreloader>
+        </p>
       </ContentBlock>
     )
   }

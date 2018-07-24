@@ -12,17 +12,21 @@ import cc from 'classnames'
 const Preloader = (props) => {
   const {
     white,
+    color = '#6c6c6c',
     ...rest
   } = props
 
   return (
-    <span {...rest} class={cc('preloader', rest.class, { 'preloader-white': white })}>
+    <span
+      {...rest}
+      class={cc('preloader-svg', rest.class)}
+    >
       <svg
         viewBox='0 0 120 120'
         xmlns='http://www.w3.org/2000/svg'
         xmlns xlink='http://www.w3.org/1999/xlink'>
         <defs>
-          <line id='l' x1='60' x2='60' y1='7' y2='27' stroke='#6c6c6c' stroke-width='11' stroke-linecap='round' />
+          <line id='l' x1='60' x2='60' y1='7' y2='27' stroke={white ? '#ffffff' : color} stroke-width='11' stroke-linecap='round' />
         </defs>
         <g>
           <use xlink href='#l' opacity='.27' />
