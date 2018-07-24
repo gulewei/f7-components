@@ -2,7 +2,7 @@
 
 Mobile UI for Hyperapp
 
-## Show
+## Components
 
 [Kitchen Sink](https://venecy.github.io/f7c/kitchen-sink/)
 
