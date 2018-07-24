@@ -10,7 +10,13 @@ export default {
   view: () => {
     return (
       <ContentBlock title="Preloader">
-        <Preloader />
+        <p>
+          <Preloader />
+          <span>default</span>
+        </p>
+        <p>
+          <SvgPreloader white></SvgPreloader>
+        </p>
         <p>
           <SvgPreloader color='#f5711c'></SvgPreloader>
         </p>
