@@ -13,12 +13,14 @@ export default ({ key, title, outside, noBackIcon }, children) => (_, { pageAnim
           left={
             !noBackIcon && (
               <a
+                style={{ display: 'flex' }}
                 onclick={() => {
                   pageAnim.changeDirection('backward')
                   window.history.back()
                 }}
               >
                 <ImgIcon name='back' />
+                <span style={{ 'margin-left': '8px' }}>Back</span>
               </a>
             )
           }

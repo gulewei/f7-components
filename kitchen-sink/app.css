@@ -17,6 +17,15 @@ i.icon.icon-f7 {
   border-radius: 6px;
 }
 
+a.home-link {
+  color: #333;
+}
+
+.navbar .left,
+.navbar .right {
+  flex: 1;
+}
+
 /* ptr */
 
 .mock-item {

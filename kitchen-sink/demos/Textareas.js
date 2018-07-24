@@ -3,6 +3,8 @@ import Layout from '../Layout'
 import { ContentBlock, List, TextareaItem } from '../../components'
 
 export default {
+  key: 'textareas',
+  title: 'Textarea Item',
   state: {
     item: '',
     resizable: '',
@@ -12,9 +14,10 @@ export default {
   actions: {
     set: (props) => props
   },
+  noLayout: true,
   view: (state, actions) => {
     return (
-      <Layout key="textarea" title="Textarea">
+      <Layout key="textareas" title="Textarea-Item">
         <ContentBlock title="Textarea Item" />
         <List>
           <TextareaItem
@@ -56,7 +59,5 @@ export default {
         </List>
       </Layout>
     )
-  },
-  key: 'textareaitem',
-  title: 'TextareaItem'
+  }
 }

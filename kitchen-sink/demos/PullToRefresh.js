@@ -30,6 +30,8 @@ const MockList = ({ mocks }) => {
 }
 
 export default {
+  key: 'pulltorefresh',
+  title: 'Pull To Refresh',
   // state
   state: {
     refreshStatus: enumRefreshStatus.release,
@@ -40,6 +42,7 @@ export default {
     onRefreshChange: (refreshStatus) => ({ refreshStatus }),
     resetMocks: (mocks) => ({ mocks })
   },
+  noLayout: true,
   // view
   view: (state, actions) => {
     window.$ptr = { state, actions }
@@ -58,7 +61,5 @@ export default {
         </PullToRefresh>
       </Layout>
     )
-  },
-  key: 'pulltorefresh',
-  title: 'PullToRefresh'
+  }
 }

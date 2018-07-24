@@ -42,6 +42,6 @@ export default {
       </Layout>
     )
   },
-  key: 'transition',
-  title: 'CSSTransition'
+  key: 'csstransition',
+  title: 'CSS Transition'
 }

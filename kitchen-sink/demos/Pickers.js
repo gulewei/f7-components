@@ -59,6 +59,8 @@ const simpleData = mocker.simple()
 const cascadeData = mocker.cascade()
 
 export default {
+  key: 'pickers',
+  title: 'Picker',
   state: {
     contentShow: false,
     outside: {
@@ -98,6 +100,7 @@ export default {
       return { inline: value }
     }
   },
+  noLayout: true,
   view: (state, actions) => {
     window.$_picker = { state, actions }
     window.$_internal_picker = Picker.internalState
@@ -235,7 +238,5 @@ export default {
         /> */}
       </Layout >
     )
-  },
-  key: 'picker',
-  title: 'Picker'
+  }
 }

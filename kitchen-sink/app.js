@@ -9,7 +9,7 @@ import '../components/index.less'
 import { View, runEnter, runExit, ImgIcon, ContentBlock, List, ListItem } from '../components'
 // eslint-disable-next-line
 import Layout from './Layout'
-import pageList from './demos'
+import { categories, demos } from './demos'
 
 const F7Icon = <ImgIcon name='f7' />
 
@@ -19,28 +19,40 @@ const Home = {
   title: 'F7 Components',
   state: {},
   actions: {},
+  noLayout: true,
   view: () => (_, { pageAnim }) => {
     return (
-      <div>
-        <ContentBlock title='Components' />
-        <List>
-          {
-            pageList.map(({ title, path, key }) => {
-              return (
-                <Link
-                  key={key}
-                  to={path}
-                  onclick={() => {
-                    pageAnim.changeDirection('forward')
-                  }}
-                >
-                  <ListItem media={F7Icon} title={title} isLink />
-                </Link>
-              )
-            })
-          }
-        </List>
-      </div>
+      <Layout
+        key={Home.key}
+        title={Home.title}
+        noBackIcon
+      >
+        {
+          categories.map(({ category, components }) => {
+            return [
+              <ContentBlock title={category} key={category}/>,
+              <List key={`${category}-list`}>
+                {
+                  components.map(({ title, path, key, view }) => {
+                    return (
+                      <Link
+                        class="home-link"
+                        key={key}
+                        to={!!view && path}
+                        onclick={() => {
+                          pageAnim.changeDirection('forward')
+                        }}
+                      >
+                        <ListItem media={F7Icon} title={title} isLink={!!view} />
+                      </Link>
+                    )
+                  })
+                }
+              </List>
+            ]
+          })
+        }
+      </Layout>
     )
   }
 }
@@ -123,5 +135,5 @@ function register (pages) {
     }
   }
 }
-const { state, actions, view } = register(pageList.concat(Home, PageAnim))
+const { state, actions, view } = register(demos.concat(Home, PageAnim))
 withRouter(app, history)(state, actions, view, document.body)
