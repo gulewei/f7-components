@@ -18,8 +18,15 @@ gulp.task('style:less', () => {
 
 gulp.task('style', ['style:css', 'style:less'])
 
-gulp.task('js', () => {
+gulp.task('js:babel', () => {
   return gulp.src('components/**/*.js')
     .pipe(babel())
     .pipe(gulp.dest('lib'))
 })
+
+gulp.task('js:typing', () => {
+  return gulp.src('components/**/*.d.ts')
+    .pipe(gulp.dest('lib'))
+})
+
+gulp.task('js', ['js:babel', 'js:typing'])
