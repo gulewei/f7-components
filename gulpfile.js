@@ -5,13 +5,11 @@ const through2 = require('through2')
 
 const src = {
   css: [
-    'components/**/style/index.less',
-    'components/_style/index.less',
-    'components/_style/anim.less'
+    'components/**/*.less'
   ],
   less: 'components/**/*.less',
   js: 'components/**/*.js',
-  typing: 'components/**/*.d.ts'
+  typing: ['components/**/*.d.ts']
 }
 const dest = {
   lib: 'lib',
@@ -63,7 +61,7 @@ gulp.task('js:babel', () => {
     .pipe(through2.obj(function (file, encoding, next) {
       this.push(file.clone())
       // console.log('before precess: ', file.path)
-      if (file.path.match(/\\style\\index\.js/)) {
+      if (file.path.match(/\\_?style\\index\.js/)) {
         const content = file.contents.toString(encoding)
         file.contents = Buffer.from(content
           .replace(/\/_style\/?'/g, '/_style/css\'')

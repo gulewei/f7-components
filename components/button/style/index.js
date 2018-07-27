@@ -1,2 +1,2 @@
-import '../../_style'
+import '../../_style/disabled.less'
 import './index.less'
