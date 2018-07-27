@@ -13,6 +13,40 @@ you can learn about `Components` and their `Apis` in *[typing files](https://git
 
     npm install --save @gulw/components
 
+You can also access bundled file in `unpkg`, global name is `F7Components`
+
+    https://unpkg.com/@gulw/components@0.7.26/dist/f7-components.js
+
+## Modularized
+
+The following two ways used to load the **only components you used**, select one of the ways you like.
+
+- Use [babel-plugin-import](https://github.com/ant-design/babel-plugin-import)
+
+   ```js
+   // .babelrc or babel-loader option
+   {
+     "plugins": [
+       ["import", { "libraryName": "@gulw/components", "style": "css" }] // `style: true` for less
+     ]
+   }
+   ```
+
+   This allows you to import components from antd-mobile without having to manually import the corresponding stylesheet. The babel plugin will automatically import stylesheets.
+
+   ```jsx
+   // import js and css modularly, parsed by babel-plugin-import
+   import { Picker } from '@gulw/components';
+   ```
+
+- Manually import
+
+   ```jsx
+   import Picker from '@gulw/components/lib/picker';  // for js
+   import '@gulw/components/lib/picker/style/css';    // for css
+   // import '@gulw/components/lib/picker/style';     // that will import less
+   ```
+
 ## Example
 
 See more example in *[demos](https://github.com/venecy/f7c/tree/master/kitchen-sink/demos)*
@@ -21,7 +55,7 @@ See more example in *[demos](https://github.com/venecy/f7c/tree/master/kitchen-s
 import { h, app } from 'hyperapp'
 import { Page, Navbar, ContentBlock } from '@gulw/components'
 // import css
-import '@gulw/components/dist/f7-components.css'
+import '@gulw/components/lib/index.css'
 
 const Main = () => {
   return (
