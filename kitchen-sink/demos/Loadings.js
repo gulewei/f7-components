@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { Loading, ContentBlock } from '../../components'
+import { Loading, ContentBlock } from '../components'
 
 export default {
   key: 'loadings',

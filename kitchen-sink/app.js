@@ -6,7 +6,7 @@ import { history } from './router'
 import '../components/index.less'
 
 // eslint-disable-next-line
-import { View, runEnter, runExit, ImgIcon, ContentBlock, List, ListItem } from '../components'
+import { View, runEnter, runExit, ImgIcon, ContentBlock, List, ListItem } from './components'
 // eslint-disable-next-line
 import Layout from './Layout'
 import { categories, demos } from './demos'

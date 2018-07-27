@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { CSSTransition, ContentBlock, Button } from '../../components'
+import { CSSTransition, ContentBlock, Button } from '../components'
 import Layout from '../Layout'
 /* eslint-enable no-unused-vars */
 

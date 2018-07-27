@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { ContentBlock, Button } from '../../components'
+import { ContentBlock, Button } from '../components'
 
 export default {
   key: 'button',

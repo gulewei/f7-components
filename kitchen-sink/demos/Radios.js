@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { ContentBlock, List, RadioItem } from '../../components'
+import { ContentBlock, List, RadioItem } from '../components'
 
 const radios = [
   { label: 'Books', value: 'books' },

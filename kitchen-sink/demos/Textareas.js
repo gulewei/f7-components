@@ -1,6 +1,6 @@
 import { h } from 'hyperapp'
 import Layout from '../Layout'
-import { ContentBlock, List, TextareaItem } from '../../components'
+import { ContentBlock, List, TextareaItem } from '../components'
 
 export default {
   key: 'textareas',

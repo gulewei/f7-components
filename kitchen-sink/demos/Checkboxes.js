@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { ContentBlock, List, CheckboxItem } from '../../components'
+import { ContentBlock, List, CheckboxItem } from '../components'
 
 const checkboxes = [
   { label: 'Books', key: 'books' },

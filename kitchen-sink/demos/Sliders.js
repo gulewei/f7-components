@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { ContentBlock, List, ListItem, Slider, ImgIcon } from '../../components'
+import { ContentBlock, List, ListItem, Slider, ImgIcon } from '../components'
 
 const F7Icon = <ImgIcon name='f7' />
 

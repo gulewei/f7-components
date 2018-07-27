@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { Overlay, enumOverlayTypes, ContentBlock } from '../../components'
+import { Overlay, enumOverlayTypes, ContentBlock } from '../components'
 import Layout from '../Layout'
 
 export default {

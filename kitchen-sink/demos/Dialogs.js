@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { ContentBlock, Dialog } from '../../components'
+import { ContentBlock, Dialog } from '../components'
 
 export default {
   key: 'dialogs',

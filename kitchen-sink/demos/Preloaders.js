@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { ContentBlock, Preloader } from '../../components'
+import { ContentBlock, Preloader } from '../components'
 import SvgPreloader from '../../components/preloader/svg'
 
 export default {

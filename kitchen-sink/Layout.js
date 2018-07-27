@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { Page, Navbar, ImgIcon } from '../components'
+import { Page, Navbar, ImgIcon } from './components'
 
 export default ({ key, title, outside, noBackIcon }, children) => (_, { pageAnim }) => {
   return (

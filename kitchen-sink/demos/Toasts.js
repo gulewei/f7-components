@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { ContentBlock, Toast } from '../../components'
+import { ContentBlock, Toast } from '../components'
 
 export default {
   key: 'toasts',
