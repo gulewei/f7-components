@@ -15,7 +15,7 @@
     "pub": "npm version patch && npm publish --access=public && git push",
     "build:ks": "git rm docs/kitchen-sink -r && parcel build kitchen-sink/app.html -d docs/kitchen-sink --public-url ./ --out-file index.html",
     "build:prod": "git rm dist/ -r && rollup -c && parcel build components/index.less --no-minify --no-source-maps --out-file f7-components.css && gulp lib && gulp es",
-    "release:ks": "git add docs/kitchen-sink/ && git commit -m \"ks build\" && git push",
+    "release:ks": "npm run build:ks git add docs/kitchen-sink/ && git commit -m \"ks build\" && git push",
     "release:prod": "npm run build:prod && git add dist/ && git commit -m \"prod build\" && npm run pub"
   },
   "repository": {
