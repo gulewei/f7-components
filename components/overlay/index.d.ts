@@ -1,9 +1,9 @@
 import { TransitionProperties, Component } from '../_util/interfaces'
 
-interface EnumOverlayTypes {
+export interface EnumOverlayTypes {
   /**
- * Default overlay for most modals
- */
+   * Default overlay for most modals
+   */
   modal: 'modal',
   /**
    * Invisible overlay
@@ -18,11 +18,6 @@ interface EnumOverlayTypes {
    */
   picker: 'picker-modal'
 }
-
-/**
- * Possible overlay type
- */
-export const enumOverlayTypes: EnumOverlayTypes
 
 export interface OverlayProperties {
   /**
@@ -47,9 +42,16 @@ export interface OverlayProperties {
   key?: string
 }
 
+interface OverlayComponent<P> extends Component<P> {
+  /**
+   * Possible overlay type
+   */
+  TYPES: EnumOverlayTypes
+}
+
 /**
  * Overlay component
  */
-declare const Overlay: Component<OverlayProperties>
+declare const Overlay: OverlayComponent<OverlayProperties>
 
 export default Overlay

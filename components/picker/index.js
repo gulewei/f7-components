@@ -1,10 +1,11 @@
-import _Picker from './Picker'
+import { Picker, ModalPicker, InlinePicker } from './Picker'
+import Toolbar from './Toolbar'
 import plugin from './plugin'
 import { install, apiMixin } from '../_util'
 
-const apis = install(plugin)
-const Picker = apiMixin(_Picker, apis)
+Picker.Modal = ModalPicker
+Picker.Inline = InlinePicker
+Picker.Toolbar = Toolbar
 
-export default Picker
-export { ContentPicker, InlinePicker } from './Picker'
-export { default as PickerToolbar } from './Toolbar'
+const _Picker = apiMixin(Picker, install(plugin))
+export default _Picker

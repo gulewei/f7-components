@@ -1,6 +1,6 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import { ListItem } from '../list'
+import List from '../list'
 
 export default (props, children) => {
   const {
@@ -17,7 +17,7 @@ export default (props, children) => {
     ...rest
   } = props
   return (
-    <ListItem
+    <List.Item
       {...rest}
       input={
         <input
@@ -29,6 +29,6 @@ export default (props, children) => {
       }
     >
       {children}
-    </ListItem>
+    </List.Item>
   )
 }

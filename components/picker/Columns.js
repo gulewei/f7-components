@@ -60,8 +60,6 @@ const PickerColumns = (props) => {
   )
 }
 
-export default PickerColumns
-
 /**
  * final column model
  *
@@ -131,3 +129,5 @@ function getCascadeDatas (items, value) {
 function compatDatas (data) {
   return data[0].value ? [data] : data
 }
+
+export default PickerColumns

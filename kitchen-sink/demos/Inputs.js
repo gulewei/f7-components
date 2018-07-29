@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { ContentBlock, List, ListItem, InputItem, ImgIcon } from '../components'
+import { ContentBlock, List, InputItem, ImgIcon } from '../components'
 
 const F7Icon = <ImgIcon name='f7' />
 
@@ -39,7 +39,7 @@ const Layouts = {
           })
         }
         {/* select */}
-        <ListItem
+        <List.Item
           media={F7Icon}
           input={
             <select onchange={e => onInput({ gender: e.target.value })}>
@@ -49,7 +49,7 @@ const Layouts = {
           }
         >
           Gender
-        </ListItem>
+        </List.Item>
       </List>
     ])
   },
@@ -78,7 +78,7 @@ const Layouts = {
           })
         }
         {/* select */}
-        <ListItem
+        <List.Item
           media={hasIcon && F7Icon}
           title={hasLabel && 'Gender'}
           input={

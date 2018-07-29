@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import CSSTransition from '../animation'
+import Transition from '../transition'
 import cc from 'classnames'
 
 /**
@@ -22,7 +22,7 @@ const PickerModal = (props, children) => {
   } = props
 
   return (
-    <CSSTransition enter={!inline && 'anim-slidein'} exit={!inline && 'anim-slideout'}>
+    <Transition enter={!inline && 'anim-slidein'} exit={!inline && 'anim-slideout'}>
       <div
         class={cc('picker-modal', modalClass, { 'picker-modal-inline': inline })}
         style={{ display: 'block' }}
@@ -33,7 +33,7 @@ const PickerModal = (props, children) => {
           {!noColumns && <div key="center-highlight" class="picker-center-highlight"></div>}
         </div>
       </div>
-    </CSSTransition>
+    </Transition>
   )
 }
 

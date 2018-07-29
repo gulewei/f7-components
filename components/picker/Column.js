@@ -16,7 +16,7 @@ const processWidth = (width) => {
  *
  * @param {PickerDividerProps} props
  */
-const PickerDivider = (props) => {
+export const PickerDivider = (props) => {
   const {
     content,
     width,
@@ -50,7 +50,7 @@ const PickerDivider = (props) => {
  *
  * @param {PickerColumnProps} props
  */
-const PickerColumn = (props) => {
+export const PickerColumn = (props) => {
   const {
     value,
     items,
@@ -96,9 +96,4 @@ const PickerColumn = (props) => {
       </div>
     </div>
   )
-}
-
-export {
-  PickerColumn,
-  PickerDivider
 }

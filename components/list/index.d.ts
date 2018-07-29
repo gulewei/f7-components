@@ -15,19 +15,12 @@ export interface ListProperties extends ElementProperties, OuterHairlines, Inner
   useForm?: boolean
 }
 
-/**
- * List component
- */
-declare const List: Component<ListProperties>
-
-export default List
-
 export interface ListItemProperties extends ElementProperties {
 
   isLink?: boolean
 
   alignTop?: boolean
-  
+
   useLabel?: boolean
 
   contentStart?: JSX.Element
@@ -46,4 +39,15 @@ export interface ListItemProperties extends ElementProperties {
 
 }
 
-export const ListItem: Component<ListItemProperties>
+interface ListComponent<P> extends Component<P> {
+  Item: Component<ListItemProperties>
+}
+
+/**
+ * List component
+ */
+declare const List: ListComponent<ListProperties>
+
+export default List
+
+

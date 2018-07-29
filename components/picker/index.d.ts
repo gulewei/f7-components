@@ -1,5 +1,8 @@
 import { WraperProperties, TransitionProperties, Component } from '../_util/interfaces'
 
+/**
+ * Data item
+ */
 export interface PickerItemProperites {
   /**
    * Display label
@@ -15,6 +18,9 @@ export interface PickerItemProperites {
   children?: Array<PickerItemProperites>
 }
 
+/**
+ * Column style props
+ */
 export interface PickerColumnProperties {
 
   isDivider?: boolean
@@ -30,37 +36,9 @@ export interface PickerColumnProperties {
   align?: 'left' | 'center'
 }
 
-export interface PickerWraperProperties extends WraperProperties {
-  /**
-   * Visible
-   */
-  show: boolean
-  /**
-   * Wraper element class
-   * Default as 'picker-wraper'
-   */
-  wraperClass?: string
-  /**
-   * Wraper element key
-   */
-  wraperKey?: string
-  /**
-   * Event handler when overlay clicked
-   */
-  onOverlayClick?: (e: Event) => void
-}
-
-export interface PickerModalProperties {
-  /**
-   * Picker modal class
-   */
-  modalClass?: string
-  /**
-   * Picker toolbar element
-   */
-  toolbar?: JSX.Element
-}
-
+/**
+ * Picker Columns
+ */
 export interface PickerColumnsProperties {
   /**
    * Cascade data
@@ -84,40 +62,51 @@ export interface PickerColumnsProperties {
   onChange: (values: string[]) => any
 }
 
+/**
+ * Wraper element props
+ */
+export interface PickerWraperProperties extends WraperProperties {
+  /**
+   * Visible
+   */
+  show: boolean
+  /**
+   * Wraper element class
+   * Default as 'picker-wraper'
+   */
+  wraperClass?: string
+  /**
+   * Wraper element key
+   */
+  wraperKey?: string
+  /**
+   * Event handler when overlay clicked
+   */
+  onOverlayClick?: (e: Event) => void
+}
+
+/**
+ * Modal props and Toolbar
+ */
+export interface PickerModalProperties {
+  /**
+   * Picker modal class
+   */
+  modalClass?: string
+  /**
+   * Picker toolbar element
+   */
+  toolbar?: JSX.Element
+}
+
+/**
+ * Default picker, with Modal and Columns
+ */
 export interface PickerProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties { }
 
-export interface PickerMethodProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties {
-  content?: JSX.Element
-  toolbarText?: string
-  onDone?: (values: string[]) => void
-}
-
-export interface PickerComponent<P> extends Component<P> {
-  open: (props: PickerMethodProperties) => void,
-  openConent: (props: PickerMethodProperties) => void,
-  close: () => void
-}
-
-/**
- * Picker component
- */
-declare const Picker: PickerComponent<PickerProperties>
-
-export default Picker
-
-export interface ContentPickerProperties extends PickerWraperProperties, PickerModalProperties { }
-
-/**
- * Custom picker content
- */
-export const ContentPicker: Component<ContentPickerProperties>
+export interface ModalPickerProperties extends PickerWraperProperties, PickerModalProperties { }
 
 export interface InlinePickerProperties extends PickerModalProperties, PickerColumnsProperties { }
-
-/**
- * Inline picker
- */
-export const InlinePicker: Component<InlinePickerProperties>
 
 export interface PickerToolbarProperties {
 
@@ -130,4 +119,36 @@ export interface PickerToolbarProperties {
   toolbarClass?: string
 }
 
-export const PickerToolbar: Component<PickerToolbarProperties>
+/**
+ * 
+ */
+export interface PickerMethodProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties {
+  content?: JSX.Element
+  toolbarText?: string
+  onDone?: (values: string[]) => void
+}
+
+interface PickerComponent<P> extends Component<P> {
+  /**
+ * Custom picker content
+ */
+  Modal: Component<ModalPickerProperties>
+  /**
+   * Inline picker
+   */
+  Inline: Component<InlinePickerProperties>
+
+  Toolbar: Component<PickerToolbarProperties>
+  
+  open: (props: PickerMethodProperties) => void,
+  openModal: (props: PickerMethodProperties) => void,
+  close: () => void
+}
+
+/**
+ * Picker component
+ */
+declare const Picker: PickerComponent<PickerProperties>
+
+export default Picker
+

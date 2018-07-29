@@ -1,9 +1,9 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Overlay, { enumOverlayTypes } from '../overlay'
+import Overlay from '../overlay'
 // eslint-disable-next-line
-import CSSTransition from '../animation'
+import Transition from '../transition'
 import { sizeEl, ANIM_NAMES } from '../_util'
 import cc from 'classnames'
 
@@ -38,10 +38,10 @@ const Toast = (props) => {
     <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay
-          type={enumOverlayTypes.preloader}
+          type={Overlay.TYPES.preloader}
           notAnimated
         />,
-        <CSSTransition
+        <Transition
           enter={enterClass}
           exit={exitClass}
           beforeEnter={el => {
@@ -54,7 +54,7 @@ const Toast = (props) => {
           >
             {msg}
           </div>
-        </CSSTransition>
+        </Transition>
       ]}
     </div>
   )

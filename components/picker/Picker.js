@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { h } from 'hyperapp'
 // eslint-disable-next-line
-import Overlay, { enumOverlayTypes } from '../overlay'
+import Overlay from '../overlay'
 // eslint-disable-next-line
 import PickerModal from './Modal'
 // eslint-disable-next-line
@@ -38,7 +38,7 @@ import cc from 'classnames'
  * @param {PickerProps} props
  * @param {JSX.Element} children
  */
-const Picker = (props, children) => {
+export const Picker = (props, children) => {
   const {
     show,
     wraperClass,
@@ -52,7 +52,7 @@ const Picker = (props, children) => {
   return (
     <div key={wraperKey} class={cc('protal-picker', wraperClass)}>
       {show && [
-        <Overlay type={enumOverlayTypes.picker} onOverlayClick={onOverlayClick} />,
+        <Overlay type={Overlay.TYPES.picker} onOverlayClick={onOverlayClick} />,
         <PickerModal {...{ modalClass, toolbar }}>
           <PickerColumns {...columnsProps} />
         </PickerModal>
@@ -61,7 +61,7 @@ const Picker = (props, children) => {
   )
 }
 
-export const ContentPicker = (props, children) => {
+export const ModalPicker = (props, children) => {
   const {
     show,
     wraperClass,
@@ -74,7 +74,7 @@ export const ContentPicker = (props, children) => {
   return (
     <div key={wraperKey} class={wraperClass}>
       {show && [
-        <Overlay type={enumOverlayTypes.picker} onOverlayClick={onOverlayClick} />,
+        <Overlay type={Overlay.TYPES.picker} onOverlayClick={onOverlayClick} />,
         <PickerModal {...{ modalClass, toolbar, noColumns: true }}>
           {children}
         </PickerModal>
@@ -96,5 +96,3 @@ export const InlinePicker = (props) => {
     </PickerModal>
   )
 }
-
-export default Picker

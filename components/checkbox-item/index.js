@@ -4,7 +4,7 @@ import cc from 'classnames'
 // eslint-disable-next-line
 import Icon from '../img-icon'
 // eslint-disable-next-line
-import { ListItem } from '../list'
+import List from '../list'
 
 const checkboxIcon = <Icon name="form-checkbox" />
 
@@ -34,7 +34,7 @@ const CheckboxItem = (props, children) => {
   } = props
 
   return (
-    <ListItem
+    <List.Item
       {...rests}
       useLabel
       class={cc('label-checkbox', rests.class)}
@@ -49,7 +49,7 @@ const CheckboxItem = (props, children) => {
       }
     >
       {children}
-    </ListItem>
+    </List.Item>
   )
 }
 

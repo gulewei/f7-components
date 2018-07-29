@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { ContentBlock, List, ListItem, ImgIcon } from '../components'
+import { ContentBlock, List, ImgIcon } from '../components'
 import Layout from '../Layout'
 
 const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sagittis tellus ut turpis condimentum, ut dignissim lacus tincidunt. Cras dolor metus, ultrices condimentum sodales sit amet, pharetra sodales eros. Phasellus vel felis tellus. Mauris rutrum ligula nec dapibus feugiat. In vel dui laoreet, commodo augue id, pulvinar lacus.'
@@ -44,56 +44,56 @@ export default {
         <ContentBlock title="Full Layout" />
         <List label={state.label}>
           {state.basic.map(({ title, after, icon, isLink }, i) => (
-            <ListItem key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
+            <List.Item key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
           ))}
         </List>
 
         <ContentBlock title="Only titles" />
         <List>
           {state.title.map((title, i) => (
-            <ListItem key={i} {...{ title }} />
+            <List.Item key={i} {...{ title }} />
           ))}
         </List>
 
         <ContentBlock title="Links" />
         <List label={state.label}>
           {state.links.map(({ title, after, icon, isLink }, i) => (
-            <ListItem key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
+            <List.Item key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
           ))}
         </List>
 
         <ContentBlock title="Inset List Block" />
         <List label={state.label} inset>
           {state.basic.map(({ title, after, icon, isLink }, i) => (
-            <ListItem key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
+            <List.Item key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
           ))}
         </List>
 
         <ContentBlock title="Media List" />
         <List>
           {state.multipleLines.map(({ img, ...rest }, i) => (
-            <ListItem key={i} media={<img src={img} width="80" />} {...rest} />
+            <List.Item key={i} media={<img src={img} width="80" />} {...rest} />
           ))}
         </List>
 
         <ContentBlock title="Mail App" />
         <List>
           {state.mails.map((mail, i) => (
-            <ListItem key={i} {...mail} />
+            <List.Item key={i} {...mail} />
           ))}
         </List>
 
         <ContentBlock title="Something more simple" />
         <List>
           {state.simples.map(({ icon, ...item }, i) => (
-            <ListItem key={i} media={<ImgIcon name={icon} />} {...item} />
+            <List.Item key={i} media={<ImgIcon name={icon} />} {...item} />
           ))}
         </List>
 
         <ContentBlock title="Inset" />
         <List inset label={state.label}>
           {state.simples.map(({ icon, ...item }, i) => (
-            <ListItem key={i} media={<ImgIcon name={icon} />} {...item} />
+            <List.Item key={i} media={<ImgIcon name={icon} />} {...item} />
           ))}
         </List>
       </Layout>

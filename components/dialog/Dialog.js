@@ -3,7 +3,7 @@ import { h } from 'hyperapp'
 // eslint-disable-next-line
 import Overlay from '../overlay'
 // eslint-disable-next-line
-import CSSTransition from '../animation'
+import Transition from '../transition'
 import { sizeEl, ANIM_NAMES } from '../_util'
 import cc from 'classnames'
 
@@ -62,7 +62,7 @@ const Dialog = (props) => {
     <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay onOverlayClick={onOverlayClick} />,
-        <CSSTransition
+        <Transition
           enter={enterClass}
           exit={exitClass}
           beforeEnter={sizeModal}
@@ -88,7 +88,7 @@ const Dialog = (props) => {
               }
             </div>
           </div>
-        </CSSTransition>
+        </Transition>
       ]}
     </div>
   )

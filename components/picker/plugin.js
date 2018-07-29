@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import Picker, { ContentPicker } from './Picker'
+import { Picker, ModalPicker } from './Picker'
 import PickerToolbar from './Toolbar'
 import { h } from 'hyperapp'
 /* eslint-enable no-unused-vars */
@@ -29,16 +29,16 @@ const state = {
 
 const actions = {
   changValue: (values) => {
-    return {values}
+    return { values }
   },
-  openPicker: (props) => {
+  open: (props) => {
     return {
       ...props,
       show: true,
       isColumnPicker: true
     }
   },
-  openContent: (props) => {
+  openModal: (props) => {
     return {
       ...props,
       show: true,
@@ -76,26 +76,32 @@ const view = (state, actions) => {
 
   return (
     isColumnPicker
-      ? <Picker
-        {...rest}
-        values={values}
-        onOverlayClick={handleOverlayClick}
-        toolbar={toolbarVNode}
-        onChange={(values) => {
-          actions.changValue(values)
-          onChange(values)
-        }}
-      />
-      : <ContentPicker
-        {...rest}
-        onOverlayClick={handleOverlayClick}
-        toolbar={toolbarVNode}
-      >{content}</ContentPicker>
+      ? (
+        <Picker
+          {...rest}
+          values={values}
+          onOverlayClick={handleOverlayClick}
+          toolbar={toolbarVNode}
+          onChange={(values) => {
+            actions.changValue(values)
+            onChange(values)
+          }}
+        />
+      )
+      : (
+        <ModalPicker
+          {...rest}
+          onOverlayClick={handleOverlayClick}
+          toolbar={toolbarVNode}
+        >
+          {content}
+        </ModalPicker>
+      )
   )
 }
 
-const api = ({ openPicker: open, openContent, close, readState }) => {
-  let methods = { open, openContent, close }
+const api = ({ open, openModal, close, readState }) => {
+  let methods = { open, openModal, close }
   // for debug only
   let internalState
   Object.defineProperty(methods, 'internalState', {

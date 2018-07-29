@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h, app } from 'hyperapp'
-import { PullToRefresh, enumRefreshStatus } from '../components'
+import { PullToRefresh } from '../components'
 import Layout from '../Layout'
 
 const mocker = {
@@ -34,7 +34,7 @@ export default {
   title: 'Pull To Refresh',
   // state
   state: {
-    refreshStatus: enumRefreshStatus.release,
+    refreshStatus: PullToRefresh.STATUS.release,
     mocks: []
   },
   // actions

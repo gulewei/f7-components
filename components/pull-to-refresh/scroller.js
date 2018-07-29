@@ -1,9 +1,9 @@
 import BaseScroller from '../_util/scroller'
 import { css, on } from '../_util'
-import { runAndCleanUp } from '../animation/run-transition'
+import { runAndCleanUp } from '../transition/run-transition'
 import { enumRefreshStatus, transitionCls } from './constant'
 
-export class PullToRefreshScroller extends BaseScroller {
+export default class PullToRefreshScroller extends BaseScroller {
   /**
    * run on create
    * @param {HTMLElement} containerEl

@@ -2,7 +2,7 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 // eslint-disable-next-line
-import { ListItem } from '../list'
+import List from '../list'
 // eslint-disable-next-line
 import Icon from '../img-icon'
 // import './index.less'
@@ -37,7 +37,7 @@ const RadioItem = (props, children) => {
   } = props
 
   return (
-    <ListItem
+    <List.Item
       {...rests}
       useLabel
       class={cc('label-radio', rests.class)}
@@ -52,7 +52,7 @@ const RadioItem = (props, children) => {
       }
     >
       {children}
-    </ListItem>
+    </List.Item>
   )
 }
 

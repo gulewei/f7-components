@@ -2,7 +2,7 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 
-const Navbar = ({ left, right, center, noBorder, ...r }, children) => {
+export default ({ left, right, center, noBorder, ...r }, children) => {
   return (
     <div {...r} class={cc('navbar', { 'no-border': noBorder }, r.class)}>
       <div class="navbar-inner">
@@ -13,5 +13,3 @@ const Navbar = ({ left, right, center, noBorder, ...r }, children) => {
     </div>
   )
 }
-
-export default Navbar

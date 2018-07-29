@@ -9,15 +9,13 @@ import cc from 'classnames'
  * @param {ToolbarProps} props
  * @param {JSX.Element[]} children
  */
-const Toolbar = (props, children) => {
+export const Toolbar = (props, children) => {
   return (
     <div {...props} class={cc('toolbar', {'no-border': props.noBorder}, props.class)}>
       <div class="toolbar-inner">{children}</div>
     </div>
   )
 }
-
-export default Toolbar
 
 /**
  * @typedef {Object} ToolbarLinkProps
@@ -27,7 +25,7 @@ export default Toolbar
  *
  * @param {ToolbarLinkProps} props
  */
-export const ToolbarLink = (props, children) => {
+export const Link = (props, children) => {
   return (
     <a {...props} class={cc('link', props.class)} >{children}</a>
   )

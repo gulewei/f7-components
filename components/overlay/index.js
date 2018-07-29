@@ -2,10 +2,10 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
 // eslint-disable-next-line
-import CSSTransition from '../animation'
+import Transition from '../transition'
 import { ANIM_NAMES } from '../_util'
 
-export const enumOverlayTypes = {
+const TYPES = {
   modal: 'modal',
   preloader: 'preloader-indicator',
   popup: 'popup',
@@ -26,7 +26,7 @@ export const enumOverlayTypes = {
  */
 const Overlay = (props) => {
   const {
-    type = enumOverlayTypes.modal,
+    type = TYPES.modal,
     notAnimated,
     onOverlayClick,
     key,
@@ -35,10 +35,10 @@ const Overlay = (props) => {
     exitClass = ANIM_NAMES.fadeOut
   } = props
 
-  const noAnim = notAnimated || type === enumOverlayTypes.preloader
+  const noAnim = notAnimated || type === TYPES.preloader
 
   return (
-    <CSSTransition
+    <Transition
       enter={!noAnim && enterClass}
       exit={!noAnim && exitClass}
     >
@@ -47,8 +47,10 @@ const Overlay = (props) => {
         class={cc(`${type}-overlay`, overlayClass)}
         onclick={onOverlayClick}
       />
-    </CSSTransition>
+    </Transition>
   )
 }
+
+Overlay.TYPES = TYPES
 
 export default Overlay

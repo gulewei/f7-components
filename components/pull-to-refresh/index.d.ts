@@ -1,9 +1,9 @@
 import { ElementProperties, VNode, Component } from '../_util/interfaces'
 
-export const enumRefreshStatus: {
-  deactivate: 'deactivate',
-  activate: 'activate',
-  release: 'release',
+interface EnumRefreshStatus {
+  deactivate: 'deactivate'
+  activate: 'activate'
+  release: 'release'
   finish: 'finish'
 }
 
@@ -36,6 +36,10 @@ export interface PullToRefreshProperties extends ElementProperties {
 
 }
 
-declare const PullToRefresh: Component<PullToRefreshProperties>
+interface PullToRefreshComponent<P> extends Component<P> {
+  STATUS: EnumRefreshStatus
+}
+
+declare const PullToRefresh: PullToRefreshComponent<PullToRefreshProperties>
 
 export default PullToRefresh

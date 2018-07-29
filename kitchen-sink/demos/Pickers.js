@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
-import { ContentBlock, List, ListItem, Picker, PickerToolbar, ContentPicker, InlinePicker } from '../components'
+import { ContentBlock, List, Picker } from '../components'
 import Layout from '../Layout'
 
 const pickerItem = (label, value) => {
@@ -117,9 +117,9 @@ export default {
             onOverlayClick={actions.outside.close}
             onChange={actions.customAction}
             toolbar={
-              <PickerToolbar
+              <Picker.Toolbar
                 left={
-                  <a class="link">Give up</a>
+                  <a class="link" onclick={actions.outside.close}>Give up</a>
                 }
                 right={
                   <a class="link" onclick={actions.outside.close}>Ok</a>
@@ -127,11 +127,11 @@ export default {
               />
             }
           />,
-          <ContentPicker
+          <Picker.Modal
             show={state.contentShow}
             onOverlayClick={() => actions.contentAction(false)}
             toolbar={
-              <PickerToolbar
+              <Picker.Toolbar
                 right={
                   <a class="link" onclick={() => actions.contentAction(false)}>Done</a>
                 }
@@ -142,12 +142,12 @@ export default {
               <h4>Info 1</h4>
               <p>Lorem ipsum dolor...</p>
             </ContentBlock>
-          </ContentPicker>
+          </Picker.Modal>
         ]}
       >
         <ContentBlock title="Picker With Single Value" />
         <List>
-          <ListItem
+          <List.Item
             input={
               <input
                 type="text"
@@ -166,7 +166,7 @@ export default {
         </List>
         <ContentBlock title="Two Values" />
         <List>
-          <ListItem
+          <List.Item
             input={
               <input
                 type="text"
@@ -185,7 +185,7 @@ export default {
         </List>
         <ContentBlock title="Cascade Values" />
         <List>
-          <ListItem
+          <List.Item
             input={
               <input
                 type="text"
@@ -205,7 +205,7 @@ export default {
         </List>
         <ContentBlock title="Custom toolbar" />
         <List>
-          <ListItem
+          <List.Item
             input={
               <input
                 type="text"
@@ -221,7 +221,7 @@ export default {
         </ContentBlock>
         {/* <ContentBlock title="Inline toolbar" />
         <List>
-          <ListItem
+          <List.Item
             input={
               <input
                 type="text"

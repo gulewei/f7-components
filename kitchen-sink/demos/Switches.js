@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { ContentBlock, List, ListItem, Switch, ImgIcon } from '../components'
+import { ContentBlock, List, Switch, ImgIcon } from '../components'
 
 const F7Icon = <ImgIcon name='f7' />
 
@@ -7,7 +7,7 @@ const FullLayout = ({ data, action, title, noIcon, noLabel, inset }) => {
   return [
     <ContentBlock title={title} />,
     <List inset={inset}>
-      <ListItem
+      <List.Item
         media={!noIcon && F7Icon}
         input={
           <Switch
@@ -17,7 +17,7 @@ const FullLayout = ({ data, action, title, noIcon, noLabel, inset }) => {
         }
       >
         {!noLabel && 'Slider'}
-      </ListItem>
+      </List.Item>
     </List>
   ]
 }

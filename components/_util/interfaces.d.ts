@@ -71,3 +71,7 @@ export interface InnerHairlines {
    */
   noHairlinesBetween?: boolean
 }
+
+export interface Bordered {
+  noBorder?: boolean
+}
