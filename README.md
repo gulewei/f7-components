@@ -55,7 +55,7 @@ See more example in *[demos](https://github.com/venecy/f7c/tree/master/kitchen-s
 import { h, app } from 'hyperapp'
 import { Page, Navbar, ContentBlock } from '@gulw/components'
 // import css
-import '@gulw/components/lib/index.css'
+import '@gulw/components/dist/f7-components.css'
 
 const Main = () => {
   return (
