@@ -1,6 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs'
 import resolve from 'rollup-plugin-node-resolve'
 import babel from 'rollup-plugin-babel'
+import { rollup: babelConfig } from './scripts/babel-config'
 
 export default {
   output: {
@@ -18,27 +19,6 @@ export default {
       include: 'node_modules/**'
     }),
     resolve(),
-    babel({
-      babelrc: false,
-      exclude: 'node_modules/**',
-      presets: [
-        [
-          'es2015',
-          {
-            'modules': false
-          }
-        ]
-      ],
-      plugins: [
-        [
-          'transform-react-jsx',
-          {
-            'pragma': 'h'
-          }
-        ],
-        'transform-object-rest-spread',
-        'external-helpers'
-      ]
-    })
+    babel(babelConfig)
   ]
 }

@@ -2,11 +2,10 @@ const gulp = require('gulp')
 const less = require('gulp-less')
 const babel = require('gulp-babel')
 const through2 = require('through2')
+const babelConfig = require('./scripts/babel-config')
 
 const src = {
-  css: [
-    'components/**/*.less'
-  ],
+  css: 'components/**/*.less',
   less: 'components/**/*.less',
   js: 'components/**/*.js',
   typing: ['components/**/*.d.ts']
@@ -40,24 +39,8 @@ gulp.task('style', ['style:css', 'style:less'])
 
 // js
 gulp.task('js:babel', () => {
-  const config = {
-    babelrc: false,
-    presets: [
-      modules ? ['es2015', { 'modules': false }] : 'es2015'
-    ],
-    plugins: [
-      [
-        'transform-react-jsx',
-        {
-          'pragma': 'h'
-        }
-      ],
-      'transform-object-rest-spread',
-      'transform-runtime'
-    ]
-  }
   return gulp.src(src.js)
-    .pipe(babel(config))
+    .pipe(babel(modules ? babelConfig.es : babelConfig.lib))
     .pipe(through2.obj(function (file, encoding, next) {
       this.push(file.clone())
       // console.log('before precess: ', file.path)
