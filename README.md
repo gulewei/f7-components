@@ -32,7 +32,7 @@ The following two ways used to load the **only components you used**, select one
    }
    ```
 
-   This allows you to import components from antd-mobile without having to manually import the corresponding stylesheet. The babel plugin will automatically import stylesheets.
+   This allows you to import components without having to manually import the corresponding stylesheet. The babel plugin will automatically import stylesheets.
 
    ```jsx
    // import js and css modularly, parsed by babel-plugin-import
