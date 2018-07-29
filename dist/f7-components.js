@@ -57,87 +57,6 @@
 	}());
 	});
 
-	/**
-	 * https://github.com/dojo/widget-core/blob/master/src/animations/cssTransitions.ts
-	 */
-
-	var transitionEndName = '';
-	var animationEndName = '';
-
-	var requestAnimationFrame = window.requestAnimationFrame;
-
-	function determineNames(element) {
-	  if ('WebkitTransition' in element.style) {
-	    transitionEndName = 'webkitTransitionEnd';
-	    animationEndName = 'webkitAnimationEnd';
-	  } else if ('transition' in element.style || 'MozTransition' in element.style) {
-	    transitionEndName = 'transitionend';
-	    animationEndName = 'animationend';
-	  } else {
-	    throw new Error('Your browser is not supported');
-	  }
-	}
-
-	function initialize(element) {
-	  if (animationEndName === '') {
-	    determineNames(element);
-	  }
-	}
-
-	function runAndCleanUp(element, startAnimation, finishAnimation) {
-	  initialize(element);
-
-	  var finished = false;
-
-	  var transitionEnd = function transitionEnd() {
-	    if (!finished) {
-	      finished = true;
-	      element.removeEventListener(transitionEndName, transitionEnd);
-	      element.removeEventListener(animationEndName, transitionEnd);
-
-	      finishAnimation();
-	    }
-	  };
-
-	  startAnimation();
-
-	  element.addEventListener(animationEndName, transitionEnd);
-	  element.addEventListener(transitionEndName, transitionEnd);
-	}
-
-	function runExit(node, exitAnimationActive, exitAnimation, removeNode) {
-	  var activeClass = exitAnimationActive || exitAnimation + '-active';
-
-	  runAndCleanUp(node, function () {
-	    node.classList.add(exitAnimation);
-
-	    requestAnimationFrame(function () {
-	      node.classList.add(activeClass);
-	    });
-	  }, function () {
-	    removeNode();
-	  });
-	}
-
-	function runEnter(node, enterAnimationActive, enterAnimation, afterEnter) {
-	  var activeClass = enterAnimationActive || enterAnimation + '-active';
-
-	  runAndCleanUp(node, function () {
-	    node.classList.add(enterAnimation);
-
-	    requestAnimationFrame(function () {
-	      // bug: add active-class in this frome won't perform transition as expected, but add in next frame will
-	      requestAnimationFrame(function () {
-	        node.classList.add(activeClass);
-	      });
-	    });
-	  }, function () {
-	    node.classList.remove(enterAnimation);
-	    node.classList.remove(activeClass);
-	    afterEnter(node);
-	  });
-	}
-
 	var classCallCheck = function (instance, Constructor) {
 	  if (!(instance instanceof Constructor)) {
 	    throw new TypeError("Cannot call a class as a function");
@@ -231,6 +150,367 @@
 	  return Array.isArray(arr) ? arr : Array.from(arr);
 	};
 
+	// eslint-disable-next-line no-unused-vars
+
+	/**
+	 * @typedef {Object} ButtonProps
+	 * @prop {boolean} [fill=false]
+	 * @prop {boolean} [big=false]
+	 * @prop {boolean} [round=false]
+	 * @prop {boolean} [disabled=false]
+	 * @prop {string | JSX.Element} [text]
+	 * @prop {(e) => void} [onclick]
+	 * @prop {string} [class]
+	 * @prop {string} [key]
+	 *
+	 * @param {ButtonProps} props
+	 * @param {JSX.Element[]} children
+	 */
+	var index = (function (props, children) {
+	  var fill = props.fill,
+	      big = props.big,
+	      round = props.round,
+	      text = props.text,
+	      restProps = objectWithoutProperties(props, ['fill', 'big', 'round', 'text']);
+
+
+	  return hyperapp.h(
+	    'a',
+	    _extends({}, restProps, {
+	      'class': classnames(restProps.class, 'button', {
+	        'button-big': big,
+	        'button-fill': fill,
+	        'button-round': round
+	      })
+	    }),
+	    text || children
+	  );
+	});
+
+	// eslint-disable-next-line
+
+	var Icon = function Icon(_ref) {
+	  var name = _ref.name,
+	      r = objectWithoutProperties(_ref, ['name']);
+
+	  return hyperapp.h('i', _extends({}, r, { 'class': classnames('icon', 'icon-' + name, r.class) }));
+	};
+
+	var IconBack = hyperapp.h(Icon, { name: 'back' });
+
+	var IconForward = hyperapp.h(Icon, { name: 'forward' });
+
+	// eslint-disable-next-line
+
+	/**
+	 * List block
+	 * @typedef {Object} ListProps
+	 * @prop {boolean} [inset=false]
+	 * @prop {string} [label]
+	 * @prop {boolean} [useForm]
+	 * @prop {boolean} [noHairlines]
+	 * @prop {boolean} [noHairlinesBetween]
+	 *
+	 * @param {ListProps} props
+	 * @param {JSX.Element[]} children
+	 */
+	var List = (function (props, children) {
+	  var inset = props.inset,
+	      label = props.label,
+	      noHairlines = props.noHairlines,
+	      noHairlinesBetween = props.noHairlinesBetween,
+	      useForm = props.useForm,
+	      rests = objectWithoutProperties(props, ['inset', 'label', 'noHairlines', 'noHairlinesBetween', 'useForm']);
+
+
+	  var wraperCls = classnames(rests.class, 'list-block', {
+	    inset: inset,
+	    'no-hairlines': noHairlines,
+	    'no-hairlines-between': noHairlinesBetween
+	  });
+	  var WraperEl = useForm ? 'form' : 'div'; // eslint-disable-line
+
+	  return hyperapp.h(
+	    WraperEl,
+	    _extends({}, rests, { 'class': wraperCls }),
+	    hyperapp.h(
+	      'ul',
+	      null,
+	      children.map(function (child) {
+	        return hyperapp.h(
+	          'li',
+	          { key: child.key },
+	          child
+	        );
+	      })
+	    ),
+	    label && hyperapp.h(
+	      'div',
+	      { 'class': 'list-block-label' },
+	      label
+	    )
+	  );
+	});
+
+	/**
+	 * @typedef {Object} ItemWraperProps
+	 * @prop {boolean} [isLink]
+	 * @prop {boolean} [alignTop]
+	 * @prop {boolean} [useLabel]
+	 * @prop {JSX.Element} [contentStart]
+	 * @prop {JSX.Element} [media]
+	 * @prop {JSX.Element} [title]
+	 * @prop {JSX.Element} [input]
+	 * @prop {JSX.Element} [after]
+	 * @prop {JSX.Element} [subTitle]
+	 * @prop {JSX.Element} [text]
+	 *
+	 * @param {ItemWraperProps} props
+	 * @param {JSX.Element[]} children
+	 */
+	var Item = (function (props, children) {
+	  var isLink = props.isLink,
+	      alignTop = props.alignTop,
+	      useLabel = props.useLabel,
+	      contentStart = props.contentStart,
+	      media = props.media,
+	      _props$title = props.title,
+	      title = _props$title === undefined ? children.length > 0 ? children : props.title : _props$title,
+	      input = props.input,
+	      after = props.after,
+	      subTitle = props.subTitle,
+	      text = props.text,
+	      wraperProps = objectWithoutProperties(props, ['isLink', 'alignTop', 'useLabel', 'contentStart', 'media', 'title', 'input', 'after', 'subTitle', 'text']);
+
+
+	  var isMedia = !!(subTitle || text);
+	  var wraperCls = classnames(wraperProps.class, 'item-content', {
+	    'item-link': isLink,
+	    'align-top': alignTop,
+	    'media-item': isMedia
+	  });
+	  var WraperEl = useLabel ? 'label' : 'div'; // eslint-disable-line
+
+	  return hyperapp.h(
+	    WraperEl,
+	    _extends({}, wraperProps, {
+	      'class': wraperCls
+	    }),
+	    contentStart,
+	    media && hyperapp.h(
+	      'div',
+	      { key: 'media', 'class': 'item-media' },
+	      media
+	    ),
+	    hyperapp.h(
+	      'div',
+	      { key: 'inner', 'class': 'item-inner' },
+	      isMedia ? [hyperapp.h(
+	        'div',
+	        { key: 'row', 'class': 'item-title-row' },
+	        renderTitle(title, input, after)
+	      ), hyperapp.h(
+	        'div',
+	        { key: 'sub', 'class': 'item-subtitle' },
+	        subTitle
+	      ), text && hyperapp.h(
+	        'div',
+	        { key: 'text', 'class': 'item-text' },
+	        text
+	      )] : renderTitle(title, input, after)
+	    )
+	  );
+	});
+
+	var renderTitle = function renderTitle(title, input, after) {
+	  return [title && hyperapp.h(
+	    'div',
+	    { key: 'title', 'class': classnames('item-title', { label: !!input }) },
+	    title
+	  ), input && hyperapp.h(
+	    'div',
+	    { key: 'input', 'class': 'item-input' },
+	    input
+	  ), after && hyperapp.h(
+	    'div',
+	    { key: 'after', 'class': 'item-after' },
+	    after
+	  )];
+	};
+
+	List.Item = Item;
+
+	// eslint-disable-next-line
+
+	var checkboxIcon = hyperapp.h(Icon, { name: 'form-checkbox' });
+
+	/**
+	 * @typedef {Object} CheckboxItemProps
+	 * @prop {boolean} checked
+	 * @prop {(checked: boolean) => any} onChange
+	 * @prop {string} [name]
+	 * @prop {boolean} [disabled]
+	 * @prop {boolean} [readonly]
+	 * @prop {Object} [checkboxProps]
+	 * @prop {Object} [checkboxMedia]
+	 *
+	 * @param {CheckboxItemProps} props
+	 * @param {JSX.Element[]} children
+	 */
+	var CheckboxItem = function CheckboxItem(props, children) {
+	  var checked = props.checked,
+	      _props$onChange = props.onChange,
+	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
+	      name = props.name,
+	      disabled = props.disabled,
+	      readonly = props.readonly,
+	      checkboxProps = props.checkboxProps,
+	      _props$checkboxMedia = props.checkboxMedia,
+	      checkboxMedia = _props$checkboxMedia === undefined ? checkboxIcon : _props$checkboxMedia,
+	      rests = objectWithoutProperties(props, ['checked', 'onChange', 'name', 'disabled', 'readonly', 'checkboxProps', 'checkboxMedia']);
+
+
+	  return hyperapp.h(
+	    List.Item,
+	    _extends({}, rests, {
+	      useLabel: true,
+	      'class': classnames('label-checkbox', rests.class),
+	      media: checkboxMedia,
+	      contentStart: hyperapp.h('input', _extends({}, _extends({}, checkboxProps, { checked: checked, name: name, disabled: disabled, readonly: readonly }), {
+	        onchange: function onchange(e) {
+	          return onChange(e.target.checked);
+	        },
+	        type: 'checkbox',
+	        key: 'content-start'
+	      }))
+	    }),
+	    children
+	  );
+	};
+
+	// eslint-disable-next-line
+
+	/**
+	 * @typedef {Object} ContentBlockProps
+	 * @prop {boolean} [inner=false]
+	 * @prop {boolean} [inset=false]
+	 * @prop {string} [title]
+	 * @prop {boolean} [noHairlines]
+	 *
+	 * @param {ContentBlockProps} props
+	 * @param {JSX.Element[]} children
+	 */
+	var ContentBlock = function ContentBlock(props, children) {
+	  var inner = props.inner,
+	      inset = props.inset,
+	      title = props.title,
+	      noHairlines = props.noHairlines,
+	      rests = objectWithoutProperties(props, ['inner', 'inset', 'title', 'noHairlines']);
+
+
+	  var classes = classnames(rests.class, 'content-block', {
+	    inset: inset,
+	    'no-hairlines': noHairlines
+	  });
+
+	  var content = hyperapp.h(
+	    'div',
+	    _extends({}, rests, { 'class': classes }),
+	    inner ? hyperapp.h(
+	      'div',
+	      { 'class': 'content-block-inner' },
+	      children
+	    ) : children
+	  );
+
+	  return [title && hyperapp.h(
+	    'div',
+	    { 'class': 'content-block-title' },
+	    title
+	  ), children.length > 0 && content];
+	};
+
+	/**
+	 * https://github.com/dojo/widget-core/blob/master/src/animations/cssTransitions.ts
+	 */
+
+	var transitionEndName = '';
+	var animationEndName = '';
+
+	var requestAnimationFrame = window.requestAnimationFrame;
+
+	function determineNames(element) {
+	  if ('WebkitTransition' in element.style) {
+	    transitionEndName = 'webkitTransitionEnd';
+	    animationEndName = 'webkitAnimationEnd';
+	  } else if ('transition' in element.style || 'MozTransition' in element.style) {
+	    transitionEndName = 'transitionend';
+	    animationEndName = 'animationend';
+	  } else {
+	    throw new Error('Your browser is not supported');
+	  }
+	}
+
+	function initialize(element) {
+	  if (animationEndName === '') {
+	    determineNames(element);
+	  }
+	}
+
+	function runAndCleanUp(element, startAnimation, finishAnimation) {
+	  initialize(element);
+
+	  var finished = false;
+
+	  var transitionEnd = function transitionEnd() {
+	    if (!finished) {
+	      finished = true;
+	      element.removeEventListener(transitionEndName, transitionEnd);
+	      element.removeEventListener(animationEndName, transitionEnd);
+
+	      finishAnimation();
+	    }
+	  };
+
+	  startAnimation();
+
+	  element.addEventListener(animationEndName, transitionEnd);
+	  element.addEventListener(transitionEndName, transitionEnd);
+	}
+
+	function runExit(node, exitAnimationActive, exitAnimation, removeNode) {
+	  var activeClass = exitAnimationActive || exitAnimation + '-active';
+
+	  runAndCleanUp(node, function () {
+	    node.classList.add(exitAnimation);
+
+	    requestAnimationFrame(function () {
+	      node.classList.add(activeClass);
+	    });
+	  }, function () {
+	    removeNode();
+	  });
+	}
+
+	function runEnter(node, enterAnimationActive, enterAnimation, afterEnter) {
+	  var activeClass = enterAnimationActive || enterAnimation + '-active';
+
+	  runAndCleanUp(node, function () {
+	    node.classList.add(enterAnimation);
+
+	    requestAnimationFrame(function () {
+	      // bug: add active-class in this frome won't perform transition as expected, but add in next frame will
+	      requestAnimationFrame(function () {
+	        node.classList.add(activeClass);
+	      });
+	    });
+	  }, function () {
+	    node.classList.remove(enterAnimation);
+	    node.classList.remove(activeClass);
+	    afterEnter(node);
+	  });
+	}
+
 	/**
 	 * @typedef {Object} CSSTransitionProps
 	 * @prop {string} [enter]
@@ -298,282 +578,9 @@
 	  });
 	};
 
-	// eslint-disable-next-line no-unused-vars
-
-	/**
-	 * @typedef {Object} ButtonProps
-	 * @prop {boolean} [fill=false]
-	 * @prop {boolean} [big=false]
-	 * @prop {boolean} [round=false]
-	 * @prop {boolean} [disabled=false]
-	 * @prop {string | JSX.Element} [text]
-	 * @prop {(e) => void} [onclick]
-	 * @prop {string} [class]
-	 * @prop {string} [key]
-	 *
-	 * @param {ButtonProps} props
-	 * @param {JSX.Element[]} children
-	 */
-	var index = (function (props, children) {
-	  var fill = props.fill,
-	      big = props.big,
-	      round = props.round,
-	      text = props.text,
-	      restProps = objectWithoutProperties(props, ['fill', 'big', 'round', 'text']);
-
-
-	  return hyperapp.h(
-	    'a',
-	    _extends({}, restProps, {
-	      'class': classnames(restProps.class, 'button', {
-	        'button-big': big,
-	        'button-fill': fill,
-	        'button-round': round
-	      })
-	    }),
-	    text || children
-	  );
-	});
-
-	// eslint-disable-next-line
-
-	var Icon = function Icon(_ref) {
-	  var name = _ref.name,
-	      r = objectWithoutProperties(_ref, ['name']);
-
-	  return hyperapp.h('i', _extends({}, r, { 'class': classnames('icon', 'icon-' + name, r.class) }));
-	};
-
-	var IconBack = hyperapp.h(Icon, { name: 'back' });
-
-	var IconForward = hyperapp.h(Icon, { name: 'forward' });
-
-	// eslint-disable-next-line
-
-	/**
-	 * List block
-	 * @typedef {Object} ListProps
-	 * @prop {boolean} [inset=false]
-	 * @prop {string} [label]
-	 * @prop {boolean} [useForm]
-	 * @prop {boolean} [noHairlines]
-	 * @prop {boolean} [noHairlinesBetween]
-	 *
-	 * @param {ListProps} props
-	 * @param {JSX.Element[]} children
-	 */
-	var List = function List(props, children) {
-	  var inset = props.inset,
-	      label = props.label,
-	      noHairlines = props.noHairlines,
-	      noHairlinesBetween = props.noHairlinesBetween,
-	      useForm = props.useForm,
-	      rests = objectWithoutProperties(props, ['inset', 'label', 'noHairlines', 'noHairlinesBetween', 'useForm']);
-
-
-	  var wraperCls = classnames(rests.class, 'list-block', {
-	    inset: inset,
-	    'no-hairlines': noHairlines,
-	    'no-hairlines-between': noHairlinesBetween
-	  });
-	  var WraperEl = useForm ? 'form' : 'div'; // eslint-disable-line
-
-	  return hyperapp.h(
-	    WraperEl,
-	    _extends({}, rests, { 'class': wraperCls }),
-	    hyperapp.h(
-	      'ul',
-	      null,
-	      children.map(function (child) {
-	        return hyperapp.h(
-	          'li',
-	          { key: child.key },
-	          child
-	        );
-	      })
-	    ),
-	    label && hyperapp.h(
-	      'div',
-	      { 'class': 'list-block-label' },
-	      label
-	    )
-	  );
-	};
-
-	/**
-	 * @typedef {Object} ItemWraperProps
-	 * @prop {boolean} [isLink]
-	 * @prop {boolean} [alignTop]
-	 * @prop {boolean} [useLabel]
-	 * @prop {JSX.Element} [contentStart]
-	 * @prop {JSX.Element} [media]
-	 * @prop {JSX.Element} [title]
-	 * @prop {JSX.Element} [input]
-	 * @prop {JSX.Element} [after]
-	 * @prop {JSX.Element} [subTitle]
-	 * @prop {JSX.Element} [text]
-	 *
-	 * @param {ItemWraperProps} props
-	 * @param {JSX.Element[]} children
-	 */
-	var ListItem = function ListItem(props, children) {
-	  var isLink = props.isLink,
-	      alignTop = props.alignTop,
-	      useLabel = props.useLabel,
-	      contentStart = props.contentStart,
-	      media = props.media,
-	      _props$title = props.title,
-	      title = _props$title === undefined ? children.length > 0 ? children : props.title : _props$title,
-	      input = props.input,
-	      after = props.after,
-	      subTitle = props.subTitle,
-	      text = props.text,
-	      wraperProps = objectWithoutProperties(props, ['isLink', 'alignTop', 'useLabel', 'contentStart', 'media', 'title', 'input', 'after', 'subTitle', 'text']);
-
-
-	  var isMedia = !!(subTitle || text);
-	  var wraperCls = classnames(wraperProps.class, 'item-content', {
-	    'item-link': isLink,
-	    'align-top': alignTop,
-	    'media-item': isMedia
-	  });
-	  var WraperEl = useLabel ? 'label' : 'div'; // eslint-disable-line
-
-	  return hyperapp.h(
-	    WraperEl,
-	    _extends({}, wraperProps, {
-	      'class': wraperCls
-	    }),
-	    contentStart,
-	    media && hyperapp.h(
-	      'div',
-	      { key: 'media', 'class': 'item-media' },
-	      media
-	    ),
-	    hyperapp.h(
-	      'div',
-	      { key: 'inner', 'class': 'item-inner' },
-	      isMedia ? [hyperapp.h(
-	        'div',
-	        { key: 'row', 'class': 'item-title-row' },
-	        renderTitle(title, input, after)
-	      ), hyperapp.h(
-	        'div',
-	        { key: 'sub', 'class': 'item-subtitle' },
-	        subTitle
-	      ), text && hyperapp.h(
-	        'div',
-	        { key: 'text', 'class': 'item-text' },
-	        text
-	      )] : renderTitle(title, input, after)
-	    )
-	  );
-	};
-	var renderTitle = function renderTitle(title, input, after) {
-	  return [title && hyperapp.h(
-	    'div',
-	    { key: 'title', 'class': classnames('item-title', { label: !!input }) },
-	    title
-	  ), input && hyperapp.h(
-	    'div',
-	    { key: 'input', 'class': 'item-input' },
-	    input
-	  ), after && hyperapp.h(
-	    'div',
-	    { key: 'after', 'class': 'item-after' },
-	    after
-	  )];
-	};
-
-	// eslint-disable-next-line
-
-	var checkboxIcon = hyperapp.h(Icon, { name: 'form-checkbox' });
-
-	/**
-	 * @typedef {Object} CheckboxItemProps
-	 * @prop {boolean} checked
-	 * @prop {(checked: boolean) => any} onChange
-	 * @prop {string} [name]
-	 * @prop {boolean} [disabled]
-	 * @prop {boolean} [readonly]
-	 * @prop {Object} [checkboxProps]
-	 * @prop {Object} [checkboxMedia]
-	 *
-	 * @param {CheckboxItemProps} props
-	 * @param {JSX.Element[]} children
-	 */
-	var CheckboxItem = function CheckboxItem(props, children) {
-	  var checked = props.checked,
-	      _props$onChange = props.onChange,
-	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
-	      name = props.name,
-	      disabled = props.disabled,
-	      readonly = props.readonly,
-	      checkboxProps = props.checkboxProps,
-	      _props$checkboxMedia = props.checkboxMedia,
-	      checkboxMedia = _props$checkboxMedia === undefined ? checkboxIcon : _props$checkboxMedia,
-	      rests = objectWithoutProperties(props, ['checked', 'onChange', 'name', 'disabled', 'readonly', 'checkboxProps', 'checkboxMedia']);
-
-
-	  return hyperapp.h(
-	    ListItem,
-	    _extends({}, rests, {
-	      useLabel: true,
-	      'class': classnames('label-checkbox', rests.class),
-	      media: checkboxMedia,
-	      contentStart: hyperapp.h('input', _extends({}, _extends({}, checkboxProps, { checked: checked, name: name, disabled: disabled, readonly: readonly }), {
-	        onchange: function onchange(e) {
-	          return onChange(e.target.checked);
-	        },
-	        type: 'checkbox',
-	        key: 'content-start'
-	      }))
-	    }),
-	    children
-	  );
-	};
-
-	// eslint-disable-next-line
-
-	/**
-	 * @typedef {Object} ContentBlockProps
-	 * @prop {boolean} [inner=false]
-	 * @prop {boolean} [inset=false]
-	 * @prop {string} [title]
-	 * @prop {boolean} [noHairlines]
-	 *
-	 * @param {ContentBlockProps} props
-	 * @param {JSX.Element[]} children
-	 */
-	var ContentBlock = function ContentBlock(props, children) {
-	  var inner = props.inner,
-	      inset = props.inset,
-	      title = props.title,
-	      noHairlines = props.noHairlines,
-	      rests = objectWithoutProperties(props, ['inner', 'inset', 'title', 'noHairlines']);
-
-
-	  var classes = classnames(rests.class, 'content-block', {
-	    inset: inset,
-	    'no-hairlines': noHairlines
-	  });
-
-	  var content = hyperapp.h(
-	    'div',
-	    _extends({}, rests, { 'class': classes }),
-	    inner ? hyperapp.h(
-	      'div',
-	      { 'class': 'content-block-inner' },
-	      children
-	    ) : children
-	  );
-
-	  return [title && hyperapp.h(
-	    'div',
-	    { 'class': 'content-block-title' },
-	    title
-	  ), children.length > 0 && content];
-	};
+	CSSTransition.runAndCleanUp = runAndCleanUp;
+	CSSTransition.runEnter = runEnter;
+	CSSTransition.runExit = runExit;
 
 	function install(_ref) {
 	  var state = _ref.state,
@@ -681,7 +688,7 @@
 
 	// eslint-disable-next-line
 
-	var enumOverlayTypes = {
+	var TYPES = {
 	  modal: 'modal',
 	  preloader: 'preloader-indicator',
 	  popup: 'popup',
@@ -701,7 +708,7 @@
 	   */
 	};var Overlay = function Overlay(props) {
 	  var _props$type = props.type,
-	      type = _props$type === undefined ? enumOverlayTypes.modal : _props$type,
+	      type = _props$type === undefined ? TYPES.modal : _props$type,
 	      notAnimated = props.notAnimated,
 	      onOverlayClick = props.onOverlayClick,
 	      key = props.key,
@@ -712,7 +719,7 @@
 	      exitClass = _props$exitClass === undefined ? ANIM_NAMES.fadeOut : _props$exitClass;
 
 
-	  var noAnim = notAnimated || type === enumOverlayTypes.preloader;
+	  var noAnim = notAnimated || type === TYPES.preloader;
 
 	  return hyperapp.h(
 	    CSSTransition,
@@ -727,6 +734,8 @@
 	    })
 	  );
 	};
+
+	Overlay.TYPES = TYPES;
 
 	// eslint-disable-next-line
 
@@ -987,7 +996,7 @@
 	      rest = objectWithoutProperties(props, ['type', 'value', 'placeholder', 'disabled', 'readonly', 'name', 'onChange', 'onFocus', 'onBlur', 'inputProps']);
 
 	  return hyperapp.h(
-	    ListItem,
+	    List.Item,
 	    _extends({}, rest, {
 	      input: hyperapp.h('input', _extends({}, _extends({}, inputProps, { type: type, value: value, placeholder: placeholder, disabled: disabled, readonly: readonly, name: name }), {
 	        oninput: function oninput(e) {
@@ -1043,7 +1052,7 @@
 	    'div',
 	    { key: wraperKey, 'class': wraperClass },
 	    show && [hyperapp.h(Overlay, {
-	      type: enumOverlayTypes.preloader,
+	      type: Overlay.TYPES.preloader,
 	      notAnimated: true
 	    }), hyperapp.h(
 	      'div',
@@ -1091,6 +1100,40 @@
 
 	var apis$1 = install(plugin$1);
 	var Loading$1 = apiMixin(Loading, apis$1);
+
+	// eslint-disable-next-line
+
+	var index$2 = (function (_ref, children) {
+	  var left = _ref.left,
+	      right = _ref.right,
+	      center = _ref.center,
+	      noBorder = _ref.noBorder,
+	      r = objectWithoutProperties(_ref, ['left', 'right', 'center', 'noBorder']);
+
+	  return hyperapp.h(
+	    'div',
+	    _extends({}, r, { 'class': classnames('navbar', { 'no-border': noBorder }, r.class) }),
+	    hyperapp.h(
+	      'div',
+	      { 'class': 'navbar-inner' },
+	      hyperapp.h(
+	        'div',
+	        { 'class': 'left' },
+	        left
+	      ),
+	      hyperapp.h(
+	        'div',
+	        { 'class': 'center' },
+	        center || children
+	      ),
+	      hyperapp.h(
+	        'div',
+	        { 'class': 'right' },
+	        right
+	      )
+	    )
+	  );
+	});
 
 	// eslint-disable-next-line
 	// import './index.less'
@@ -1902,15 +1945,14 @@
 	  return hyperapp.h(
 	    'div',
 	    { key: wraperKey, 'class': classnames('protal-picker', wraperClass) },
-	    show && [hyperapp.h(Overlay, { type: enumOverlayTypes.picker, onOverlayClick: onOverlayClick }), hyperapp.h(
+	    show && [hyperapp.h(Overlay, { type: Overlay.TYPES.picker, onOverlayClick: onOverlayClick }), hyperapp.h(
 	      PickerModal,
 	      { modalClass: modalClass, toolbar: toolbar },
 	      hyperapp.h(PickerColumns, columnsProps)
 	    )]
 	  );
 	};
-
-	var ContentPicker = function ContentPicker(props, children) {
+	var ModalPicker = function ModalPicker(props, children) {
 	  var show = props.show,
 	      wraperClass = props.wraperClass,
 	      wraperKey = props.wraperKey,
@@ -1922,7 +1964,7 @@
 	  return hyperapp.h(
 	    'div',
 	    { key: wraperKey, 'class': wraperClass },
-	    show && [hyperapp.h(Overlay, { type: enumOverlayTypes.picker, onOverlayClick: onOverlayClick }), hyperapp.h(
+	    show && [hyperapp.h(Overlay, { type: Overlay.TYPES.picker, onOverlayClick: onOverlayClick }), hyperapp.h(
 	      PickerModal,
 	      { modalClass: modalClass, toolbar: toolbar, noColumns: true },
 	      children
@@ -1940,40 +1982,6 @@
 	    PickerModal,
 	    { modalClass: modalClass, toolbar: toolbar, inline: true },
 	    hyperapp.h(PickerColumns, columnsProps)
-	  );
-	};
-
-	// eslint-disable-next-line
-
-	var Navbar = function Navbar(_ref, children) {
-	  var left = _ref.left,
-	      right = _ref.right,
-	      center = _ref.center,
-	      noBorder = _ref.noBorder,
-	      r = objectWithoutProperties(_ref, ['left', 'right', 'center', 'noBorder']);
-
-	  return hyperapp.h(
-	    'div',
-	    _extends({}, r, { 'class': classnames('navbar', { 'no-border': noBorder }, r.class) }),
-	    hyperapp.h(
-	      'div',
-	      { 'class': 'navbar-inner' },
-	      hyperapp.h(
-	        'div',
-	        { 'class': 'left' },
-	        left
-	      ),
-	      hyperapp.h(
-	        'div',
-	        { 'class': 'center' },
-	        center || children
-	      ),
-	      hyperapp.h(
-	        'div',
-	        { 'class': 'right' },
-	        right
-	      )
-	    )
 	  );
 	};
 
@@ -2006,13 +2014,15 @@
 	 *
 	 * @param {ToolbarLinkProps} props
 	 */
-	var ToolbarLink = function ToolbarLink(props, children) {
+	var Link = function Link(props, children) {
 	  return hyperapp.h(
 	    'a',
 	    _extends({}, props, { 'class': classnames('link', props.class) }),
 	    children
 	  );
 	};
+
+	Toolbar.Link = Link;
 
 	// eslint-disable-next-line
 	// import cc from 'classnames'
@@ -2025,7 +2035,7 @@
 	 * @prop {string} [toolbarClass]
 	 * @param {PickerToolbarProps} props
 	 */
-	var PickerToolbar = function PickerToolbar(props) {
+	var PickerToolbar = (function (props) {
 	  var left = props.left,
 	      right = props.right,
 	      center = props.center,
@@ -2051,7 +2061,7 @@
 	      right
 	    )
 	  );
-	};
+	});
 
 	/* eslint-disable no-unused-vars */
 	/* eslint-enable no-unused-vars */
@@ -2083,13 +2093,13 @@
 	  changValue: function changValue(values) {
 	    return { values: values };
 	  },
-	  openPicker: function openPicker(props) {
+	  open: function open(props) {
 	    return _extends({}, props, {
 	      show: true,
 	      isColumnPicker: true
 	    });
 	  },
-	  openContent: function openContent(props) {
+	  openModal: function openModal(props) {
 	    return _extends({}, props, {
 	      show: true,
 	      isColumnPicker: false
@@ -2136,7 +2146,7 @@
 	      _onChange(values);
 	    }
 	  })) : hyperapp.h(
-	    ContentPicker,
+	    ModalPicker,
 	    _extends({}, rest, {
 	      onOverlayClick: handleOverlayClick,
 	      toolbar: toolbarVNode
@@ -2146,12 +2156,12 @@
 	};
 
 	var api$2 = function api(_ref) {
-	  var open = _ref.openPicker,
-	      openContent = _ref.openContent,
+	  var open = _ref.open,
+	      openModal = _ref.openModal,
 	      close = _ref.close,
 	      readState = _ref.readState;
 
-	  var methods = { open: open, openContent: openContent, close: close
+	  var methods = { open: open, openModal: openModal, close: close
 	    // for debug only
 	  };var internalState = void 0;
 	  Object.defineProperty(methods, 'internalState', {
@@ -2172,8 +2182,11 @@
 	  api: api$2
 	};
 
-	var apis$2 = install(plugin$2);
-	var Picker$1 = apiMixin(Picker, apis$2);
+	Picker.Modal = ModalPicker;
+	Picker.Inline = InlinePicker;
+	Picker.Toolbar = PickerToolbar;
+
+	var _Picker = apiMixin(Picker, install(plugin$2));
 
 	var transitionCls = 'pull-to-refresh-transition';
 
@@ -2344,6 +2357,7 @@
 	  return PullToRefreshScroller;
 	}(BaseScroller);
 
+
 	function render(content, translate) {
 	  var value = 'translate3d(0, ' + translate + 'px, 0)';
 	  css(content, {
@@ -2356,10 +2370,10 @@
 	// eslint-disable-next-line no-unused-vars
 
 	var defaultIndicator = {
-	  deactivate: '下拉刷新',
-	  activate: '松开立即刷新',
-	  release: '加载中...',
-	  finish: '完成刷新'
+	  deactivate: 'pull down',
+	  activate: 'release to refresh',
+	  release: 'refreshing',
+	  finish: 'done'
 
 	  /**
 	   * @typedef {Object} PullToRefreshProps
@@ -2372,7 +2386,7 @@
 	   *
 	   * @param {PullToRefreshProps} props
 	   */
-	};var PullToRefresh = function PullToRefresh(props, children) {
+	};var PullToRefresh = (function (props, children) {
 	  var _props$distance = props.distance,
 	      distance = _props$distance === undefined ? 25 : _props$distance,
 	      _props$indicator = props.indicator,
@@ -2423,7 +2437,9 @@
 	      )
 	    )
 	  );
-	};
+	});
+
+	PullToRefresh.STATUS = enumRefreshStatus;
 
 	// eslint-disable-next-line
 	// import './index.less'
@@ -2458,7 +2474,7 @@
 
 
 	  return hyperapp.h(
-	    ListItem,
+	    List.Item,
 	    _extends({}, rests, {
 	      useLabel: true,
 	      'class': classnames('label-radio', rests.class),
@@ -2520,7 +2536,7 @@
 	 * @prop {string} [name]
 	 *
 	 */
-	var index$2 = (function (props) {
+	var index$3 = (function (props) {
 	  var checked = props.checked,
 	      _props$onChange = props.onChange,
 	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
@@ -2577,7 +2593,7 @@
 	  }
 	}
 
-	var index$3 = (function (props, children) {
+	var TextareaItem = (function (props, children) {
 	  var value = props.value,
 	      placeholder = props.placeholder,
 	      rows = props.rows,
@@ -2597,7 +2613,7 @@
 
 
 	  return hyperapp.h(
-	    ListItem,
+	    List.Item,
 	    _extends({}, rest, {
 	      input: hyperapp.h(
 	        'textarea',
@@ -2623,6 +2639,8 @@
 	    children
 	  );
 	});
+
+	TextareaItem.resizableTextarea = resizableTextarea;
 
 	// eslint-disable-next-line
 
@@ -2659,7 +2677,7 @@
 	    'div',
 	    { key: wraperKey, 'class': wraperClass },
 	    show && [hyperapp.h(Overlay, {
-	      type: enumOverlayTypes.preloader,
+	      type: Overlay.TYPES.preloader,
 	      notAnimated: true
 	    }), hyperapp.h(
 	      CSSTransition,
@@ -2737,8 +2755,8 @@
 	  api: api$3
 	};
 
-	var apis$3 = install(plugin$3);
-	var Toast$1 = apiMixin(Toast, apis$3);
+	var apis$2 = install(plugin$3);
+	var Toast$1 = apiMixin(Toast, apis$2);
 
 	// eslint-disable-next-line
 
@@ -2754,10 +2772,6 @@
 	  );
 	};
 
-	exports.CSSTransition = CSSTransition;
-	exports.runAndCleanUp = runAndCleanUp;
-	exports.runEnter = runEnter;
-	exports.runExit = runExit;
 	exports.Button = index;
 	exports.CheckboxItem = CheckboxItem;
 	exports.ContentBlock = ContentBlock;
@@ -2765,27 +2779,20 @@
 	exports.ImgIcon = Icon;
 	exports.InputItem = index$1;
 	exports.List = List;
-	exports.ListItem = ListItem;
 	exports.Loading = Loading$1;
+	exports.Navbar = index$2;
 	exports.Overlay = Overlay;
-	exports.enumOverlayTypes = enumOverlayTypes;
 	exports.Page = Page;
-	exports.Picker = Picker$1;
-	exports.ContentPicker = ContentPicker;
-	exports.InlinePicker = InlinePicker;
-	exports.PickerToolbar = PickerToolbar;
+	exports.Picker = _Picker;
 	exports.Preloader = Preloader;
 	exports.PullToRefresh = PullToRefresh;
-	exports.enumRefreshStatus = enumRefreshStatus;
 	exports.RadioItem = RadioItem;
 	exports.Slider = RangeSlider;
-	exports.Switch = index$2;
-	exports.TextareaItem = index$3;
-	exports.resizableTextarea = resizableTextarea;
+	exports.Switch = index$3;
+	exports.TextareaItem = TextareaItem;
 	exports.Toast = Toast$1;
-	exports.Navbar = Navbar;
 	exports.Toolbar = Toolbar;
-	exports.ToolbarLink = ToolbarLink;
+	exports.Transition = CSSTransition;
 	exports.View = View;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
