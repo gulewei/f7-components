@@ -51,6 +51,11 @@
 		if (module.exports) {
 			classNames.default = classNames;
 			module.exports = classNames;
+		} else if (typeof undefined === 'function' && typeof undefined.amd === 'object' && undefined.amd) {
+			// register as 'classnames', consistent with npm package name
+			undefined('classnames', [], function () {
+				return classNames;
+			});
 		} else {
 			window.classNames = classNames;
 		}
@@ -478,7 +483,7 @@
 	  element.addEventListener(transitionEndName, transitionEnd);
 	}
 
-	function runExit(node, exitAnimationActive, exitAnimation, removeNode) {
+	function runExit(node, exitAnimationActive, exitAnimation, removeNode, afterExit) {
 	  var activeClass = exitAnimationActive || exitAnimation + '-active';
 
 	  runAndCleanUp(node, function () {
@@ -489,6 +494,9 @@
 	    });
 	  }, function () {
 	    removeNode();
+	    if (afterExit) {
+	      afterExit(node);
+	    }
 	  });
 	}
 
@@ -507,80 +515,97 @@
 	  }, function () {
 	    node.classList.remove(enterAnimation);
 	    node.classList.remove(activeClass);
-	    afterEnter(node);
+	    if (afterEnter) {
+	      afterEnter(node);
+	    }
 	  });
 	}
 
 	/**
-	 * @typedef {Object} CSSTransitionProps
+	 * @typedef {Object} TransitionProps
 	 * @prop {string} [enter]
 	 * @prop {string} [enterActive]
+	 * @prop {(el: HTMLElement) => void} [onEnter]
+	 * @prop {(el: HTMLElement) => void} [afterEnter]
 	 * @prop {string} [exit]
 	 * @prop {string} [exitActive]
-	 * @prop {(el: HTMLElement) => void} [beforeEnter]
-	 * @prop {(el: HTMLElement) => void} [afterEnter]
-	 * @prop {(el: HTMLElement) => void} [beforeExit]
+	 * @prop {(el: HTMLElement, removeNode: () => void) => void} [onExit]
 	 * @prop {(el: HTMLElement, removeNode: () => void) => void} [afterExit]
 	 *
-	 * @param {CSSTransitionProps} props
+	 * @param {TransitionProps} props
 	 * @param {JSX.Element[]} children
 	 */
-	var CSSTransition = function CSSTransition(props, children) {
-	  var enter = props.enter,
-	      _props$enterActive = props.enterActive,
-	      enterActive = _props$enterActive === undefined ? enter + '-active' : _props$enterActive,
-	      exit = props.exit,
-	      _props$exitActive = props.exitActive,
-	      exitActive = _props$exitActive === undefined ? exit + '-active' : _props$exitActive,
-	      beforeEnter = props.beforeEnter,
-	      _props$afterEnter = props.afterEnter,
-	      afterEnter = _props$afterEnter === undefined ? function () {} : _props$afterEnter,
-	      beforeExit = props.beforeExit,
-	      afterExit = props.afterExit;
-
-
+	function makeTransition(props, children) {
 	  var child = children[0];
-
 	  if (!child.attributes) {
 	    return child;
 	  }
+	  var attributes = child.attributes,
+	      rest = objectWithoutProperties(child, ['attributes']);
 
-	  var attr = child.attributes;
-	  var replaceAttr = {};
 
-	  if (enter) {
-	    replaceAttr.oncreate = function (el) {
-	      if (enter) {
-	        runEnter(el, enterActive, enter, afterEnter);
+	  return _extends({}, rest, {
+	    attributes: _extends({}, attributes, {
+	      oncreate: function oncreate(el) {
+	        transitionEnter(el, props, attributes);
+	      },
+	      onremove: function onremove(el, done) {
+	        transitionExit(el, props, attributes, done);
 	      }
-	      // TOOD: why put this before runEnter can affect Toast animation
-	      if (beforeEnter) {
-	        beforeEnter(el);
-	      }
-	    };
-	  }
-
-	  if (exit) {
-	    replaceAttr.onremove = function (el, done) {
-	      if (beforeExit) {
-	        beforeExit(el);
-	      }
-	      if (exit) {
-	        runExit(el, exitActive, exit, afterExit ? function () {
-	          return afterExit(el, done);
-	        } : done);
-	      }
-	    };
-	  }
-
-	  return _extends({}, child, {
-	    attributes: _extends({}, attr, replaceAttr)
+	    })
 	  });
-	};
+	}
 
-	CSSTransition.runAndCleanUp = runAndCleanUp;
-	CSSTransition.runEnter = runEnter;
-	CSSTransition.runExit = runExit;
+	function transitionEnter(el, props, attributes) {
+	  if (props.enter) {
+	    runEnter(el, props.enterActive, props.enter, props.afterEnter);
+	  }
+
+	  if (props.onEnter) {
+	    props.onEnter(el);
+	  }
+
+	  if (attributes.oncreate) {
+	    attributes.oncreate(el);
+	  }
+	}
+
+	function transitionExit(el, props, attributes, removeNode) {
+	  var directlyRemove = true;
+
+	  if (props.exit) {
+	    runExit(el, props.exitActive, props.exit, removeNode, props.afterExit);
+	    directlyRemove = false;
+	  }
+
+	  if (props.onExit) {
+	    props.onExit(el, removeNode);
+	    directlyRemove = false;
+	  }
+
+	  if (attributes.onremove) {
+	    attributes.onremove(el, removeNode);
+	    directlyRemove = false;
+	  }
+
+	  if (directlyRemove) {
+	    removeNode();
+	  }
+	}
+
+	var Transition = (function (props, children) {
+	  if (typeof children === 'function') {
+	    return function (state, actions) {
+	      return makeTransition(props, children(state, actions));
+	    };
+	  } else {
+	    return makeTransition(props, children);
+	  }
+	});
+
+	Transition.runAndCleanUp = runAndCleanUp;
+	Transition.runEnter = runEnter;
+	Transition.runExit = runExit;
 
 	function install(_ref) {
 	  var state = _ref.state,
@@ -722,7 +747,7 @@
 	  var noAnim = notAnimated || type === TYPES.preloader;
 
 	  return hyperapp.h(
-	    CSSTransition,
+	    Transition,
 	    {
 	      enter: !noAnim && enterClass,
 	      exit: !noAnim && exitClass
@@ -797,15 +822,14 @@
 	    'div',
 	    { key: wraperKey, 'class': wraperClass },
 	    show && [hyperapp.h(Overlay, { onOverlayClick: onOverlayClick }), hyperapp.h(
-	      CSSTransition,
+	      Transition,
 	      {
 	        enter: enterClass,
-	        exit: exitClass,
-	        beforeEnter: sizeModal
+	        exit: exitClass
 	      },
 	      hyperapp.h(
 	        'div',
-	        { 'class': 'modal' },
+	        { 'class': 'modal', oncreate: sizeModal },
 	        hyperapp.h(
 	          'div',
 	          { 'class': 'modal-inner' },
@@ -1194,7 +1218,7 @@
 
 
 	  return hyperapp.h(
-	    CSSTransition,
+	    Transition,
 	    { enter: !inline && 'anim-slidein', exit: !inline && 'anim-slideout' },
 	    hyperapp.h(
 	      'div',
@@ -2646,6 +2670,10 @@
 
 	var WRAPER = 'toast-wraper';
 
+	function sizeToast(el) {
+	  sizeEl(el, true, true);
+	}
+
 	/**
 	 * @typedef {Object} ToastProps
 	 * @prop {boolean} show
@@ -2680,19 +2708,17 @@
 	      type: Overlay.TYPES.preloader,
 	      notAnimated: true
 	    }), hyperapp.h(
-	      CSSTransition,
+	      Transition,
 	      {
 	        enter: enterClass,
-	        exit: exitClass,
-	        beforeEnter: function beforeEnter(el) {
-	          sizeEl(el, true, true);
-	        }
+	        exit: exitClass
 	      },
 	      hyperapp.h(
 	        'div',
 	        {
 	          'class': classnames('toast toast-transition', toastClass),
-	          onclick: onToastClick
+	          onclick: onToastClick,
+	          oncreate: sizeToast
 	        },
 	        msg
 	      )
@@ -2792,7 +2818,7 @@
 	exports.TextareaItem = TextareaItem;
 	exports.Toast = Toast$1;
 	exports.Toolbar = Toolbar;
-	exports.Transition = CSSTransition;
+	exports.Transition = Transition;
 	exports.View = View;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
