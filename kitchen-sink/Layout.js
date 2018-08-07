@@ -2,12 +2,10 @@
 import { h } from 'hyperapp'
 import { Page, Navbar, ImgIcon } from './components'
 
-export default ({ key, title, outside, noBackIcon }, children) => (_, { pageAnim }) => {
+export default ({ key, title, outside, noBackIcon }, children) => {
   return (
     <Page
       key={key}
-      oncreate={pageAnim.pageCreate}
-      onremove={(el, done) => { pageAnim.pageRemove({ el, done }) }}
       navbar={
         <Navbar
           left={
@@ -15,7 +13,6 @@ export default ({ key, title, outside, noBackIcon }, children) => (_, { pageAnim
               <a
                 style={{ display: 'flex' }}
                 onclick={() => {
-                  pageAnim.changeDirection('backward')
                   window.history.back()
                 }}
               >
