@@ -1,71 +1,83 @@
-import cc from 'classnames'
 import { runEnter, runExit } from './run-transition'
 
 /**
- * @typedef {Object} CSSTransitionProps
+ * @typedef {Object} TransitionProps
  * @prop {string} [enter]
  * @prop {string} [enterActive]
+ * @prop {(el: HTMLElement) => void} [onEnter]
+ * @prop {(el: HTMLElement) => void} [afterEnter]
  * @prop {string} [exit]
  * @prop {string} [exitActive]
- * @prop {(el: HTMLElement) => void} [beforeEnter]
- * @prop {(el: HTMLElement) => void} [afterEnter]
- * @prop {(el: HTMLElement) => void} [beforeExit]
+ * @prop {(el: HTMLElement, removeNode: () => void) => void} [onExit]
  * @prop {(el: HTMLElement, removeNode: () => void) => void} [afterExit]
  *
- * @param {CSSTransitionProps} props
+ * @param {TransitionProps} props
  * @param {JSX.Element[]} children
  */
-const CSSTransition = (props, children) => {
-  const {
-    enter,
-    enterActive = `${enter}-active`,
-    exit,
-    exitActive = `${exit}-active`,
-    beforeEnter,
-    afterEnter = () => { },
-    beforeExit,
-    afterExit
-  } = props
-
+function makeTransition (props, children) {
   const child = children[0]
-
   if (!child.attributes) {
     return child
   }
-
-  const attr = child.attributes
-  let replaceAttr = {}
-
-  if (enter) {
-    replaceAttr.oncreate = (el) => {
-      if (enter) {
-        runEnter(el, enterActive, enter, afterEnter)
-      }
-      // TOOD: why put this before runEnter can affect Toast animation
-      if (beforeEnter) {
-        beforeEnter(el)
-      }
-    }
-  }
-
-  if (exit) {
-    replaceAttr.onremove = (el, done) => {
-      if (beforeExit) {
-        beforeExit(el)
-      }
-      if (exit) {
-        runExit(el, exitActive, exit, afterExit ? () => afterExit(el, done) : done)
-      }
-    }
-  }
+  const { attributes, ...rest } = child
 
   return {
-    ...child,
+    ...rest,
     attributes: {
-      ...attr,
-      ...replaceAttr
+      ...attributes,
+      oncreate: (el) => {
+        transitionEnter(el, props, attributes)
+      },
+      onremove: (el, done) => {
+        transitionExit(el, props, attributes, done)
+      }
     }
   }
 }
 
-export default CSSTransition
+function transitionEnter (el, props, attributes) {
+  if (props.enter) {
+    runEnter(el, props.enterActive, props.enter, props.afterEnter)
+  }
+
+  if (props.onEnter) {
+    props.onEnter(el)
+  }
+
+  if (attributes.oncreate) {
+    attributes.oncreate(el)
+  }
+}
+
+function transitionExit (el, props, attributes, removeNode) {
+  let directlyRemove = true
+
+  if (props.exit) {
+    runExit(el, props.exitActive, props.exit, removeNode, props.afterExit)
+    directlyRemove = false
+  }
+
+  if (props.onExit) {
+    props.onExit(el, removeNode)
+    directlyRemove = false
+  }
+
+  if (attributes.onremove) {
+    attributes.onremove(el, removeNode)
+    directlyRemove = false
+  }
+
+  if (directlyRemove) {
+    removeNode()
+  }
+}
+
+export default (props, children) => {
+  if (typeof children === 'function') {
+    return (state, actions) => {
+      return makeTransition(props, children(state, actions))
+    }
+  } else {
+    return makeTransition(props, children)
+  }
+}

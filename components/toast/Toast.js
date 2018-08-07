@@ -9,6 +9,10 @@ import cc from 'classnames'
 
 const WRAPER = 'toast-wraper'
 
+function sizeToast (el) {
+  sizeEl(el, true, true)
+}
+
 /**
  * @typedef {Object} ToastProps
  * @prop {boolean} show
@@ -44,13 +48,11 @@ const Toast = (props) => {
         <Transition
           enter={enterClass}
           exit={exitClass}
-          beforeEnter={el => {
-            sizeEl(el, true, true)
-          }}
         >
           <div
             class={cc('toast toast-transition', toastClass)}
             onclick={onToastClick}
+            oncreate={sizeToast}
           >
             {msg}
           </div>

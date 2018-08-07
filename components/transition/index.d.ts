@@ -12,11 +12,11 @@ export interface CSSTransitionProperties {
 
   exitActive?: string
 
-  beforeEnter: (el: HTMLElement) => void
+  onEnter: (el: HTMLElement) => void
 
   afterEnter: (el: HTMLElement) => void
 
-  beforeExit: (el: HTMLElement) => void
+  onExit: (el: HTMLElement, removeNode: () => void) => void
 
   afterExit: (el: HTMLElement, removeNode: () => void) => void
 }
