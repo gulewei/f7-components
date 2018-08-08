@@ -1210,6 +1210,9 @@
   exports.Dialog = Dialog$1;
   exports.Loading = Loading$1;
   exports.Toast = Toast$1;
+  exports.Transition = Transition;
+  exports.Overlay = Overlay;
+  exports.Preloader = Preloader;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
