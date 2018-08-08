@@ -1,16 +1,20 @@
+// eslint-disable-next-line
+import { h } from 'hyperapp'
+// eslint-disable-next-line
+import { Transition, View } from './components'
+// eslint-disable-next-line
+import { Switch } from 'hyperapp-hoa-router'
 import createBrowserHistory from 'history/createBrowserHistory'
-import { Transition } from './components'
-
-// History
 
 export const history = createBrowserHistory({
   basename: '/#/'
 })
 
-// Handle session
-
 const sessionStorage = window.sessionStorage
 
+/**
+ * 历史记录
+ */
 const store = {
   key: '_hoa_router_session_',
   get () {
@@ -30,7 +34,12 @@ const store = {
   }
 }
 
-export function handleHistory ({ setForward, setBackward, setNone }) {
+/**
+ * 判断动画放向
+ * @param {Object} appActions
+ */
+const subscribe = (appActions) => {
+  const { setForward, setBackward, setNone } = appActions[direction.key]
   history.listen((location, action) => {
     const pathes = store.get()
     switch (action) {
@@ -55,69 +64,69 @@ export function handleHistory ({ setForward, setBackward, setNone }) {
   })
 }
 
-// Router module
-
+/**
+ * 动画方向
+ */
 const enumDirection = {
   none: 0,
   forward: 1,
   backward: 2
 }
 
-export const Router = {
-  key: 'routeAnim',
-  view: false,
-  state: {
-    direction: enumDirection.none
-  },
-  actions: {
-    setForward () {
-      return { direction: enumDirection.forward }
-    },
-    setBackward () {
-      return { direction: enumDirection.backward }
-    },
-    setNone () {
-      return { direction: enumDirection.none }
-    },
-    // Handle transition
-    pageEnter: (el) => ({ direction }) => {
-      if (direction === enumDirection.none) {
-        return
-      }
-      direction === enumDirection.forward
-        ? Transition.runEnter(el, 'page-from-right-to-center', 'page-on-right', () => { })
-        : Transition.runEnter(el, 'page-from-left-to-center', 'page-on-left', () => { })
-    },
-    pageExit: ({ el, done }) => ({ direction }) => {
-      if (direction === enumDirection.none) {
-        return
-      }
-      direction === enumDirection.forward
-        ? Transition.runExit(el, 'page-from-center-to-left', 'page-on-center', done)
-        : Transition.runExit(el, 'page-from-center-to-right', 'page-on-center', done)
-    }
+/**
+ * 进场动画
+ * @param {HTMLElement} el
+ */
+const performEnter = (el) => ({ direction }) => {
+  if (direction === enumDirection.none) {
+    return
   }
+  direction === enumDirection.forward
+    ? Transition.runEnter(el, 'page-from-right-to-center', 'page-on-right', () => { })
+    : Transition.runEnter(el, 'page-from-left-to-center', 'page-on-left', () => { })
 }
 
-// export function handleTransitions (routerState, noneTranstionCls = '') {
-//   if (routerState.direction === enumDirection.none) {
-//     return {
-//       enter: noneTranstionCls,
-//       exit: noneTranstionCls
-//     }
-//   }
+/**
+ * 出场动画
+ * @param {{el: HTMLElement, done: () => {}}} param0
+ */
+const performExit = ({ el, done }) => ({ direction }) => {
+  if (direction === enumDirection.none) {
+    return
+  }
+  direction === enumDirection.forward
+    ? Transition.runExit(el, 'page-from-center-to-left', 'page-on-center', done)
+    : Transition.runExit(el, 'page-from-center-to-right', 'page-on-center', done)
+}
 
-//   return routerState.direction === enumDirection.forward
-//     ? {
-//       enter: 'page-on-right',
-//       enterActive: 'page-from-right-to-center',
-//       exit: 'page-on-center',
-//       exitActive: 'page-from-center-to-left'
-//     }
-//     : {
-//       enter: 'page-on-left',
-//       enterActive: 'page-from-left-to-center',
-//       exit: 'page-on-center',
-//       exitActive: 'page-from-center-to-right'
-//     }
-// }
+export const direction = {
+  key: 'direction',
+  view: false,
+  state: { direction: enumDirection.none },
+  actions: {
+    performEnter,
+    performExit,
+    setForward: () => ({ direction: enumDirection.forward }),
+    setBackward: () => ({ direction: enumDirection.backward }),
+    setNone: () => ({ direction: enumDirection.none })
+  },
+  subscribe
+}
+
+/**
+ * 页面动画容器
+ * @param {*} _
+ * @param {*} children
+ */
+export const RouterView = (_, children) => (_, appActions) => {
+  return (
+    <View>
+      <Transition
+        onEnter={el => appActions[direction.key].performEnter(el)}
+        onExit={(el, done) => appActions[direction.key].performExit({ el, done })}
+      >
+        <Switch>{children}</Switch>
+      </Transition>
+    </View>
+  )
+}

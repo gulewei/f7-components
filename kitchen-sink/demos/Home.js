@@ -3,10 +3,10 @@ import { h } from 'hyperapp'
 // eslint-disable-next-line
 import { Link } from 'hyperapp-hoa-router'
 // eslint-disable-next-line
-import { ImgIcon, ContentBlock, List, ListItem } from './components'
+import { ImgIcon, ContentBlock, List, ListItem } from '../components'
 // eslint-disable-next-line
-import Layout from './Layout'
-import { categories } from './demos'
+import Layout from '../Layout'
+import { categories } from './_categories'
 
 const F7Icon = <ImgIcon name='f7' />
 
