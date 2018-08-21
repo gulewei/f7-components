@@ -13,7 +13,7 @@
   "scripts": {
     "start": "parcel kitchen-sink/app.html --out-dir .ksdist --no-autoinstall --no-cache",
     "pub": "npm version patch && npm publish --access=public && git push",
-    "build:ks": "git rm docs/kitchen-sink -r && parcel build kitchen-sink/app.html -d docs/kitchen-sink --public-url ./ --out-file index.html",
+    "build:ks": "git rm docs/kitchen-sink -r && parcel build kitchen-sink/app.html -d docs/kitchen-sink --public-url ./ --out-file index",
     "build:prod": "git rm dist/ -r && rollup -c && parcel build components/index.less --no-minify --no-source-maps --out-file f7-components.css && gulp lib && gulp es",
     "build:custom": "rollup --config scripts/custom.config.js && parcel build scripts/custom.less --no-minify --no-source-maps --out-file f7c.custom.css",
     "release:ks": "npm run build:ks && git add docs/kitchen-sink/ && git commit -m \"ks build\" && git push",
