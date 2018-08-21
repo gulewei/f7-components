@@ -4,11 +4,14 @@ import { h } from 'hyperapp'
 import { Transition, View } from './components'
 // eslint-disable-next-line
 import { Switch } from 'hyperapp-hoa-router'
-import createBrowserHistory from 'history/createBrowserHistory'
+// import createBrowserHistory from 'history/createBrowserHistory'
 
-export const history = createBrowserHistory({
-  basename: '/#/'
-})
+// export const history = createBrowserHistory({
+// basename: '/#/'
+// })
+
+import createHashHistory from 'history/createHashHistory'
+export const history = createHashHistory()
 
 const sessionStorage = window.sessionStorage
 
