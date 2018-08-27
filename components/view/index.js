@@ -3,9 +3,13 @@ import { h } from 'hyperapp'
 import cc from 'classnames'
 
 const View = (props, children) => {
+  const { outside, ...rests } = props
   return (
-    <div {...props} class={cc('view', props.class)}>
-      <div class="pages">{children}</div>
+    <div {...rests} class={cc('view', rests.class)}>
+      <div key="pages" class="pages">{children}</div>
+      {outside &&
+        <div key='outside' class="view-outside">{outside}</div>
+      }
     </div>
   )
 }

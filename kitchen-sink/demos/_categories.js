@@ -15,6 +15,7 @@ import Toasts from './Toasts'
 import Loadings from './Loadings'
 import Preloaders from './Preloaders'
 import Overlay from './Overlay'
+import Panels from './Panels'
 
 import PullToRefresh from './PullToRefresh'
 import Transition from './Transition'
@@ -47,6 +48,7 @@ export const demos = transformModels([
   Loadings,
   Preloaders,
   Overlay,
+  Panels,
 
   PullToRefresh,
   Transition
@@ -89,7 +91,8 @@ export const categories = [
       Toasts,
       Loadings,
       Overlay,
-      Preloaders
+      Preloaders,
+      Panels
     ])
   },
   {
