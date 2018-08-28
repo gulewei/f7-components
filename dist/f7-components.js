@@ -2022,7 +2022,7 @@
 	    return {
 	      isDivider: isDivider,
 	      props: props,
-	      content: isDivider ? content : contents[++itemIndex]
+	      content: isDivider ? content : contents[itemIndex++]
 	    };
 	  });
 	}
