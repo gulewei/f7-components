@@ -1460,6 +1460,149 @@ html.android .page-from-center-to-right:before {
     opacity: 0;
   }
 }
+/* === Panels === */
+.panel-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  z-index: 5999;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transition-duration: 300ms;
+  transition-duration: 300ms;
+}
+.panel-overlay.not-animated {
+  -webkit-transition-duration: 0ms;
+  transition-duration: 0ms;
+}
+.panel {
+  z-index: 1000;
+  display: none;
+  background: #fff;
+  box-sizing: border-box;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  position: absolute;
+  width: 260px;
+  top: 0;
+  height: 100%;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transition-duration: 300ms;
+  transition-duration: 300ms;
+}
+.panel.not-animated {
+  -webkit-transition-duration: 0ms;
+  transition-duration: 0ms;
+}
+.panel.panel-visible {
+  display: block;
+}
+.panel.panel-left {
+  left: 0;
+}
+.panel.panel-left.panel-cover {
+  z-index: 6000;
+  -webkit-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+}
+.panel.panel-right {
+  right: 0;
+}
+.panel.panel-right.panel-cover {
+  z-index: 6000;
+  -webkit-transform: translate3d(100%, 0, 0);
+  transform: translate3d(100%, 0, 0);
+}
+.panel.panel-visible-by-breakpoint {
+  display: block;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+  box-shadow: none !important;
+}
+.panel.panel-visible-by-breakpoint.panel-cover {
+  z-index: 5900;
+}
+body.with-panel-left-cover .panel,
+body.with-panel-right-cover .panel {
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+}
+body.with-panel-left-cover .view,
+body.with-panel-right-cover .view {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+body.with-panel-left-cover .panel-overlay,
+body.with-panel-right-cover .panel-overlay {
+  display: block;
+  opacity: 1;
+}
+body.with-panel-left-reveal .view,
+body.with-panel-right-reveal .view {
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+  -webkit-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-property: -webkit-transform, box-shadow;
+  -webkit-transition-property: box-shadow, -webkit-transform;
+  transition-property: box-shadow, -webkit-transform;
+  transition-property: transform, box-shadow;
+  transition-property: transform, box-shadow, -webkit-transform;
+}
+body.with-panel-left-reveal .panel.not-animated ~ .view,
+body.with-panel-right-reveal .panel.not-animated ~ .view {
+  -webkit-transition-duration: 0ms;
+  transition-duration: 0ms;
+}
+body.with-panel-left-reveal .panel-overlay,
+body.with-panel-right-reveal .panel-overlay {
+  background: rgba(0, 0, 0, 0);
+  display: block;
+  opacity: 0;
+}
+body.with-panel-left-reveal .view {
+  -webkit-transform: translate3d(260px, 0, 0);
+  transform: translate3d(260px, 0, 0);
+}
+body.with-panel-left-reveal .panel-overlay {
+  -webkit-transform: translate3d(260px, 0, 0);
+  transform: translate3d(260px, 0, 0);
+}
+body.with-panel-left-cover .panel.panel-left {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+body.with-panel-right-reveal .view {
+  -webkit-transform: translate3d(-260px, 0, 0);
+  transform: translate3d(-260px, 0, 0);
+}
+body.with-panel-right-reveal .panel-overlay {
+  -webkit-transform: translate3d(-260px, 0, 0);
+  transform: translate3d(-260px, 0, 0);
+}
+body.with-panel-right-cover .panel.panel-right {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+body.panel-closing .panel-overlay {
+  display: block;
+}
+body.panel-closing .view {
+  -webkit-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-property: -webkit-transform, box-shadow;
+  -webkit-transition-property: box-shadow, -webkit-transform;
+  transition-property: box-shadow, -webkit-transform;
+  transition-property: transform, box-shadow;
+  transition-property: transform, box-shadow, -webkit-transform;
+}
+body.panel-closing .panel.not-animated ~ .view {
+  -webkit-transition-duration: 0ms;
+  transition-duration: 0ms;
+}
 .picker-modal {
   position: absolute;
   left: 0;

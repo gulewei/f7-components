@@ -1186,13 +1186,155 @@
 	      children
 	    ),
 	    toolbar,
-	    outside && hyperapp.h(
-	      'div',
-	      { key: 'outside', 'class': 'page-outside' },
-	      outside
+	    outside
+	  );
+	};
+
+	function runIf(fn) {
+	  if (fn) {
+	    fn();
+	  }
+	}
+
+	var body = document.body;
+	var addBodyClass = function addBodyClass(cls) {
+	  return body.classList.add(cls);
+	};
+	var removeBodyClass = function removeBodyClass(cls) {
+	  return body.classList.remove(cls);
+	};
+	var raf = window.requestAnimationFrame;
+
+	/**
+	 * @typedef {Object} PanelProps
+	 * @prop {boolean} notAnimated
+	 * @prop {'left' | 'right'} position
+	 * @prop {'cover' | 'reveal'} effect
+	 * @prop {string} panelClass
+	 * @prop {() => void} onOverlayClick
+	 *
+	 * @param {PanelProps} props
+	 */
+	var Panel = function Panel(props, children) {
+	  var notAnimated = props.notAnimated,
+	      _props$position = props.position,
+	      position = _props$position === undefined ? 'left' : _props$position,
+	      _props$effect = props.effect,
+	      effect = _props$effect === undefined ? 'cover' : _props$effect,
+	      overlayClass = props.overlayClass,
+	      panelClass = props.panelClass,
+	      onOverlayClick = props.onOverlayClick,
+	      onOpen = props.onOpen,
+	      onOpened = props.onOpened,
+	      onClose = props.onClose,
+	      onClosed = props.onClosed,
+	      rests = objectWithoutProperties(props, ['notAnimated', 'position', 'effect', 'overlayClass', 'panelClass', 'onOverlayClick', 'onOpen', 'onOpened', 'onClose', 'onClosed']);
+
+	  var animateClass = { 'not-animated': notAnimated };
+	  var openClass = 'with-panel-' + position + '-' + effect;
+
+	  return [hyperapp.h('div', {
+	    key: 'panel-overlay',
+	    'class': classnames('panel-overlay', overlayClass, animateClass), onclick: onOverlayClick
+	  }), hyperapp.h(
+	    'div',
+	    _extends({}, rests, {
+	      key: 'panel',
+	      'class': classnames('panel panel-' + position + ' panel-' + effect, panelClass, animateClass),
+	      style: _extends({ display: 'block' }, rests.style),
+	      oncreate: function oncreate(el) {
+	        runAndCleanUp(el, function () {
+	          runIf(onOpen);
+	          raf(function () {
+	            raf(function () {
+	              return addBodyClass(openClass);
+	            });
+	          });
+	          runIf(notAnimated && onOpened);
+	        }, function () {
+	          runIf(!notAnimated && onOpened);
+	        });
+	      },
+	      onremove: function onremove(el, done) {
+	        var remove = function remove() {
+	          runIf(onClosed);
+	          done();
+	        };
+	        runAndCleanUp(el, function () {
+	          runIf(onClose);
+	          notAnimated ? remove() : addBodyClass('panel-closing');
+	          removeBodyClass(openClass);
+	        }, function () {
+	          remove();
+	          removeBodyClass('panel-closing');
+	        });
+	      },
+	      ondestroy: function ondestroy() {
+	        removeBodyClass('panel-closing');
+	        removeBodyClass(openClass);
+	      }
+	    }),
+	    children
+	  )];
+	};
+
+	var defaultState$1 = {
+	  children: [],
+	  show: false,
+	  notAnimated: false,
+	  position: 'left',
+	  effect: 'cover',
+	  overlayClass: '',
+	  panelClass: '',
+	  onOverlayClick: null,
+	  onOpen: null,
+	  onOpened: null,
+	  onClose: null,
+	  onClosed: null
+	};
+
+	var actions$2 = {
+	  open: function open(props) {
+	    return _extends({}, props, {
+	      show: true
+	    });
+	  },
+	  close: function close() {
+	    return defaultState$1;
+	  },
+	  update: function update(props) {
+	    return props;
+	  }
+	};
+
+	var view$2 = function view(state, actions) {
+	  var show = state.show,
+	      children = state.children,
+	      onOverlayClick = state.onOverlayClick,
+	      props = objectWithoutProperties(state, ['show', 'children', 'onOverlayClick']);
+
+
+	  return hyperapp.h(
+	    'div',
+	    { 'class': 'panel-wraper' },
+	    show && hyperapp.h(
+	      Panel,
+	      _extends({}, props, { onOverlayClick: onOverlayClick || actions.close }),
+	      children
 	    )
 	  );
 	};
+
+	var plugin$2 = {
+	  state: defaultState$1,
+	  actions: actions$2,
+	  view: view$2,
+	  api: function api(actions) {
+	    return actions;
+	  }
+	};
+
+	var _Panel = apiMixin(Panel, install(plugin$2));
 
 	// eslint-disable-next-line
 
@@ -1218,8 +1360,8 @@
 	    hyperapp.h(
 	      'div',
 	      {
-	        'class': classnames('picker-modal', modalClass, { 'picker-modal-inline': inline }),
-	        style: { display: 'block' }
+	        'class': classnames('picker-modal', modalClass, { 'picker-modal-inline': inline })
+	        // style={{ display: 'block' }}
 	      },
 	      toolbar,
 	      hyperapp.h(
@@ -2108,7 +2250,7 @@
 	  onChange: function onChange() {}
 	};
 
-	var actions$2 = {
+	var actions$3 = {
 	  changValue: function changValue(values) {
 	    return { values: values };
 	  },
@@ -2134,7 +2276,7 @@
 	  }
 	};
 
-	var view$2 = function view(state, actions) {
+	var view$3 = function view(state, actions) {
 	  var isColumnPicker = state.isColumnPicker,
 	      content = state.content,
 	      toolbarText = state.toolbarText,
@@ -2194,10 +2336,10 @@
 	  return methods;
 	};
 
-	var plugin$2 = {
+	var plugin$3 = {
 	  state: state$1,
-	  actions: actions$2,
-	  view: view$2,
+	  actions: actions$3,
+	  view: view$3,
 	  api: api$2
 	};
 
@@ -2205,7 +2347,7 @@
 	Picker.Inline = InlinePicker;
 	Picker.Toolbar = PickerToolbar;
 
-	var _Picker = apiMixin(Picker, install(plugin$2));
+	var _Picker = apiMixin(Picker, install(plugin$3));
 
 	var transitionCls = 'pull-to-refresh-transition';
 
@@ -2725,13 +2867,13 @@
 
 	var defaultDuration = 1500;
 
-	var defaultState$1 = {
+	var defaultState$2 = {
 	  show: false,
 	  msg: '',
 	  duration: defaultDuration
 	};
 
-	var actions$3 = {
+	var actions$4 = {
 	  toast: function toast(_ref) {
 	    var msg = _ref.msg,
 	        _ref$duration = _ref.duration,
@@ -2745,7 +2887,7 @@
 	  scheduleClose: function scheduleClose() {
 	    return function (state, actions) {
 	      setTimeout(function () {
-	        actions.set(defaultState$1);
+	        actions.set(defaultState$2);
 	      }, state.duration);
 	    };
 	  },
@@ -2755,7 +2897,7 @@
 	  }
 	};
 
-	var view$3 = function view(state, actions) {
+	var view$4 = function view(state, actions) {
 	  return hyperapp.h(Toast, { show: state.show, msg: state.msg });
 	};
 
@@ -2769,27 +2911,31 @@
 	  };
 	};
 
-	var plugin$3 = {
-	  state: defaultState$1,
-	  actions: actions$3,
-	  view: view$3,
+	var plugin$4 = {
+	  state: defaultState$2,
+	  actions: actions$4,
+	  view: view$4,
 	  api: api$3
 	};
 
-	var apis$2 = install(plugin$3);
+	var apis$2 = install(plugin$4);
 	var Toast$1 = apiMixin(Toast, apis$2);
 
 	// eslint-disable-next-line
 
 	var View = function View(props, children) {
+	  var outside = props.outside,
+	      rests = objectWithoutProperties(props, ['outside']);
+
 	  return hyperapp.h(
 	    'div',
-	    _extends({}, props, { 'class': classnames('view', props.class) }),
+	    _extends({}, rests, { 'class': classnames('view', rests.class) }),
 	    hyperapp.h(
 	      'div',
-	      { 'class': 'pages' },
+	      { key: 'pages', 'class': 'pages' },
 	      children
-	    )
+	    ),
+	    outside
 	  );
 	};
 
@@ -2804,6 +2950,7 @@
 	exports.Navbar = index$2;
 	exports.Overlay = Overlay;
 	exports.Page = Page;
+	exports.Panel = _Panel;
 	exports.Picker = _Picker;
 	exports.Preloader = Preloader;
 	exports.PullToRefresh = PullToRefresh;
