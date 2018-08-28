@@ -93,7 +93,7 @@ function modelColumn (cascade, items, values, columns) {
     return {
       isDivider,
       props,
-      content: isDivider ? content : contents[++itemIndex]
+      content: isDivider ? content : contents[itemIndex++]
     }
   })
 }
