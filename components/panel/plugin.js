@@ -35,12 +35,13 @@ const view = (state, actions) => {
   const {
     show,
     children,
+    onOverlayClick,
     ...props
   } = state
 
   return (
     <div class="panel-wraper">
-      {show && <Panel {...props}>{children}</Panel>}
+      {show && <Panel {...props} onOverlayClick={onOverlayClick || actions.close}>{children}</Panel>}
     </div>
   )
 }

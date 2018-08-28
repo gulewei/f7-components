@@ -10,7 +10,8 @@ export interface PanelProperties extends ElementProperties {
    */
   position?: 'left' | 'right'
   /**
-   * There could be one of two effects: "Reveal" (when panel moves out whole app's content) or "Cover" (when panel overlays app's content)
+   * There could be one of two effects: "Reveal" (when panel moves out whole app's content) or "Cover" (when panel overlays app's content).
+   * Note: reveal effect won't work well when Panel inside View element
    */
   effect?: 'cover' | 'reveal'
   /**

@@ -28,9 +28,7 @@ const Page = (props, children) => {
       {navbar}
       <div key='content' class="page-content">{children}</div>
       {toolbar}
-      {outside &&
-        <div key='outside' class="page-outside">{outside}</div>
-      }
+      {outside}
     </div>
   )
 }

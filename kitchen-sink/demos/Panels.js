@@ -1,6 +1,6 @@
 import { h } from 'hyperapp'
 import Layout from '../Layout'
-import { Panel, ContentBlock } from '../components'
+import { Panel, ContentBlock, Toast } from '../components'
 
 const key = 'panel'
 
@@ -27,41 +27,26 @@ export default {
   },
   noLayout: true,
   view: (state, actions) => {
+    const closeOutsidePanel = () => actions.outsidePanel({ show: false })
+
     return (
       <Layout
         key={key}
         title="Panels"
-        noBackIcon={true}
         outside={state.outsidePanel &&
           <Panel
             effect="cover"
             position={state.position}
-          // onOverlayClick={() => actions.outsidePanel(false)}
+            onOverlayClick={closeOutsidePanel}
+            onOpen={() => Toast.text('Panel open')}
+            onOpened={() => Toast.text('Panel opened')}
+            onClose={() => Toast.text('Panel close')}
+            onClosed={() => Toast.text('Panel closed')}
           >
-            {PanelContent(() => actions.outsidePanel({ show: false }))}
+            {PanelContent(closeOutsidePanel)}
           </Panel>
         }
       >
-        <ContentBlock title="Open by method">
-          <p
-            onclick={() => {
-              Panel.open({ children: PanelContent(Panel.close) })
-            }}
-          >
-            open left panel
-          </p>
-          <p
-            onclick={() => {
-              Panel.open({
-                position: 'right',
-                children: PanelContent(Panel.close)
-              })
-            }}
-          >
-            open right panel
-          </p>
-        </ContentBlock>
-
         <ContentBlock title="Open by action">
           <p
             onclick={() => {
@@ -73,6 +58,28 @@ export default {
           <p
             onclick={() => {
               actions.outsidePanel({ show: true, position: 'right' })
+            }}
+          >
+            open right panel
+          </p>
+        </ContentBlock>
+
+        <ContentBlock title="Open by method">
+          <p
+            onclick={() => {
+              Panel.open({
+                children: PanelContent(Panel.close)
+              })
+            }}
+          >
+            open left panel
+          </p>
+          <p
+            onclick={() => {
+              Panel.open({
+                position: 'right',
+                children: PanelContent(Panel.close)
+              })
             }}
           >
             open right panel

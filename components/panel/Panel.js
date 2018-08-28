@@ -38,7 +38,7 @@ const Panel = (props, children) => {
     ...rests
   } = props
   const animateClass = { 'not-animated': notAnimated }
-  const bodyClass = `with-panel-${position}-${effect}`
+  const openClass = `with-panel-${position}-${effect}`
 
   return [
     <div
@@ -56,34 +56,37 @@ const Panel = (props, children) => {
           el,
           () => {
             runIf(onOpen)
-            raf(() => raf(
-              () => addBodyClass(bodyClass)
-            ))
+            raf(() => {
+              raf(() => addBodyClass(openClass))
+            })
             runIf(notAnimated && onOpened)
           },
           () => {
-            runIf(onOpened)
+            runIf(!notAnimated && onOpened)
           }
         )
       }}
       onremove={(el, done) => {
+        const remove = () => {
+          runIf(onClosed)
+          done()
+        }
         runAndCleanUp(
           el,
           () => {
             runIf(onClose)
-            runIf(notAnimated ? onClosed : () => addBodyClass('panel-closing'))
-            removeBodyClass(bodyClass)
+            notAnimated ? remove() : addBodyClass('panel-closing')
+            removeBodyClass(openClass)
           },
           () => {
-            runIf(onClosed)
+            remove()
             removeBodyClass('panel-closing')
-            done()
           }
         )
       }}
       ondestroy={() => {
         removeBodyClass('panel-closing')
-        removeBodyClass(bodyClass)
+        removeBodyClass(openClass)
       }}
     >
       {children}

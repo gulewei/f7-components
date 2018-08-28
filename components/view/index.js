@@ -7,9 +7,7 @@ const View = (props, children) => {
   return (
     <div {...rests} class={cc('view', rests.class)}>
       <div key="pages" class="pages">{children}</div>
-      {outside &&
-        <div key='outside' class="view-outside">{outside}</div>
-      }
+      {outside}
     </div>
   )
 }
