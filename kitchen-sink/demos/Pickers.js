@@ -117,27 +117,38 @@ export default {
             values={state.custom}
             onOverlayClick={actions.outside.close}
             onChange={actions.customAction}
+            onClose={() => {
+              console.log('custom toolbar close')
+            }}
+            onOpen={() => {
+              console.log('custom toolbar open')
+            }}
             toolbar={
               <Picker.Toolbar
-                left={
-                  <a class="link" onclick={actions.outside.close}>Give up</a>
-                }
-                right={
-                  <a class="link" onclick={actions.outside.close}>Ok</a>
-                }
-              />
+                cancelText="Give up"
+                onCancel={actions.outside.close}
+                okText="Ok"
+                onOk={actions.outside.close}
+              >
+              </Picker.Toolbar>
             }
           />,
           // content picker
           <Picker.Modal
             show={state.contentShow}
             onOverlayClick={() => actions.contentAction(false)}
+            onClose={() => {
+              console.log('content picker close')
+            }}
+            onOpen={() => {
+              console.log('content picker open')
+            }}
             toolbar={
               <Picker.Toolbar
-                right={
-                  <a class="link" onclick={() => actions.contentAction(false)}>Done</a>
-                }
-              />
+                okText="Done"
+                onOk={() => actions.contentAction(false)}
+              >
+              </Picker.Toolbar>
             }
           >
             <ContentBlock>
@@ -158,7 +169,13 @@ export default {
                   Picker.open({
                     items: singelData,
                     values: state.single,
-                    onChange: actions.singleAction
+                    onChange: actions.singleAction,
+                    onOpen: () => {
+                      console.log('Picker With Single Value opened')
+                    },
+                    onClose: () => {
+                      console.log('Picker With Single Value closed')
+                    }
                   })
                 }}
                 readonly
@@ -177,7 +194,13 @@ export default {
                   Picker.open({
                     items: simpleData,
                     values: state.two,
-                    onChange: actions.twoAction
+                    onChange: actions.twoAction,
+                    onOpen: () => {
+                      console.log('Two Values opened')
+                    },
+                    onClose: () => {
+                      console.log('Two Values closed')
+                    }
                   })
                 }}
                 readonly
