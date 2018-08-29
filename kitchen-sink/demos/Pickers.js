@@ -110,6 +110,7 @@ export default {
         key='picker'
         title='Picker'
         outside={[
+          // custom toolbar
           <Picker
             show={state.outside.show}
             items={simpleData}
@@ -127,6 +128,7 @@ export default {
               />
             }
           />,
+          // content picker
           <Picker.Modal
             show={state.contentShow}
             onOverlayClick={() => actions.contentAction(false)}

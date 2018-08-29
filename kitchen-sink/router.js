@@ -116,6 +116,24 @@ export const direction = {
   subscribe
 }
 
+// eslint-disable-next-line no-unused-vars
+const TransitionDecarator = ({ performEnter, performExit }, children) => {
+  const child = children[0]
+  if (!child) {
+    return child
+  }
+  const { oncreate, onremove } = child.attributes
+  child.attributes.oncreate = (el) => {
+    performEnter(el)
+    oncreate && oncreate(el)
+  }
+  child.attributes.onremove = (el, done) => {
+    performExit({ el, done })
+    onremove && onremove(el, () => { })
+  }
+  return child
+}
+
 /**
  * 页面动画容器
  * @param {*} _
@@ -124,12 +142,12 @@ export const direction = {
 export const RouterView = (_, children) => (_, appActions) => {
   return (
     <View>
-      <Transition
-        onEnter={el => appActions[direction.key].performEnter(el)}
-        onExit={(el, done) => appActions[direction.key].performExit({ el, done })}
+      <TransitionDecarator
+        performEnter={appActions[direction.key].performEnter}
+        performExit={appActions[direction.key].performExit}
       >
         <Switch>{children}</Switch>
-      </Transition>
+      </TransitionDecarator>
     </View>
   )
 }
