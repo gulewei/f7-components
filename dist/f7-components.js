@@ -478,7 +478,7 @@
 	  element.addEventListener(transitionEndName, transitionEnd);
 	}
 
-	function runExit(node, exitAnimationActive, exitAnimation, removeNode, afterExit) {
+	function runExit(node, exitAnimationActive, exitAnimation, removeNode) {
 	  var activeClass = exitAnimationActive || exitAnimation + '-active';
 
 	  runAndCleanUp(node, function () {
@@ -489,20 +489,23 @@
 	    });
 	  }, function () {
 	    removeNode();
-	    if (afterExit) {
-	      afterExit(node);
-	    }
 	  });
 	}
 
-	function runEnter(node, enterAnimationActive, enterAnimation, afterEnter) {
+	function runEnter(node, enterAnimationActive, enterAnimation, onEntered) {
 	  var activeClass = enterAnimationActive || enterAnimation + '-active';
 
 	  runAndCleanUp(node, function () {
 	    node.classList.add(enterAnimation);
 
 	    requestAnimationFrame(function () {
-	      // bug: add active-class in this frome won't perform transition as expected, but add in next frame will
+	      /**
+	       * bug: add enter-animation-active classname in this frame won't perform transition as expected, but add in next frame will.
+	       *
+	       * I don't know exactly, but I'm guessing that is beacuse we run this after node inserted into document,
+	       * add enter-animation classname may perform an frame immediately,
+	       * and add enter-animation-active classname here may merge into repaint in this same frame.
+	       */
 	      requestAnimationFrame(function () {
 	        node.classList.add(activeClass);
 	      });
@@ -510,8 +513,8 @@
 	  }, function () {
 	    node.classList.remove(enterAnimation);
 	    node.classList.remove(activeClass);
-	    if (afterEnter) {
-	      afterEnter(node);
+	    if (onEntered) {
+	      onEntered(node);
 	    }
 	  });
 	}
@@ -521,11 +524,11 @@
 	 * @prop {string} [enter]
 	 * @prop {string} [enterActive]
 	 * @prop {(el: HTMLElement) => void} [onEnter]
-	 * @prop {(el: HTMLElement) => void} [afterEnter]
+	 * @prop {(el: HTMLElement) => void} [onEntered]
 	 * @prop {string} [exit]
 	 * @prop {string} [exitActive]
-	 * @prop {(el: HTMLElement, removeNode: () => void) => void} [onExit]
-	 * @prop {(el: HTMLElement, removeNode: () => void) => void} [afterExit]
+	 * @prop {(el: HTMLElement) => void} [onExit]
+	 * @prop {(el: HTMLElement) => void} [onExited]
 	 *
 	 * @param {TransitionProps} props
 	 * @param {JSX.Element[]} children
@@ -553,37 +556,22 @@
 
 	function transitionEnter(el, props, attributes) {
 	  if (props.enter) {
-	    runEnter(el, props.enterActive, props.enter, props.afterEnter);
+	    runEnter(el, props.enterActive, props.enter, props.onEntered);
 	  }
-
-	  if (props.onEnter) {
-	    props.onEnter(el);
-	  }
-
 	  if (attributes.oncreate) {
 	    attributes.oncreate(el);
 	  }
 	}
 
 	function transitionExit(el, props, attributes, removeNode) {
-	  var directlyRemove = true;
-
+	  var notAnimated = !props.exit;
 	  if (props.exit) {
-	    runExit(el, props.exitActive, props.exit, removeNode, props.afterExit);
-	    directlyRemove = false;
+	    runExit(el, props.exitActive, props.exit, removeNode);
 	  }
-
-	  if (props.onExit) {
-	    props.onExit(el, removeNode);
-	    directlyRemove = false;
-	  }
-
 	  if (attributes.onremove) {
-	    attributes.onremove(el, removeNode);
-	    directlyRemove = false;
+	    attributes.onremove(el, notAnimated ? removeNode : function () {});
 	  }
-
-	  if (directlyRemove) {
+	  if (notAnimated) {
 	    removeNode();
 	  }
 	}
@@ -1344,6 +1332,7 @@
 	 * @prop {boolean} [noColumns=false]
 	 * @prop {boolean} [inline=false]
 	 * @prop {string} [modalClass]
+	 *
 	 * @param {PickerModalProps} props
 	 * @param {JSX.Element} children
 	 */
@@ -1351,17 +1340,23 @@
 	  var toolbar = props.toolbar,
 	      noColumns = props.noColumns,
 	      inline = props.inline,
-	      modalClass = props.modalClass;
+	      modalClass = props.modalClass,
+	      onOpen = props.onOpen,
+	      onClose = props.onClose;
 
 
 	  return hyperapp.h(
 	    Transition,
-	    { enter: !inline && 'anim-slidein', exit: !inline && 'anim-slideout' },
+	    {
+	      enter: !inline && 'anim-slidein',
+	      exit: !inline && 'anim-slideout'
+	    },
 	    hyperapp.h(
 	      'div',
 	      {
-	        'class': classnames('picker-modal', modalClass, { 'picker-modal-inline': inline })
-	        // style={{ display: 'block' }}
+	        'class': classnames('picker-modal', modalClass, { 'picker-modal-inline': inline }),
+	        oncreate: onOpen,
+	        ondestroy: onClose
 	      },
 	      toolbar,
 	      hyperapp.h(
@@ -2232,8 +2227,13 @@
 	  isColumnPicker: true,
 	  // extra props
 	  content: null,
-	  toolbarText: 'Done',
-	  onDone: function onDone() {},
+	  // toolbarText: 'Done',
+	  // onDone: () => { },
+	  toolbarClass: '',
+	  okText: 'Done',
+	  cancelText: '',
+	  onOk: function onOk() {},
+	  onCancel: function onCancel() {},
 	  // wraper
 	  show: false,
 	  wraperClass: '',
@@ -2279,24 +2279,44 @@
 	var view$3 = function view(state, actions) {
 	  var isColumnPicker = state.isColumnPicker,
 	      content = state.content,
-	      toolbarText = state.toolbarText,
-	      onDone = state.onDone,
+	      toolbarClass = state.toolbarClass,
+	      okText = state.okText,
+	      cancelText = state.cancelText,
+	      onOk = state.onOk,
+	      onCancel = state.onCancel,
 	      onOverlayClick = state.onOverlayClick,
 	      toolbar = state.toolbar,
 	      _onChange = state.onChange,
 	      values = state.values,
-	      rest = objectWithoutProperties(state, ['isColumnPicker', 'content', 'toolbarText', 'onDone', 'onOverlayClick', 'toolbar', 'onChange', 'values']);
+	      rest = objectWithoutProperties(state, ['isColumnPicker', 'content', 'toolbarClass', 'okText', 'cancelText', 'onOk', 'onCancel', 'onOverlayClick', 'toolbar', 'onChange', 'values']);
 
 
 	  var handleOverlayClick = onOverlayClick || actions.close;
-	  var toolbarVNode = toolbar || hyperapp.h(PickerToolbar, { right: hyperapp.h(
+	  var toolbarVNode = toolbar || hyperapp.h(PickerToolbar, {
+	    toolbarClass: toolbarClass,
+	    left: hyperapp.h(
 	      'a',
-	      { 'class': 'link', onclick: function onclick() {
+	      {
+	        'class': 'link',
+	        onclick: function onclick() {
 	          actions.close();
-	          onDone(values);
-	        } },
-	      toolbarText
-	    ) });
+	          onCancel(values);
+	        }
+	      },
+	      cancelText
+	    ),
+	    right: hyperapp.h(
+	      'a',
+	      {
+	        'class': 'link',
+	        onclick: function onclick() {
+	          actions.close();
+	          onOk(values);
+	        }
+	      },
+	      okText
+	    )
+	  });
 
 	  return isColumnPicker ? hyperapp.h(Picker, _extends({}, rest, {
 	    values: values,
