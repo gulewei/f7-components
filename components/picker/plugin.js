@@ -9,9 +9,8 @@ const state = {
   isColumnPicker: true,
   // extra props
   content: null,
-  // toolbarText: 'Done',
-  // onDone: () => { },
   toolbarClass: '',
+  title: '',
   okText: 'Done',
   cancelText: '',
   onOk: () => { },
@@ -24,6 +23,8 @@ const state = {
   // modal
   modalClass: '',
   toolbar: null,
+  onOpen: () => { },
+  onClose: () => { },
   // columns
   cascade: false,
   items: [],
@@ -63,6 +64,7 @@ const view = (state, actions) => {
     isColumnPicker,
     content,
     toolbarClass,
+    title,
     okText,
     cancelText,
     onOk,
@@ -78,29 +80,18 @@ const view = (state, actions) => {
   const toolbarVNode = toolbar || (
     <PickerToolbar
       toolbarClass={toolbarClass}
-      left={
-        <a
-          class="link"
-          onclick={() => {
-            actions.close()
-            onCancel(values)
-          }}
-        >
-          {cancelText}
-        </a>
-      }
-      right={
-        <a
-          class="link"
-          onclick={() => {
-            actions.close()
-            onOk(values)
-          }}
-        >
-          {okText}
-        </a>
-      }
+      cancelText={cancelText}
+      onCancel={() => {
+        actions.close()
+        onCancel(values)
+      }}
+      okText={okText}
+      onOk={() => {
+        actions.close()
+        onOk(values)
+      }}
     >
+      {title}
     </PickerToolbar>
   )
 

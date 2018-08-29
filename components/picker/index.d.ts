@@ -1,65 +1,64 @@
 import { WraperProperties, Component } from '../_util/interfaces'
 
+export default Picker
+
 /**
- * Data item
+ * Picker component
  */
-export interface PickerItemProperites {
+declare const Picker: PickerComponent<PickerProperties>
+
+interface PickerComponent<P> extends Component<P> {
   /**
-   * Display label
+   * Picker with custom content and no columns
    */
-  label: string
+  Modal: Component<ModalPickerProperties>
   /**
-   * Actual value
+   * Inline picker
    */
-  value: string
+  Inline: Component<InlinePickerProperties>
   /**
-   * Children items (cascade picker only)
+   * Predefined picker toolbar
    */
-  children?: Array<PickerItemProperites>
+  Toolbar: Component<PickerToolbarProperties>
+  /**
+   * open a predefined picker
+   */
+  open: (options: PickerOptions) => void,
+  openModal: (options: PickerOptions) => void,
+  close: () => void
 }
 
 /**
- * Column style props
+ * Default picker, with Modal and Columns
  */
-export interface PickerColumnProperties {
+export interface PickerProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties { }
 
-  isDivider?: boolean
+export interface ModalPickerProperties extends PickerWraperProperties, PickerModalProperties { }
 
-  content?: string
+export interface InlinePickerProperties extends PickerModalProperties, PickerColumnsProperties { }
 
-  class?: string
-
-  key?: string
-
-  width?: number
-
-  align?: 'left' | 'center'
+export interface PickerOptions extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties, PickerToolbarProperties {
+  /**
+   * Modal picker content
+   */
+  content?: JSX.Element
+  /**
+   * Overload toolbar prop
+   */
+  onOk?: (values: string[]) => void
+  onCancel?: (values: string[]) => void
+  /**
+   * Rendered as children of `Toolbar`
+   */
+  title?: string
 }
 
-/**
- * Picker Columns
- */
-export interface PickerColumnsProperties {
-  /**
-   * Cascade data
-   */
-  cascade?: boolean
-  /**
-   * Picker data
-   */
-  items: Array<PickerItemProperites> | Array<Array<PickerItemProperites>>
-  /**
-   * Picker value
-   */
-  values: string[]
-  /**
-   * Picker column style
-   */
-  columns?: Array<PickerColumnProperties>
-  /**
-   * Callback when picker value change
-   */
-  onChange: (values: string[]) => any
+export interface PickerToolbarProperties {
+  toolbarClass?: string
+  okText?: string
+  cancelText?: string
+  onOk?: (el: HTMLElement) => void
+  onCancel?: (el: HTMLElement) => void
 }
 
 /**
@@ -101,10 +100,6 @@ export interface PickerModalProperties {
    * Create hook
    */
   onOpen?: (el: HTMLElement) => void
-  // /**
-  //  * Enter-animation complete hook
-  //  */
-  // onEntered?: (el: HTMLElement) => void
   /**
    * Destory hook
    */
@@ -112,63 +107,57 @@ export interface PickerModalProperties {
 }
 
 /**
- * Default picker, with Modal and Columns
+ * Picker Columns
  */
-export interface PickerProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties { }
-
-export interface ModalPickerProperties extends PickerWraperProperties, PickerModalProperties { }
-
-export interface InlinePickerProperties extends PickerModalProperties, PickerColumnsProperties { }
-
-export interface PickerToolbarProperties {
-
-  left?: JSX.Element
-
-  right?: JSX.Element
-
-  center?: JSX.Element
-
-  toolbarClass?: string
+export interface PickerColumnsProperties {
+  /**
+   * Cascade data
+   */
+  cascade?: boolean
+  /**
+   * Picker data
+   */
+  items: Array<ItemModel> | Array<Array<ItemModel>>
+  /**
+   * Picker value
+   */
+  values: string[]
+  /**
+   * Picker column style
+   */
+  columns?: Array<ColumnModel>
+  /**
+   * Callback when picker value change
+   */
+  onChange: (values: string[]) => any
 }
 
 /**
- * 
+ * Data item
  */
-export interface PickerMethodProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties {
+export interface ItemModel {
   /**
-   * Modal picker content
+   * Display label
    */
-  content?: JSX.Element
-  // toolbarText?: string
-  // onDone?: (values: string[]) => void
-  toolbarClass?: string
-  okText?: string
-  cancelText?: string
-  onOk?: (values: string[]) => void
-  onCancel?: (values: string[]) => void
-}
-
-interface PickerComponent<P> extends Component<P> {
+  label: string
   /**
- * Custom picker content
- */
-  Modal: Component<ModalPickerProperties>
-  /**
-   * Inline picker
+   * Actual value
    */
-  Inline: Component<InlinePickerProperties>
-
-  Toolbar: Component<PickerToolbarProperties>
-
-  open: (props: PickerMethodProperties) => void,
-  openModal: (props: PickerMethodProperties) => void,
-  close: () => void
+  value: string
+  /**
+   * Children items (cascade picker only)
+   */
+  children?: Array<ItemModel>
 }
 
 /**
- * Picker component
+ * Column style props
  */
-declare const Picker: PickerComponent<PickerProperties>
-
-export default Picker
-
+export interface ColumnModel {
+  isDivider?: boolean
+  content?: string
+  class?: string
+  key?: string
+  width?: number
+  align?: 'left' | 'center'
+}

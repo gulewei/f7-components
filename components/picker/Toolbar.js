@@ -6,25 +6,34 @@ import Toolbar from '../toolbar'
 
 /**
  * @typedef {Object} PickerToolbarProps
- * @prop {JSX.Element} [left]
- * @prop {JSX.Element} [right]
- * @prop {JSX.Element} [center]
  * @prop {string} [toolbarClass]
+ * @prop {string} [okText]
+ * @prop {string} [cancelText]
+ * @prop {string} [onOk]
+ * @prop {string} [onCancel]
+ *
  * @param {PickerToolbarProps} props
  */
-export default (props) => {
+const PickerToolbar = (props, children) => {
   const {
-    left,
-    right,
-    center,
+    okText,
+    cancelText,
+    onOk,
+    onCancel,
     toolbarClass
   } = props
 
   return (
     <Toolbar class={toolbarClass}>
-      <div key="left" class="left">{left}</div>
-      {center && <div class="center">{center}</div>}
-      <div key="right" class="right">{right}</div>
+      <div key="left" class="left">
+        <a class="link" onclick={onCancel}>{cancelText}</a>
+      </div>
+      {children}
+      <div key="right" class="right">
+        <a class="link" onclick={onOk}>{okText}</a>
+      </div>
     </Toolbar>
   )
 }
+
+export default PickerToolbar

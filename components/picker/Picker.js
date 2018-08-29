@@ -43,9 +43,11 @@ export const Picker = (props, children) => {
     show,
     wraperClass,
     wraperKey,
-    modalClass,
     onOverlayClick,
+    modalClass,
     toolbar,
+    onOpen,
+    onClose,
     ...columnsProps
   } = props
 
@@ -53,7 +55,7 @@ export const Picker = (props, children) => {
     <div key={wraperKey} class={cc('protal-picker', wraperClass)}>
       {show && [
         <Overlay type={Overlay.TYPES.picker} onOverlayClick={onOverlayClick} />,
-        <PickerModal {...{ modalClass, toolbar }}>
+        <PickerModal {...{ modalClass, toolbar, onOpen, onClose }}>
           <PickerColumns {...columnsProps} />
         </PickerModal>
       ]}
@@ -66,8 +68,10 @@ export const ModalPicker = (props, children) => {
     show,
     wraperClass,
     wraperKey,
-    modalClass,
     onOverlayClick,
+    modalClass,
+    onOpen,
+    onClose,
     toolbar
   } = props
 
@@ -75,7 +79,7 @@ export const ModalPicker = (props, children) => {
     <div key={wraperKey} class={wraperClass}>
       {show && [
         <Overlay type={Overlay.TYPES.picker} onOverlayClick={onOverlayClick} />,
-        <PickerModal {...{ modalClass, toolbar, noColumns: true }}>
+        <PickerModal {...{ modalClass, toolbar, noColumns: true, onOpen, onClose }}>
           {children}
         </PickerModal>
       ]}
@@ -86,12 +90,14 @@ export const ModalPicker = (props, children) => {
 export const InlinePicker = (props) => {
   const {
     modalClass,
+    onOpen,
+    onClose,
     toolbar,
     ...columnsProps
   } = props
 
   return (
-    <PickerModal {...{ modalClass, toolbar, inline: true }}>
+    <PickerModal {...{ modalClass, toolbar, inline: true, onOpen, onClose }}>
       <PickerColumns {...columnsProps} />
     </PickerModal>
   )
