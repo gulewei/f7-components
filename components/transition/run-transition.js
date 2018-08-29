@@ -46,7 +46,7 @@ export function runAndCleanUp (element, startAnimation, finishAnimation) {
   element.addEventListener(transitionEndName, transitionEnd)
 }
 
-export function runExit (node, exitAnimationActive, exitAnimation, removeNode, afterExit) {
+export function runExit (node, exitAnimationActive, exitAnimation, removeNode) {
   const activeClass = exitAnimationActive || `${exitAnimation}-active`
 
   runAndCleanUp(
@@ -60,14 +60,11 @@ export function runExit (node, exitAnimationActive, exitAnimation, removeNode, a
     },
     () => {
       removeNode()
-      if (afterExit) {
-        afterExit(node)
-      }
     }
   )
 }
 
-export function runEnter (node, enterAnimationActive, enterAnimation, afterEnter) {
+export function runEnter (node, enterAnimationActive, enterAnimation, onEntered) {
   const activeClass = enterAnimationActive || `${enterAnimation}-active`
 
   runAndCleanUp(
@@ -76,7 +73,13 @@ export function runEnter (node, enterAnimationActive, enterAnimation, afterEnter
       node.classList.add(enterAnimation)
 
       requestAnimationFrame(function () {
-        // bug: add active-class in this frome won't perform transition as expected, but add in next frame will
+        /**
+         * bug: add enter-animation-active classname in this frame won't perform transition as expected, but add in next frame will.
+         *
+         * I don't know exactly, but I'm guessing that is beacuse we run this after node inserted into document,
+         * add enter-animation classname may perform an frame immediately,
+         * and add enter-animation-active classname here may merge into repaint in this same frame.
+         */
         requestAnimationFrame(function () {
           node.classList.add(activeClass)
         })
@@ -85,8 +88,8 @@ export function runEnter (node, enterAnimationActive, enterAnimation, afterEnter
     () => {
       node.classList.remove(enterAnimation)
       node.classList.remove(activeClass)
-      if (afterEnter) {
-        afterEnter(node)
+      if (onEntered) {
+        onEntered(node)
       }
     }
   )

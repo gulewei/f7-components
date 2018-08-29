@@ -10,6 +10,7 @@ import cc from 'classnames'
  * @prop {boolean} [noColumns=false]
  * @prop {boolean} [inline=false]
  * @prop {string} [modalClass]
+ *
  * @param {PickerModalProps} props
  * @param {JSX.Element} children
  */
@@ -18,14 +19,20 @@ const PickerModal = (props, children) => {
     toolbar,
     noColumns,
     inline,
-    modalClass
+    modalClass,
+    onOpen,
+    onClose
   } = props
 
   return (
-    <Transition enter={!inline && 'anim-slidein'} exit={!inline && 'anim-slideout'}>
+    <Transition
+      enter={!inline && 'anim-slidein'}
+      exit={!inline && 'anim-slideout'}
+    >
       <div
         class={cc('picker-modal', modalClass, { 'picker-modal-inline': inline })}
-        // style={{ display: 'block' }}
+        oncreate={onOpen}
+        ondestroy={onClose}
       >
         {toolbar}
         <div class={cc('picker-modal-inner', { 'picker-items': !noColumns })}>

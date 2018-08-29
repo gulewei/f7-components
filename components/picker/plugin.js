@@ -9,8 +9,13 @@ const state = {
   isColumnPicker: true,
   // extra props
   content: null,
-  toolbarText: 'Done',
-  onDone: () => { },
+  // toolbarText: 'Done',
+  // onDone: () => { },
+  toolbarClass: '',
+  okText: 'Done',
+  cancelText: '',
+  onOk: () => { },
+  onCancel: () => { },
   // wraper
   show: false,
   wraperClass: '',
@@ -57,8 +62,11 @@ const view = (state, actions) => {
   const {
     isColumnPicker,
     content,
-    toolbarText,
-    onDone,
+    toolbarClass,
+    okText,
+    cancelText,
+    onOk,
+    onCancel,
     onOverlayClick,
     toolbar,
     onChange,
@@ -67,12 +75,34 @@ const view = (state, actions) => {
   } = state
 
   const handleOverlayClick = onOverlayClick || actions.close
-  const toolbarVNode = toolbar || <PickerToolbar right={
-    <a class="link" onclick={() => {
-      actions.close()
-      onDone(values)
-    }}>{toolbarText}</a>
-  } />
+  const toolbarVNode = toolbar || (
+    <PickerToolbar
+      toolbarClass={toolbarClass}
+      left={
+        <a
+          class="link"
+          onclick={() => {
+            actions.close()
+            onCancel(values)
+          }}
+        >
+          {cancelText}
+        </a>
+      }
+      right={
+        <a
+          class="link"
+          onclick={() => {
+            actions.close()
+            onOk(values)
+          }}
+        >
+          {okText}
+        </a>
+      }
+    >
+    </PickerToolbar>
+  )
 
   return (
     isColumnPicker

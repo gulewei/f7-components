@@ -1,4 +1,4 @@
-import { WraperProperties, TransitionProperties, Component } from '../_util/interfaces'
+import { WraperProperties, Component } from '../_util/interfaces'
 
 /**
  * Data item
@@ -97,6 +97,18 @@ export interface PickerModalProperties {
    * Picker toolbar element
    */
   toolbar?: JSX.Element
+  /**
+   * Create hook
+   */
+  onOpen?: (el: HTMLElement) => void
+  // /**
+  //  * Enter-animation complete hook
+  //  */
+  // onEntered?: (el: HTMLElement) => void
+  /**
+   * Destory hook
+   */
+  onClose?: (el: HTMLElement) => void
 }
 
 /**
@@ -123,9 +135,17 @@ export interface PickerToolbarProperties {
  * 
  */
 export interface PickerMethodProperties extends PickerWraperProperties, PickerModalProperties, PickerColumnsProperties {
+  /**
+   * Modal picker content
+   */
   content?: JSX.Element
-  toolbarText?: string
-  onDone?: (values: string[]) => void
+  // toolbarText?: string
+  // onDone?: (values: string[]) => void
+  toolbarClass?: string
+  okText?: string
+  cancelText?: string
+  onOk?: (values: string[]) => void
+  onCancel?: (values: string[]) => void
 }
 
 interface PickerComponent<P> extends Component<P> {
@@ -139,7 +159,7 @@ interface PickerComponent<P> extends Component<P> {
   Inline: Component<InlinePickerProperties>
 
   Toolbar: Component<PickerToolbarProperties>
-  
+
   open: (props: PickerMethodProperties) => void,
   openModal: (props: PickerMethodProperties) => void,
   close: () => void

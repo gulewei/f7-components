@@ -5,11 +5,11 @@ import { runEnter, runExit } from './run-transition'
  * @prop {string} [enter]
  * @prop {string} [enterActive]
  * @prop {(el: HTMLElement) => void} [onEnter]
- * @prop {(el: HTMLElement) => void} [afterEnter]
+ * @prop {(el: HTMLElement) => void} [onEntered]
  * @prop {string} [exit]
  * @prop {string} [exitActive]
- * @prop {(el: HTMLElement, removeNode: () => void) => void} [onExit]
- * @prop {(el: HTMLElement, removeNode: () => void) => void} [afterExit]
+ * @prop {(el: HTMLElement) => void} [onExit]
+ * @prop {(el: HTMLElement) => void} [onExited]
  *
  * @param {TransitionProps} props
  * @param {JSX.Element[]} children
@@ -37,37 +37,22 @@ function makeTransition (props, children) {
 
 function transitionEnter (el, props, attributes) {
   if (props.enter) {
-    runEnter(el, props.enterActive, props.enter, props.afterEnter)
+    runEnter(el, props.enterActive, props.enter, props.onEntered)
   }
-
-  if (props.onEnter) {
-    props.onEnter(el)
-  }
-
   if (attributes.oncreate) {
     attributes.oncreate(el)
   }
 }
 
 function transitionExit (el, props, attributes, removeNode) {
-  let directlyRemove = true
-
+  const notAnimated = !props.exit
   if (props.exit) {
-    runExit(el, props.exitActive, props.exit, removeNode, props.afterExit)
-    directlyRemove = false
+    runExit(el, props.exitActive, props.exit, removeNode)
   }
-
-  if (props.onExit) {
-    props.onExit(el, removeNode)
-    directlyRemove = false
-  }
-
   if (attributes.onremove) {
-    attributes.onremove(el, removeNode)
-    directlyRemove = false
+    attributes.onremove(el, notAnimated ? removeNode : () => { })
   }
-
-  if (directlyRemove) {
+  if (notAnimated) {
     removeNode()
   }
 }

@@ -2,23 +2,36 @@ import { Component } from '../_util/interfaces'
 
 export interface CSSTransitionProperties {
   /**
-   * Enter class name
+   * A classname added when element was inserted into document, and will be removed when animation was completed.
+   * PS: no enter-classname no animation
    */
   enter?: string
-
+  /**
+   * Classname add in next frame and removed when complete
+   */
   enterActive?: string
-
+  /**
+   * A classname added when element is about to remove, and removed when animation was completed.
+   * PS: no exit-classname no animation
+   */
   exit?: string
-
+  /**
+   * Classname add in next frame and removed when complete
+   */
   exitActive?: string
-
-  onEnter: (el: HTMLElement) => void
-
-  afterEnter: (el: HTMLElement) => void
-
-  onExit: (el: HTMLElement, removeNode: () => void) => void
-
-  afterExit: (el: HTMLElement, removeNode: () => void) => void
+  /**
+   * Animation hook when enter-animation completed.
+   * As for other animtion hooks, you can just use lifecycle in children:
+   * oncreate -> onEnter
+   * onremove -> onExit
+   * ondestroy -> onExited
+   * PS: 
+   * While perform exit-animation, onremove signature will be `(el: HTMLElement, noop: () => void) => void`
+   * instead of original `(el: HTMLElement, done: () => void) => void`,
+   * the second param used be a method to remove element when we done our stuff, now it bacome a method of noop, do nothing.
+   * Element will be removed when exit-animation completed, not by yourself.
+   */
+  onEntered: (el: HTMLElement) => void
 }
 
 interface TransitionComponent<P> extends Component<P> {
