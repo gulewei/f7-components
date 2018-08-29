@@ -1,29 +1,32 @@
-import { WraperProperties, TransitionProperties, Component } from '../_util/interfaces'
+import { ElementProperties, TransitionProperties, Component, VNode } from '../_util/interfaces'
 
+export default Toast
 
-export interface ToastProperties extends WraperProperties, TransitionProperties {
+/**
+ * Toast message
+ */
+declare const Toast: ToastComponent<ToastProperties>
+
+export interface ToastComponent<P> extends Component<P> {
   /**
-   * A toast message of string or a VNode
+   * Perform a toast message
    */
-  msg: string | JSX.Element
+  text: (msg: string, duration?: number) => void
+}
+
+export interface ToastProperties extends ElementProperties, TransitionProperties {
   /**
-   * Click handler when toast element is clicked
+   * A toast message of string or VNode. Same as slot `children`
+   */
+  msg?: string | VNode
+  /**
+   * Click callback
    */
   onToastClick?: (e: Event) => void
-
   /**
-   * Specify class name of toast element
+   * (To be remove, use `class` instead) Specify class name of toast element 
    */
   toastClass?: string
 }
 
-export interface ToastComponent<P> extends Component<P> {
-  text: (msg: string, duration?: number) => void
-}
 
-/**
- * Toast componet
- */
-declare const Toast: ToastComponent<ToastProperties>
-
-export default Toast

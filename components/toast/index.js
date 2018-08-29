@@ -1,8 +1,7 @@
 import _Toast from './Toast'
-import plugin from './plugin'
-import { install, apiMixin } from '../_util'
+import methods from './method'
+import { apiMixin } from '../_util'
 
-const apis = install(plugin)
-const Toast = apiMixin(_Toast, apis)
+const Toast = apiMixin(_Toast, methods)
 
 export default Toast

@@ -4,7 +4,7 @@ Mobile UI for Hyperapp
 
 ## Updating
 
-### v0.8.5 = August 29, 2018
+### v0.8.5 - August 29, 2018
 
   * Add new component `Panel`.
   * More specific doc in typing files

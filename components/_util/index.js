@@ -1,11 +1,15 @@
 import { app } from 'hyperapp'
 
-export function install ({ state, actions, view, api }) {
-  const el = document.createElement('div')
-  const appActions = app(state, actions, view, el)
-  document.body.appendChild(el)
-
-  return api(appActions)
+export function createApp (getApp) {
+  const div = document.createElement('div')
+  const actions = app(
+    ...getApp(() => {
+      document.body.removeChild(div)
+    }),
+    div
+  )
+  document.body.appendChild(div)
+  return actions
 }
 
 export function apiMixin (Component, apis) {

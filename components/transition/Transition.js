@@ -50,7 +50,7 @@ function transitionExit (el, props, attributes, removeNode) {
     runExit(el, props.exitActive, props.exit, removeNode)
   }
   if (attributes.onremove) {
-    attributes.onremove(el, notAnimated ? removeNode : () => { })
+    attributes.onremove(el, () => { })
   }
   if (notAnimated) {
     removeNode()

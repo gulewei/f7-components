@@ -1,8 +1,7 @@
 import _Loading from './Loading'
-import plugin from './plugin'
-import { install, apiMixin } from '../_util'
+import methods from './method'
+import { apiMixin } from '../_util'
 
-const apis = install(plugin)
-const Loading = apiMixin(_Loading, apis)
+const Loading = apiMixin(_Loading, methods)
 
 export default Loading

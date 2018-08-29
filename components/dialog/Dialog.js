@@ -8,14 +8,6 @@ import { sizeEl, ANIM_NAMES } from '../_util'
 import cc from 'classnames'
 
 /**
- *
- * @param {HTMLElement} el
- */
-function sizeModal (el) {
-  sizeEl(el, true)
-}
-
-/**
  * 按钮
  * @typedef {Object} DialogButtonProps
  * @prop {string} text
@@ -30,7 +22,9 @@ function sizeModal (el) {
  * @prop {string} [afterText]
  * @prop {DialogButtonProps[]} [buttons=[]]
  * @prop {() => void} [onButtonsClick]
- * @prop {() => void} [onMaskClick]
+ * @prop {() => void} [onOverlayClick]
+ * @prop {(el: HTMLElement) => void} [onOpen]
+ * @prop {(el: HTMLElement) => void} [onClose]
  * @prop {boolean} [verticalButtons=false]
  * @prop {string} [enterClass='anim-bouncein']
  * @prop {string} [exitClass='anim-bouncout]
@@ -47,6 +41,8 @@ const Dialog = (props) => {
     onButtonsClick,
     onOverlayClick,
     verticalButtons,
+    onOpen,
+    onClose,
     show,
     wraperClass = 'dialog-wraper',
     wraperKey,
@@ -66,13 +62,23 @@ const Dialog = (props) => {
           enter={enterClass}
           exit={exitClass}
         >
-          <div class="modal" oncreate={sizeModal}>
+          <div
+            class="modal"
+            oncreate={(el) => {
+              sizeEl(el, true)
+              onOpen && onOpen(el)
+            }}
+            ondestroy={onClose}
+          >
             <div class="modal-inner">
               <div class="modal-title">{title}</div>
               <div class="modal-text">{text}</div>
               {afterText}
             </div>
-            <div class={buttonWraperCls} onclick={onButtonsClick} >
+            <div
+              class={buttonWraperCls}
+              onclick={onButtonsClick}
+            >
               {
                 buttons.map(button => {
                   return (

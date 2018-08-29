@@ -16,6 +16,7 @@ import Toolbar from '../toolbar'
  */
 const PickerToolbar = (props, children) => {
   const {
+    title = children,
     okText,
     cancelText,
     onOk,
@@ -25,11 +26,11 @@ const PickerToolbar = (props, children) => {
 
   return (
     <Toolbar class={toolbarClass}>
-      <div key="left" class="left">
+      <div key="_left" class="left">
         <a class="link" onclick={onCancel}>{cancelText}</a>
       </div>
-      {children}
-      <div key="right" class="right">
+      {title}
+      <div key="_right" class="right">
         <a class="link" onclick={onOk}>{okText}</a>
       </div>
     </Toolbar>
