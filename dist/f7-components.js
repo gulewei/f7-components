@@ -2092,10 +2092,12 @@
 	  var show = props.show,
 	      wraperClass = props.wraperClass,
 	      wraperKey = props.wraperKey,
-	      modalClass = props.modalClass,
 	      onOverlayClick = props.onOverlayClick,
+	      modalClass = props.modalClass,
 	      toolbar = props.toolbar,
-	      columnsProps = objectWithoutProperties(props, ['show', 'wraperClass', 'wraperKey', 'modalClass', 'onOverlayClick', 'toolbar']);
+	      onOpen = props.onOpen,
+	      onClose = props.onClose,
+	      columnsProps = objectWithoutProperties(props, ['show', 'wraperClass', 'wraperKey', 'onOverlayClick', 'modalClass', 'toolbar', 'onOpen', 'onClose']);
 
 
 	  return hyperapp.h(
@@ -2103,7 +2105,7 @@
 	    { key: wraperKey, 'class': classnames('protal-picker', wraperClass) },
 	    show && [hyperapp.h(Overlay, { type: Overlay.TYPES.picker, onOverlayClick: onOverlayClick }), hyperapp.h(
 	      PickerModal,
-	      { modalClass: modalClass, toolbar: toolbar },
+	      { modalClass: modalClass, toolbar: toolbar, onOpen: onOpen, onClose: onClose },
 	      hyperapp.h(PickerColumns, columnsProps)
 	    )]
 	  );
@@ -2112,8 +2114,10 @@
 	  var show = props.show,
 	      wraperClass = props.wraperClass,
 	      wraperKey = props.wraperKey,
-	      modalClass = props.modalClass,
 	      onOverlayClick = props.onOverlayClick,
+	      modalClass = props.modalClass,
+	      onOpen = props.onOpen,
+	      onClose = props.onClose,
 	      toolbar = props.toolbar;
 
 
@@ -2122,7 +2126,7 @@
 	    { key: wraperKey, 'class': wraperClass },
 	    show && [hyperapp.h(Overlay, { type: Overlay.TYPES.picker, onOverlayClick: onOverlayClick }), hyperapp.h(
 	      PickerModal,
-	      { modalClass: modalClass, toolbar: toolbar, noColumns: true },
+	      { modalClass: modalClass, toolbar: toolbar, noColumns: true, onOpen: onOpen, onClose: onClose },
 	      children
 	    )]
 	  );
@@ -2130,13 +2134,15 @@
 
 	var InlinePicker = function InlinePicker(props) {
 	  var modalClass = props.modalClass,
+	      onOpen = props.onOpen,
+	      onClose = props.onClose,
 	      toolbar = props.toolbar,
-	      columnsProps = objectWithoutProperties(props, ['modalClass', 'toolbar']);
+	      columnsProps = objectWithoutProperties(props, ['modalClass', 'onOpen', 'onClose', 'toolbar']);
 
 
 	  return hyperapp.h(
 	    PickerModal,
-	    { modalClass: modalClass, toolbar: toolbar, inline: true },
+	    { modalClass: modalClass, toolbar: toolbar, inline: true, onOpen: onOpen, onClose: onClose },
 	    hyperapp.h(PickerColumns, columnsProps)
 	  );
 	};
@@ -2185,16 +2191,19 @@
 
 	/**
 	 * @typedef {Object} PickerToolbarProps
-	 * @prop {JSX.Element} [left]
-	 * @prop {JSX.Element} [right]
-	 * @prop {JSX.Element} [center]
 	 * @prop {string} [toolbarClass]
+	 * @prop {string} [okText]
+	 * @prop {string} [cancelText]
+	 * @prop {string} [onOk]
+	 * @prop {string} [onCancel]
+	 *
 	 * @param {PickerToolbarProps} props
 	 */
-	var PickerToolbar = (function (props) {
-	  var left = props.left,
-	      right = props.right,
-	      center = props.center,
+	var PickerToolbar = function PickerToolbar(props, children) {
+	  var okText = props.okText,
+	      cancelText = props.cancelText,
+	      onOk = props.onOk,
+	      onCancel = props.onCancel,
 	      toolbarClass = props.toolbarClass;
 
 
@@ -2204,20 +2213,24 @@
 	    hyperapp.h(
 	      'div',
 	      { key: 'left', 'class': 'left' },
-	      left
+	      hyperapp.h(
+	        'a',
+	        { 'class': 'link', onclick: onCancel },
+	        cancelText
+	      )
 	    ),
-	    center && hyperapp.h(
-	      'div',
-	      { 'class': 'center' },
-	      center
-	    ),
+	    children,
 	    hyperapp.h(
 	      'div',
 	      { key: 'right', 'class': 'right' },
-	      right
+	      hyperapp.h(
+	        'a',
+	        { 'class': 'link', onclick: onOk },
+	        okText
+	      )
 	    )
 	  );
-	});
+	};
 
 	/* eslint-disable no-unused-vars */
 	/* eslint-enable no-unused-vars */
@@ -2227,9 +2240,8 @@
 	  isColumnPicker: true,
 	  // extra props
 	  content: null,
-	  // toolbarText: 'Done',
-	  // onDone: () => { },
 	  toolbarClass: '',
+	  title: '',
 	  okText: 'Done',
 	  cancelText: '',
 	  onOk: function onOk() {},
@@ -2242,6 +2254,8 @@
 	  // modal
 	  modalClass: '',
 	  toolbar: null,
+	  onOpen: function onOpen() {},
+	  onClose: function onClose() {},
 	  // columns
 	  cascade: false,
 	  items: [],
@@ -2280,43 +2294,36 @@
 	  var isColumnPicker = state.isColumnPicker,
 	      content = state.content,
 	      toolbarClass = state.toolbarClass,
+	      title = state.title,
 	      okText = state.okText,
 	      cancelText = state.cancelText,
-	      onOk = state.onOk,
-	      onCancel = state.onCancel,
+	      _onOk = state.onOk,
+	      _onCancel = state.onCancel,
 	      onOverlayClick = state.onOverlayClick,
 	      toolbar = state.toolbar,
 	      _onChange = state.onChange,
 	      values = state.values,
-	      rest = objectWithoutProperties(state, ['isColumnPicker', 'content', 'toolbarClass', 'okText', 'cancelText', 'onOk', 'onCancel', 'onOverlayClick', 'toolbar', 'onChange', 'values']);
+	      rest = objectWithoutProperties(state, ['isColumnPicker', 'content', 'toolbarClass', 'title', 'okText', 'cancelText', 'onOk', 'onCancel', 'onOverlayClick', 'toolbar', 'onChange', 'values']);
 
 
 	  var handleOverlayClick = onOverlayClick || actions.close;
-	  var toolbarVNode = toolbar || hyperapp.h(PickerToolbar, {
-	    toolbarClass: toolbarClass,
-	    left: hyperapp.h(
-	      'a',
-	      {
-	        'class': 'link',
-	        onclick: function onclick() {
-	          actions.close();
-	          onCancel(values);
-	        }
+	  var toolbarVNode = toolbar || hyperapp.h(
+	    PickerToolbar,
+	    {
+	      toolbarClass: toolbarClass,
+	      cancelText: cancelText,
+	      onCancel: function onCancel() {
+	        actions.close();
+	        _onCancel(values);
 	      },
-	      cancelText
-	    ),
-	    right: hyperapp.h(
-	      'a',
-	      {
-	        'class': 'link',
-	        onclick: function onclick() {
-	          actions.close();
-	          onOk(values);
-	        }
-	      },
-	      okText
-	    )
-	  });
+	      okText: okText,
+	      onOk: function onOk() {
+	        actions.close();
+	        _onOk(values);
+	      }
+	    },
+	    title
+	  );
 
 	  return isColumnPicker ? hyperapp.h(Picker, _extends({}, rest, {
 	    values: values,
