@@ -569,7 +569,7 @@
 	    runExit(el, props.exitActive, props.exit, removeNode);
 	  }
 	  if (attributes.onremove) {
-	    attributes.onremove(el, notAnimated ? removeNode : function () {});
+	    attributes.onremove(el, function () {});
 	  }
 	  if (notAnimated) {
 	    removeNode();
@@ -590,17 +590,15 @@
 	Transition.runEnter = runEnter;
 	Transition.runExit = runExit;
 
-	function install(_ref) {
-	  var state = _ref.state,
-	      actions = _ref.actions,
-	      view = _ref.view,
-	      api = _ref.api;
-
-	  var el = document.createElement('div');
-	  var appActions = hyperapp.app(state, actions, view, el);
-	  document.body.appendChild(el);
-
-	  return api(appActions);
+	function createElement() {
+	  var div = document.createElement('div');
+	  document.body.appendChild(div);
+	  return {
+	    div: div,
+	    remove: function remove() {
+	      document.body.removeChild(div);
+	    }
+	  };
 	}
 
 	function apiMixin(Component, apis) {
@@ -748,14 +746,6 @@
 	// eslint-disable-next-line
 
 	/**
-	 *
-	 * @param {HTMLElement} el
-	 */
-	function sizeModal(el) {
-	  sizeEl(el, true);
-	}
-
-	/**
 	 * 按钮
 	 * @typedef {Object} DialogButtonProps
 	 * @prop {string} text
@@ -770,7 +760,9 @@
 	 * @prop {string} [afterText]
 	 * @prop {DialogButtonProps[]} [buttons=[]]
 	 * @prop {() => void} [onButtonsClick]
-	 * @prop {() => void} [onMaskClick]
+	 * @prop {() => void} [onOverlayClick]
+	 * @prop {(el: HTMLElement) => void} [onOpen]
+	 * @prop {(el: HTMLElement) => void} [onClose]
 	 * @prop {boolean} [verticalButtons=false]
 	 * @prop {string} [enterClass='anim-bouncein']
 	 * @prop {string} [exitClass='anim-bouncout]
@@ -778,15 +770,18 @@
 	 *
 	 * @param {DialogProps} props
 	 */
-	var Dialog = function Dialog(props) {
+	var Dialog = function Dialog(props, children) {
 	  var title = props.title,
-	      text = props.text,
+	      _props$text = props.text,
+	      text = _props$text === undefined ? children : _props$text,
 	      afterText = props.afterText,
 	      _props$buttons = props.buttons,
 	      buttons = _props$buttons === undefined ? [] : _props$buttons,
 	      onButtonsClick = props.onButtonsClick,
 	      onOverlayClick = props.onOverlayClick,
 	      verticalButtons = props.verticalButtons,
+	      onOpen = props.onOpen,
+	      onClose = props.onClose,
 	      show = props.show,
 	      _props$wraperClass = props.wraperClass,
 	      wraperClass = _props$wraperClass === undefined ? 'dialog-wraper' : _props$wraperClass,
@@ -801,6 +796,52 @@
 	    'modal-buttons-vertical': verticalButtons
 	  });
 
+	  var footer = buttons.map(function (button) {
+	    return hyperapp.h(
+	      'span',
+	      {
+	        'class': classnames('modal-button', { 'modal-button-bold': button.bold }),
+	        onclick: button.onclick
+	      },
+	      button.text
+	    );
+	  });
+
+	  var modal = hyperapp.h(
+	    'div',
+	    {
+	      'class': 'modal',
+	      oncreate: function oncreate(el) {
+	        sizeEl(el, true);
+	        onOpen && onOpen(el);
+	      },
+	      ondestroy: onClose
+	    },
+	    hyperapp.h(
+	      'div',
+	      { 'class': 'modal-inner' },
+	      hyperapp.h(
+	        'div',
+	        { 'class': 'modal-title' },
+	        title
+	      ),
+	      hyperapp.h(
+	        'div',
+	        { 'class': 'modal-text' },
+	        text
+	      ),
+	      afterText
+	    ),
+	    hyperapp.h(
+	      'div',
+	      {
+	        'class': buttonWraperCls,
+	        onclick: onButtonsClick
+	      },
+	      footer
+	    )
+	  );
+
 	  return hyperapp.h(
 	    'div',
 	    { key: wraperKey, 'class': wraperClass },
@@ -810,180 +851,98 @@
 	        enter: enterClass,
 	        exit: exitClass
 	      },
-	      hyperapp.h(
-	        'div',
-	        { 'class': 'modal', oncreate: sizeModal },
-	        hyperapp.h(
-	          'div',
-	          { 'class': 'modal-inner' },
-	          hyperapp.h(
-	            'div',
-	            { 'class': 'modal-title' },
-	            title
-	          ),
-	          hyperapp.h(
-	            'div',
-	            { 'class': 'modal-text' },
-	            text
-	          ),
-	          afterText
-	        ),
-	        hyperapp.h(
-	          'div',
-	          { 'class': buttonWraperCls, onclick: onButtonsClick },
-	          buttons.map(function (button) {
-	            return hyperapp.h(
-	              'span',
-	              {
-	                'class': classnames('modal-button', { 'modal-button-bold': button.bold }),
-	                onclick: button.onclick
-	              },
-	              button.text
-	            );
-	          })
-	        )
-	      )
+	      modal
 	    )]
 	  );
 	};
 
 	// eslint-disable-next-line
 
-	var defaultState = {
-	  show: false,
-	  title: '',
-	  text: '',
-	  buttons: [],
-	  afterText: '',
-	  verticalButtons: false
-	};
-
-	var OPTIONS = {
+	var CONFIG = {
 	  title: 'Message',
 	  okText: 'OK',
 	  cancleText: 'Cancle'
 	};
 
-	var setDefault = function setDefault(newOptions) {
-	  OPTIONS = _extends({}, OPTIONS, newOptions);
-	};
+	function config(config) {
+	  CONFIG = _extends({}, CONFIG, config);
+	}
 
-	var actions = {
-	  alert: function alert(_ref) {
-	    var text = _ref.text,
-	        _ref$title = _ref.title,
-	        title = _ref$title === undefined ? OPTIONS.title : _ref$title,
-	        onOk = _ref.onOk;
+	function custom(props) {
+	  var _props$title = props.title,
+	      title = _props$title === undefined ? CONFIG.title : _props$title,
+	      text = props.text,
+	      onButtonsClick = props.onButtonsClick,
+	      _onClose = props.onClose,
+	      rests = objectWithoutProperties(props, ['title', 'text', 'onButtonsClick', 'onClose']);
 
-	    return {
-	      show: true,
-	      title: title,
-	      text: text,
-	      buttons: [{ text: OPTIONS.okText, onclick: onOk }]
-	    };
-	  },
+	  var _createElement = createElement(),
+	      div = _createElement.div,
+	      remove = _createElement.remove;
 
-	  confirm: function confirm(_ref2) {
-	    var text = _ref2.text,
-	        _ref2$title = _ref2.title,
-	        title = _ref2$title === undefined ? OPTIONS.title : _ref2$title,
-	        onOk = _ref2.onOk,
-	        onCancel = _ref2.onCancel;
+	  return hyperapp.app({ show: true }, {
+	    close: function close() {
+	      return { show: false };
+	    }
+	  }, function (state, actions) {
+	    return hyperapp.h(
+	      Dialog,
+	      _extends({}, rests, {
+	        title: title,
+	        show: state.show,
+	        onButtonsClick: onButtonsClick || actions.close,
+	        onClose: function onClose(el) {
+	          _onClose && _onClose(el);
+	          remove();
+	        }
+	      }),
+	      text
+	    );
+	  }, div);
+	}
 
-	    return {
-	      show: true,
-	      title: title,
-	      text: text,
-	      buttons: [{ text: OPTIONS.cancleText, onclick: onCancel }, { text: OPTIONS.okText, onclick: onOk }]
-	    };
-	  },
-
-	  dialog: function dialog(_ref3) {
-	    var text = _ref3.text,
-	        _ref3$title = _ref3.title,
-	        title = _ref3$title === undefined ? OPTIONS.title : _ref3$title,
-	        buttons = _ref3.buttons;
-
-	    return {
-	      show: true,
-	      title: title,
-	      text: text,
-	      buttons: buttons
-	    };
-	  },
-
-	  open: function open(props) {
-	    return _extends({}, props, {
-	      show: true
-	    });
-	  },
-
-	  close: function close() {
-	    return defaultState;
+	function alert(text, title, onOk) {
+	  if (typeof title === 'function') {
+	    onOk = title;
+	    title = undefined;
 	  }
+	  return custom({
+	    text: text,
+	    title: title,
+	    buttons: [{ text: CONFIG.okText, onclick: onOk }]
+	  });
+	}
+
+	function confirm(text, title, onOk, onCancel) {
+	  if (typeof title === 'function') {
+	    onCancel = onOk;
+	    onOk = title;
+	    title = undefined;
+	  }
+	  return custom({
+	    text: text,
+	    title: title,
+	    buttons: [{ text: CONFIG.cancleText, onclick: onCancel }, { text: CONFIG.okText, onclick: onOk }]
+	  });
+	}
+
+	function action(text, title, buttons) {
+	  if (Array.isArray(title)) {
+	    buttons = title;
+	    title = undefined;
+	  }
+	  return custom({ text: text, title: title, buttons: buttons });
+	}
+
+	var methods = {
+	  config: config,
+	  alert: alert,
+	  confirm: confirm,
+	  action: action,
+	  custom: custom
 	};
 
-	var view = function view(state, actions) {
-	  var onButtonsClick = state.onButtonsClick,
-	      rest = objectWithoutProperties(state, ['onButtonsClick']);
-
-
-	  return hyperapp.h(Dialog, _extends({}, rest, {
-	    onButtonsClick: onButtonsClick || actions.close
-	  }));
-	};
-
-	var api = function api(actions) {
-	  return {
-	    alert: function alert(text, title, onOk) {
-	      if (typeof title === 'function') {
-	        onOk = title;
-	        title = undefined;
-	      }
-
-	      actions.alert({ text: text, title: title, onOk: onOk });
-	      return actions.close;
-	    },
-
-	    confirm: function confirm(text, title, onOk, onCancel) {
-	      if (typeof title === 'function') {
-	        onCancel = onOk;
-	        onOk = title;
-	        title = undefined;
-	      }
-
-	      actions.confirm({ text: text, title: title, onOk: onOk, onCancel: onCancel });
-	      return actions.close;
-	    },
-
-	    action: function action(text, title, buttons) {
-	      if (Array.isArray(title)) {
-	        buttons = title;
-	        title = undefined;
-	      }
-
-	      actions.dialog({ text: text, title: title, buttons: buttons });
-	      return actions.close;
-	    },
-
-	    custom: function custom(props) {
-	      actions.open(props);
-	      return actions.close;
-	    },
-
-	    setDefault: setDefault
-	  };
-	};
-
-	var plugin = {
-	  state: defaultState,
-	  actions: actions,
-	  view: view,
-	  api: api
-	};
-
-	var apis = install(plugin);
-	var Dialog$1 = apiMixin(Dialog, apis);
+	var Dialog$1 = apiMixin(Dialog, methods);
 
 	var index$1 = (function (props, children) {
 	  var _props$type = props.type,
@@ -1071,42 +1030,34 @@
 
 	// eslint-disable-next-line
 
-	var state = {
-	  show: false
-	};
+	function create() {
+	  var _createElement = createElement(),
+	      div = _createElement.div,
+	      close = _createElement.remove;
 
-	var actions$1 = {
-	  loading: function loading(show) {
-	    return { show: show };
+	  return hyperapp.app({}, { close: close }, function () {
+	    return hyperapp.h(Loading, { show: true });
+	  }, div);
+	}
+
+	var _action = void 0;
+
+	var methods$1 = {
+	  create: create,
+	  show: function show() {
+	    if (!_action) {
+	      _action = create().close;
+	    }
+	  },
+	  hide: function hide() {
+	    if (_action) {
+	      _action();
+	    }
+	    _action = null;
 	  }
 	};
 
-	var view$1 = function view(state, actions) {
-	  return hyperapp.h(Loading, { show: state.show });
-	};
-
-	var api$1 = function api(_ref) {
-	  var loading = _ref.loading;
-
-	  return {
-	    show: function show() {
-	      return loading(true);
-	    },
-	    hide: function hide() {
-	      return loading(false);
-	    }
-	  };
-	};
-
-	var plugin$1 = {
-	  state: state,
-	  actions: actions$1,
-	  view: view$1,
-	  api: api$1
-	};
-
-	var apis$1 = install(plugin$1);
-	var Loading$1 = apiMixin(Loading, apis$1);
+	var Loading$1 = apiMixin(Loading, methods$1);
 
 	// eslint-disable-next-line
 
@@ -1266,63 +1217,61 @@
 	  )];
 	};
 
-	var defaultState$1 = {
-	  children: [],
-	  show: false,
-	  notAnimated: false,
-	  position: 'left',
-	  effect: 'cover',
-	  overlayClass: '',
-	  panelClass: '',
-	  onOverlayClick: null,
-	  onOpen: null,
-	  onOpened: null,
-	  onClose: null,
-	  onClosed: null
-	};
+	function create$1(props) {
+	  var content = props.content,
+	      onOverlayClick = props.onOverlayClick,
+	      _onClosed = props.onClosed,
+	      rests = objectWithoutProperties(props, ['content', 'onOverlayClick', 'onClosed']);
 
-	var actions$2 = {
-	  open: function open(props) {
-	    return _extends({}, props, {
-	      show: true
-	    });
-	  },
-	  close: function close() {
-	    return defaultState$1;
-	  },
-	  update: function update(props) {
-	    return props;
+	  var _createElement = createElement(),
+	      div = _createElement.div,
+	      remove = _createElement.remove;
+
+	  return hyperapp.app({ show: true }, {
+	    close: function close() {
+	      return { show: false };
+	    }
+	  }, function (state, actions) {
+	    return hyperapp.h(
+	      'div',
+	      { 'class': 'panel-wraper' },
+	      state.show && hyperapp.h(
+	        Panel,
+	        _extends({}, rests, {
+	          effect: 'cover',
+	          onOverlayClick: onOverlayClick || actions.close,
+	          onClosed: function onClosed() {
+	            _onClosed && _onClosed();
+	            remove();
+	          }
+	        }),
+	        content
+	      )
+	    );
+	  }, div);
+	}
+
+	var _close = void 0;
+
+	function open(props) {
+	  // close opened panel if there is
+	  close();
+	  _close = create$1(props).close;
+	}
+
+	function close() {
+	  if (_close) {
+	    _close();
 	  }
+	  _close = null;
+	}
+
+	var methods$2 = {
+	  open: open,
+	  close: close
 	};
 
-	var view$2 = function view(state, actions) {
-	  var show = state.show,
-	      children = state.children,
-	      onOverlayClick = state.onOverlayClick,
-	      props = objectWithoutProperties(state, ['show', 'children', 'onOverlayClick']);
-
-
-	  return hyperapp.h(
-	    'div',
-	    { 'class': 'panel-wraper' },
-	    show && hyperapp.h(
-	      Panel,
-	      _extends({}, props, { onOverlayClick: onOverlayClick || actions.close }),
-	      children
-	    )
-	  );
-	};
-
-	var plugin$2 = {
-	  state: defaultState$1,
-	  actions: actions$2,
-	  view: view$2,
-	  api: function api(actions) {
-	    return actions;
-	  }
-	};
-
-	var _Panel = apiMixin(Panel, install(plugin$2));
+	var _Panel = apiMixin(Panel, methods$2);
 
 	// eslint-disable-next-line
 
@@ -2200,7 +2149,9 @@
 	 * @param {PickerToolbarProps} props
 	 */
 	var PickerToolbar = function PickerToolbar(props, children) {
-	  var okText = props.okText,
+	  var _props$title = props.title,
+	      title = _props$title === undefined ? children : _props$title,
+	      okText = props.okText,
 	      cancelText = props.cancelText,
 	      onOk = props.onOk,
 	      onCancel = props.onCancel,
@@ -2212,17 +2163,17 @@
 	    { 'class': toolbarClass },
 	    hyperapp.h(
 	      'div',
-	      { key: 'left', 'class': 'left' },
+	      { key: '_left', 'class': 'left' },
 	      hyperapp.h(
 	        'a',
 	        { 'class': 'link', onclick: onCancel },
 	        cancelText
 	      )
 	    ),
-	    children,
+	    title,
 	    hyperapp.h(
 	      'div',
-	      { key: 'right', 'class': 'right' },
+	      { key: '_right', 'class': 'right' },
 	      hyperapp.h(
 	        'a',
 	        { 'class': 'link', onclick: onOk },
@@ -2233,148 +2184,128 @@
 	};
 
 	/* eslint-disable no-unused-vars */
-	/* eslint-enable no-unused-vars */
 
-	var state$1 = {
-	  // internal
-	  isColumnPicker: true,
-	  // extra props
-	  content: null,
-	  toolbarClass: '',
-	  title: '',
-	  okText: 'Done',
-	  cancelText: '',
-	  onOk: function onOk() {},
-	  onCancel: function onCancel() {},
-	  // wraper
-	  show: false,
-	  wraperClass: '',
-	  wraperKey: '',
-	  onOverlayClick: null,
-	  // modal
-	  modalClass: '',
-	  toolbar: null,
-	  onOpen: function onOpen() {},
-	  onClose: function onClose() {},
-	  // columns
-	  cascade: false,
-	  items: [],
-	  values: [],
-	  columns: null,
-	  onChange: function onChange() {}
-	};
+	var OK_TEXT = 'Done';
 
-	var actions$3 = {
-	  changValue: function changValue(values) {
-	    return { values: values };
-	  },
-	  open: function open(props) {
-	    return _extends({}, props, {
-	      show: true,
-	      isColumnPicker: true
-	    });
-	  },
-	  openModal: function openModal(props) {
-	    return _extends({}, props, {
-	      show: true,
-	      isColumnPicker: false
-	    });
-	  },
+	var ACTIONS = {
 	  close: function close() {
-	    return state$1;
+	    return { show: false };
 	  },
-	  readState: function readState(reader) {
-	    return function (state) {
-	      reader(state);
-	    };
+	  setValues: function setValues(values) {
+	    return { values: values };
 	  }
 	};
 
-	var view$3 = function view(state, actions) {
-	  var isColumnPicker = state.isColumnPicker,
-	      content = state.content,
-	      toolbarClass = state.toolbarClass,
-	      title = state.title,
-	      okText = state.okText,
-	      cancelText = state.cancelText,
-	      _onOk = state.onOk,
-	      _onCancel = state.onCancel,
-	      onOverlayClick = state.onOverlayClick,
-	      toolbar = state.toolbar,
-	      _onChange = state.onChange,
-	      values = state.values,
-	      rest = objectWithoutProperties(state, ['isColumnPicker', 'content', 'toolbarClass', 'title', 'okText', 'cancelText', 'onOk', 'onCancel', 'onOverlayClick', 'toolbar', 'onChange', 'values']);
+	var renderToolbar = function renderToolbar(_ref, close, values) {
+	  var toolbarClass = _ref.toolbarClass,
+	      title = _ref.title,
+	      _ref$okText = _ref.okText,
+	      okText = _ref$okText === undefined ? OK_TEXT : _ref$okText,
+	      cancelText = _ref.cancelText,
+	      _onOk = _ref.onOk,
+	      _onCancel = _ref.onCancel;
 
-
-	  var handleOverlayClick = onOverlayClick || actions.close;
-	  var toolbarVNode = toolbar || hyperapp.h(
-	    PickerToolbar,
-	    {
-	      toolbarClass: toolbarClass,
-	      cancelText: cancelText,
-	      onCancel: function onCancel() {
-	        actions.close();
-	        _onCancel(values);
-	      },
-	      okText: okText,
-	      onOk: function onOk() {
-	        actions.close();
-	        _onOk(values);
-	      }
+	  return hyperapp.h(PickerToolbar, {
+	    toolbarClass: toolbarClass,
+	    title: title,
+	    okText: okText,
+	    cancelText: cancelText,
+	    onCancel: function onCancel() {
+	      _onCancel && _onCancel(values);
+	      cancelText && close();
 	    },
-	    title
-	  );
-
-	  return isColumnPicker ? hyperapp.h(Picker, _extends({}, rest, {
-	    values: values,
-	    onOverlayClick: handleOverlayClick,
-	    toolbar: toolbarVNode,
-	    onChange: function onChange(values) {
-	      actions.changValue(values);
-	      _onChange(values);
-	    }
-	  })) : hyperapp.h(
-	    ModalPicker,
-	    _extends({}, rest, {
-	      onOverlayClick: handleOverlayClick,
-	      toolbar: toolbarVNode
-	    }),
-	    content
-	  );
-	};
-
-	var api$2 = function api(_ref) {
-	  var open = _ref.open,
-	      openModal = _ref.openModal,
-	      close = _ref.close,
-	      readState = _ref.readState;
-
-	  var methods = { open: open, openModal: openModal, close: close
-	    // for debug only
-	  };var internalState = void 0;
-	  Object.defineProperty(methods, 'internalState', {
-	    get: function get$$1() {
-	      readState(function (state) {
-	        internalState = state;
-	      });
-	      return _extends({}, internalState);
+	    onOk: function onOk() {
+	      _onOk && _onOk(values);
+	      close();
 	    }
 	  });
-	  return methods;
 	};
 
-	var plugin$3 = {
-	  state: state$1,
-	  actions: actions$3,
-	  view: view$3,
-	  api: api$2
+	var getProps = function getProps(_ref2, remove, close) {
+	  var onOverlayClick = _ref2.onOverlayClick,
+	      modalClass = _ref2.modalClass,
+	      onOpen = _ref2.onOpen,
+	      _onClose = _ref2.onClose;
+
+	  return {
+	    onOverlayClick: onOverlayClick || close,
+	    modalClass: modalClass,
+	    onOpen: onOpen,
+	    onClose: function onClose(el) {
+	      _onClose && _onClose(el);
+	      remove();
+	    }
+	  };
+	};
+
+	function open$1(props) {
+	  var items = props.items,
+	      cascade = props.cascade,
+	      columns = props.columns,
+	      values = props.values,
+	      _onChange = props.onChange,
+	      toolbar = props.toolbar,
+	      rests = objectWithoutProperties(props, ['items', 'cascade', 'columns', 'values', 'onChange', 'toolbar']);
+
+	  var _createElement = createElement(),
+	      div = _createElement.div,
+	      remove = _createElement.remove;
+
+	  return hyperapp.app({
+	    show: true,
+	    values: values
+	  }, ACTIONS, function (state, actions) {
+	    var show = state.show,
+	        values = state.values;
+	    var setValues = actions.setValues,
+	        close = actions.close;
+
+	    return hyperapp.h(Picker, _extends({
+	      show: show,
+	      items: items,
+	      cascade: cascade,
+	      columns: columns,
+	      values: values,
+	      onChange: function onChange(newValue) {
+	        _onChange && _onChange(newValue);
+	        setValues(newValue);
+	      },
+	      toolbar: toolbar || renderToolbar(rests, close, values)
+	    }, getProps(rests, remove, close)));
+	  }, div);
+	}
+
+	function modal(props) {
+	  var content = props.content,
+	      toolbar = props.toolbar,
+	      rests = objectWithoutProperties(props, ['content', 'toolbar']);
+
+	  var _createElement2 = createElement(),
+	      div = _createElement2.div,
+	      remove = _createElement2.remove;
+
+	  return hyperapp.app({ show: true }, { close: ACTIONS.close }, function (state, actions) {
+	    return hyperapp.h(
+	      ModalPicker,
+	      _extends({
+	        show: state.show,
+	        toolbar: toolbar || renderToolbar(rests, actions.close)
+	      }, getProps(rests, remove, actions.close)),
+	      content
+	    );
+	  }, div);
+	}
+
+	var methods$3 = {
+	  open: open$1,
+	  modal: modal
 	};
 
 	Picker.Modal = ModalPicker;
 	Picker.Inline = InlinePicker;
 	Picker.Toolbar = PickerToolbar;
 
-	var _Picker = apiMixin(Picker, install(plugin$3));
+	var _Picker = apiMixin(Picker, methods$3);
 
 	var transitionCls = 'pull-to-refresh-transition';
 
@@ -2834,44 +2765,44 @@
 
 	var WRAPER = 'toast-wraper';
 
-	function sizeToast(el) {
-	  sizeEl(el, true, true);
-	}
-
 	/**
 	 * @typedef {Object} ToastProps
 	 * @prop {boolean} show
-	 * @prop {string} msg
-	 * @prop {Function} [onToastClick]
-	 * @prop {string} [toastClass]
+	 * @prop {string} [wraperKey]
+	 * @prop {string} [wraperClass='toast-wraper']
 	 * @prop {string | false} [enterClass="anim-fadein"]
 	 * @prop {string | false} [exitClass="anim-fadeout"]
-	 * @prop {string} [wraperClass='toast-wraper']
-	 * @prop {string} [wraperKey]
+	 * @prop {string} msg
+	 * @prop {string} [toastClass]
+	 * @prop {boolean} [mask]
+	 * @prop {Function} [onToastClick]
 	 *
 	 * @param {ToastProps} props
 	 */
-	var Toast = function Toast(props) {
+	var Toast = function Toast(props, children) {
 	  var show = props.show,
-	      msg = props.msg,
-	      toastClass = props.toastClass,
-	      onToastClick = props.onToastClick,
+	      wraperKey = props.wraperKey,
+	      _props$wraperClass = props.wraperClass,
+	      wraperClass = _props$wraperClass === undefined ? WRAPER : _props$wraperClass,
 	      _props$enterClass = props.enterClass,
 	      enterClass = _props$enterClass === undefined ? ANIM_NAMES.fadeIn : _props$enterClass,
 	      _props$exitClass = props.exitClass,
 	      exitClass = _props$exitClass === undefined ? ANIM_NAMES.fadeOut : _props$exitClass,
-	      _props$wraperClass = props.wraperClass,
-	      wraperClass = _props$wraperClass === undefined ? WRAPER : _props$wraperClass,
-	      wraperKey = props.wraperKey;
+	      _props$msg = props.msg,
+	      msg = _props$msg === undefined ? children : _props$msg,
+	      toastClass = props.toastClass,
+	      mask = props.mask,
+	      onOpen = props.onOpen,
+	      onClose = props.onClose,
+	      onToastClick = props.onToastClick;
 
+
+	  var overlay = mask && hyperapp.h(Overlay, { type: Overlay.TYPES.preloader, notAnimated: true });
 
 	  return hyperapp.h(
 	    'div',
 	    { key: wraperKey, 'class': wraperClass },
-	    show && [hyperapp.h(Overlay, {
-	      type: Overlay.TYPES.preloader,
-	      notAnimated: true
-	    }), hyperapp.h(
+	    show && [overlay, hyperapp.h(
 	      Transition,
 	      {
 	        enter: enterClass,
@@ -2880,9 +2811,13 @@
 	      hyperapp.h(
 	        'div',
 	        {
-	          'class': classnames('toast toast-transition', toastClass),
+	          'class': classnames('toast', toastClass),
 	          onclick: onToastClick,
-	          oncreate: sizeToast
+	          oncreate: function oncreate(el) {
+	            sizeEl(el, true, true);
+	            onOpen && onOpen(el);
+	          },
+	          ondestroy: onClose
 	        },
 	        msg
 	      )
@@ -2892,61 +2827,64 @@
 
 	// eslint-disable-next-line
 
-	var defaultDuration = 1500;
+	var DURATION = 1500;
 
-	var defaultState$2 = {
-	  show: false,
-	  msg: '',
-	  duration: defaultDuration
-	};
+	function create$2(msg) {
+	  var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DURATION;
+	  var _onClose = arguments[2];
+	  var mask = arguments[3];
+	  var onClick = arguments[4];
 
-	var actions$4 = {
-	  toast: function toast(_ref) {
-	    var msg = _ref.msg,
-	        _ref$duration = _ref.duration,
-	        duration = _ref$duration === undefined ? defaultDuration : _ref$duration;
-	    return function (state, actions) {
-	      actions.set({ show: true, msg: msg, duration: duration });
-	      actions.scheduleClose();
-	    };
-	  },
+	  var _createElement = createElement(),
+	      div = _createElement.div,
+	      remove = _createElement.remove;
 
-	  scheduleClose: function scheduleClose() {
-	    return function (state, actions) {
-	      setTimeout(function () {
-	        actions.set(defaultState$2);
-	      }, state.duration);
-	    };
-	  },
-
-	  set: function set(state) {
-	    return state;
-	  }
-	};
-
-	var view$4 = function view(state, actions) {
-	  return hyperapp.h(Toast, { show: state.show, msg: state.msg });
-	};
-
-	var api$3 = function api(_ref2) {
-	  var toast = _ref2.toast;
-
-	  return {
-	    text: function text(msg, duration) {
-	      return toast({ msg: msg, duration: duration });
+	  return hyperapp.app({ show: true }, {
+	    close: function close() {
+	      return { show: false };
 	    }
-	  };
+	  }, function (state, actions) {
+	    return hyperapp.h(
+	      Toast,
+	      {
+	        show: state.show,
+	        mask: mask,
+	        onOpen: function onOpen() {
+	          if (duration !== 0) {
+	            setTimeout(actions.close, duration);
+	          }
+	        },
+	        onToastClick: onClick,
+	        onClose: function onClose() {
+	          _onClose && _onClose();
+	          remove();
+	        }
+	      },
+	      msg
+	    );
+	  }, div);
+	}
+
+	var _close$1 = void 0;
+
+	function text(msg, duration, onClose, mask, onClick) {
+	  hide();
+	  _close$1 = create$2(msg, duration, onClose, mask, onClick).close;
+	}
+
+	function hide() {
+	  if (_close$1) {
+	    _close$1();
+	  }
+	  _close$1 = null;
+	}
+
+	var methods$4 = {
+	  text: text,
+	  hide: hide
 	};
 
-	var plugin$4 = {
-	  state: defaultState$2,
-	  actions: actions$4,
-	  view: view$4,
-	  api: api$3
-	};
-
-	var apis$2 = install(plugin$4);
-	var Toast$1 = apiMixin(Toast, apis$2);
+	var Toast$1 = apiMixin(Toast, methods$4);
 
 	// eslint-disable-next-line
 
