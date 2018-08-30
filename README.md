@@ -28,6 +28,8 @@ Mobile UI for Hyperapp
     * dialog methods now return actions to let you close it outside.
     * `Dialog.setDefault` rename to `Dialog.config`
 
+#### check [Change Log](https://github.com/venecy/f7c/blob/master/CHANGELOG.md) for more.
+
 
 ## Components
 
