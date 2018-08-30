@@ -1,5 +1,27 @@
 import { Component, ElementProperties } from '../_util/interfaces'
 
+export default Panel
+
+declare const Panel: PanelComponent<PanelProperties>
+
+interface PanelComponent<P> extends Component<P> {
+  /**
+   * Open a predefined panel
+   */
+  open: (props: PanelOptions) => any,
+  /**
+   * Close predefined panel
+   */
+  close: () => any,
+}
+
+interface PanelOptions extends PanelProperties {
+  /**
+   * Panel content
+   */
+  content?: string | JSX.Element
+}
+
 export interface PanelProperties extends ElementProperties {
   /**
    * No animation
@@ -44,32 +66,3 @@ export interface PanelProperties extends ElementProperties {
   onOverlayClick?: () => void
 }
 
-export interface PanelMethodProperties extends PanelProperties {
-  /**
-   * To open or close panel
-   */
-  show?: boolean
-  /**
-   * Panel children
-   */
-  children?: JSX.Element[]
-}
-
-interface PanelComponent<P> extends Component<P> {
-  /**
-   * Open a predefined panel
-   */
-  open: (props: PanelMethodProperties) => any,
-  /**
-   * Close predefined panel
-   */
-  close: () => any,
-  /**
-   * Update rendered panel (which is predefined)
-   */
-  update: (props: PanelMethodProperties) => any
-}
-
-declare const Panel: PanelComponent<PanelProperties>
-
-export default Panel

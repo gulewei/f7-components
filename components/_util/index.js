@@ -1,15 +1,12 @@
-import { app } from 'hyperapp'
-
-export function createApp (getApp) {
+export function createElement () {
   const div = document.createElement('div')
-  const actions = app(
-    ...getApp(() => {
-      document.body.removeChild(div)
-    }),
-    div
-  )
   document.body.appendChild(div)
-  return actions
+  return {
+    div,
+    remove: () => {
+      document.body.removeChild(div)
+    }
+  }
 }
 
 export function apiMixin (Component, apis) {

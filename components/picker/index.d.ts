@@ -7,46 +7,51 @@ export default Picker
  */
 declare const Picker: PickerComponent<PickerProperties>
 
-type ClosePicker = () => void
-
 interface PickerComponent<P> extends Component<P> {
   /**
-   * Picker with custom content and no columns
+   * Picker with content, no data and columns
    */
   Modal: Component<ModalPickerProperties>
   /**
-   * Inline picker
-   */
-  Inline: Component<InlinePickerProperties>
-  /**
-   * Predefined picker toolbar
+   * Toolbar of Picker
    */
   Toolbar: Component<PickerToolbarProperties>
+
+  Inline: Component<InlinePickerProperties>
+
   /**
-   * open a predefined picker
+   * Open picker
    */
-  open: (options: PickerOptions) => ClosePicker
-  modal: (options: ModalOptions) => ClosePicker
+  open: (options: PickerOptions) => {
+    /**
+     * Close opened picker
+     */
+    close: () => any,
+    /**
+     * Set picker's values
+     */
+    setValues: (values: string[]) => any
+  }
+  /**
+   * Open modal-picker
+   */
+  modal: (options: ModalOptions) => {
+    /**
+     * Close opened picker
+     */
+    close: () => any,
+  }
 }
 
-type ActionAccessor = (_, { close: ClosePicker }) => any
-
 interface PickerOptions extends PickerProperties, PickerToolbarProperties {
-  onChange?: (values: string[]) => ActionAccessor
-  onOverlayClick?: (e: Event) => ActionAccessor
-  onOk?: (values: string[]) => ActionAccessor
-  onCancel?: (values: string[]) => ActionAccessor
-  onOpen?: (el: HTMLElement) => ActionAccessor
-  onClose?: (el: HTMLElement) => ActionAccessor
+  show?: boolean
+  onOk?: (values: string[]) => void
+  onCancel?: (values: string[]) => void
 }
 
 interface ModalOptions extends ModalPickerProperties, PickerToolbarProperties {
-  content: JSX.Element
-  onOverlayClick?: (e: Event) => ActionAccessor
-  onOk?: (values: string[]) => ActionAccessor
-  onCancel?: (values: string[]) => ActionAccessor
-  onOpen?: (el: HTMLElement) => ActionAccessor
-  onClose?: (el: HTMLElement) => ActionAccessor
+  show?: boolean
+  content?: string | JSX.Element
 }
 
 /**
@@ -109,8 +114,8 @@ export interface PickerToolbarProperties {
   okText?: string
   cancelText?: string
   toolbarClass?: string
-  onOk?: (el: HTMLElement) => void
-  onCancel?: (el: HTMLElement) => void
+  onOk?: () => void
+  onCancel?: () => void
 }
 
 /**

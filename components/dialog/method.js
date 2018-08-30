@@ -1,57 +1,56 @@
 // eslint-disable-next-line
-import { h } from 'hyperapp'
+import { h, app } from 'hyperapp'
 // eslint-disable-next-line
 import Dialog from './Dialog'
-import { createApp } from '../_util'
+import { createElement } from '../_util'
 
-let GLOBAL_CONFIG = {
+let CONFIG = {
   title: 'Message',
   okText: 'OK',
   cancleText: 'Cancle'
 }
 
-const close = () => {
-  return { show: false }
-}
-
-const view = (state, actions) => {
-  return (
-    <Dialog
-      {...state}
-      onButtonsClick={actions.close}
-      onClose={actions.destroy}
-    />
-  )
-}
-
-/**
- * @param {string} text
- * @param {string} title
- * @param {*[]} buttons
- * @returns {() => void}
- */
-const createDialog = (text, title, buttons) => {
-  return createApp(
-    (destroy) => {
-      return [
-        {
-          show: true,
-          title: title || GLOBAL_CONFIG.title,
-          text,
-          buttons
-        },
-        { close, destroy },
-        view
-      ]
-    }
-  ).close
-}
-
 function config (config) {
-  GLOBAL_CONFIG = {
-    ...GLOBAL_CONFIG,
+  CONFIG = {
+    ...CONFIG,
     ...config
   }
+}
+
+function custom (props) {
+  const {
+    title = CONFIG.title,
+    text,
+    onButtonsClick,
+    onClose,
+    ...rests
+  } = props
+  const { div, remove } = createElement()
+  return app(
+    { show: true },
+    {
+      close: () => {
+        return { show: false }
+      }
+    },
+    (state, actions) => {
+      return (
+        <Dialog
+          {...rests}
+          title={title}
+          show={state.show}
+          onButtonsClick={onButtonsClick || actions.close}
+          onClose={(el) => {
+            onClose && onClose(el)
+            remove()
+          }}
+        >
+          {text}
+        </Dialog>
+      )
+    },
+    div
+  )
 }
 
 function alert (text, title, onOk) {
@@ -59,7 +58,13 @@ function alert (text, title, onOk) {
     onOk = title
     title = undefined
   }
-  return createDialog(text, title, [{ text: GLOBAL_CONFIG.okText, onclick: onOk }])
+  return custom({
+    text,
+    title,
+    buttons: [
+      { text: CONFIG.okText, onclick: onOk }
+    ]
+  })
 }
 
 function confirm (text, title, onOk, onCancel) {
@@ -68,10 +73,14 @@ function confirm (text, title, onOk, onCancel) {
     onOk = title
     title = undefined
   }
-  createDialog(text, title, [
-    { text: GLOBAL_CONFIG.cancleText, onclick: onCancel },
-    { text: GLOBAL_CONFIG.okText, onclick: onOk }
-  ])
+  return custom({
+    text,
+    title,
+    buttons: [
+      { text: CONFIG.cancleText, onclick: onCancel },
+      { text: CONFIG.okText, onclick: onOk }
+    ]
+  })
 }
 
 function action (text, title, buttons) {
@@ -79,47 +88,7 @@ function action (text, title, buttons) {
     buttons = title
     title = undefined
   }
-  createDialog(text, title, buttons)
-}
-
-function custom (props) {
-  const {
-    onButtonsClick,
-    onOverlayClick,
-    onOpen,
-    onClose,
-    ...state
-  } = props
-  const { close } = createApp((destroy) => {
-    return [
-      {
-        ...state,
-        show: true
-      },
-      {
-        close,
-        onButtonsClick,
-        onOverlayClick,
-        onOpen,
-        onClose,
-        destroy
-      },
-      (state, actions) => {
-        return (
-          <Dialog
-            {...state}
-            onOverlayClick={actions.onOverlayClick}
-            onButtonsClick={actions.onButtonsClick || actions.close}
-            onOpen={actions.onOpen}
-            onClose={(el) => {
-              actions.onClose(el)
-              actions.destroy()
-            }}
-          />
-        )
-      }
-    ]
-  })
+  return custom({ text, title, buttons })
 }
 
 export default {

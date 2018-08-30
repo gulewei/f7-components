@@ -7,22 +7,21 @@ export default Loading
  */
 declare const Loading: LoadingComponent<LoadingProperties>
 
-type CloseLoading = () => void
+type CloseActions = { close: () => void }
 
 export interface LoadingComponent<P> extends Component<P> {
   /**
-   * Create a showing loading indicator, and remove it when close.
+   * Show loading indicator, you can close it use `Loading.close`
    */
-  showIndicator: () => CloseLoading
+  show: () => void
   /**
-   * Create an app instance and return it's actions, then you call action method to
-   * show or hide or destroy this loading indicator
+   * Close loading indicator created by `Loading.show`
    */
-  create: () => {
-    show: () => void
-    hide: () => void
-    destroy: () => void
-  }
+  hide: () => void
+  /**
+   * Create a showing loading indicator, return actions with a `close` method.
+   */
+  create: () => CloseActions
 }
 
 export interface LoadingProperties extends WraperProperties { }

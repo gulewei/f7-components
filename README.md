@@ -4,16 +4,29 @@ Mobile UI for Hyperapp
 
 ## Updating
 
-### v0.8.5 - August 29, 2018
+### v0.8.6 - August 31, 2018
+  * Toast:
+    * add `mask` prop, whether to show a transparent mask to prevent touch event of the whole page.
+    * add `onOpen` `onClose` hook.
+    * `Toast.text`:
+      * add `onClose` `mask` `onClick` param.
+      * now `duration` can be `0`, which means you need close it by hand.
+    * add new method `Toast.hide` to close opened toast
 
-  * Add new component `Panel`.
-  * More specific doc in typing files
-  * Update `Picker` component.
-    * add `onOpen` and `onClose` hooks
-    * update `Picker.Toolbar` component
-    * update picker method options
-  * Update `Transiton` component:
-    * update animation hooks, now only `onEntered` is provided, other hooks replced by in child's lifecycle.
+  * Picker: 
+    * `Picker.openModal` rename to `Picker.modal`
+    * `Picker.open` `Picker.modal` now return actions to close or update it.
+    * `Picker.close` is removed.
+
+  * Panel:
+    * `Panel.update` is removed.
+  
+  * Loading:
+    * add new method `Loading.create`, create individual loading indicator closed by returned actions
+
+  * Dialog:
+    * dialog methods now return actions to let you close it outside.
+    * `Dialog.setDefault` rename to `Dialog.config`
 
 
 ## Components
@@ -23,6 +36,7 @@ Mobile UI for Hyperapp
 Docs are not ready yet, 
 you can learn about `Components` and their `Apis` in *[typing files](https://github.com/venecy/f7c/blob/master/components/index.d.ts)* for now.
 
+
 ## Install
 
     npm install --save @gulw/components
@@ -30,6 +44,7 @@ you can learn about `Components` and their `Apis` in *[typing files](https://git
 You can also access bundled file in `unpkg`, global name is `F7Components`
 
     https://unpkg.com/@gulw/components@0.7.26/dist/f7-components.js
+
 
 ## Modularized
 
@@ -61,6 +76,7 @@ The following two ways used to load the **only components you used**, select one
    // import '@gulw/components/lib/picker/style';     // that will import less
    ```
 
+
 ## Example
 
 See more example in *[demos](https://github.com/venecy/f7c/tree/master/kitchen-sink/demos)*
@@ -88,4 +104,3 @@ const Main = () => {
 app({}, {}, Main, document.body)
 
 ```
-

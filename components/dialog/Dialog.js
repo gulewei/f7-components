@@ -32,10 +32,10 @@ import cc from 'classnames'
  *
  * @param {DialogProps} props
  */
-const Dialog = (props) => {
+const Dialog = (props, children) => {
   const {
     title,
-    text,
+    text = children,
     afterText,
     buttons = [],
     onButtonsClick,
@@ -50,9 +50,46 @@ const Dialog = (props) => {
     exitClass = ANIM_NAMES.bounceOut
   } = props
 
-  const buttonWraperCls = cc('modal-buttons', {
-    'modal-buttons-vertical': verticalButtons
+  const buttonWraperCls = cc(
+    'modal-buttons',
+    {
+      'modal-buttons-vertical': verticalButtons
+    }
+  )
+
+  const footer = buttons.map(button => {
+    return (
+      <span
+        class={cc('modal-button', { 'modal-button-bold': button.bold })}
+        onclick={button.onclick}
+      >
+        {button.text}
+      </span>
+    )
   })
+
+  const modal = (
+    <div
+      class="modal"
+      oncreate={(el) => {
+        sizeEl(el, true)
+        onOpen && onOpen(el)
+      }}
+      ondestroy={onClose}
+    >
+      <div class="modal-inner">
+        <div class="modal-title">{title}</div>
+        <div class="modal-text">{text}</div>
+        {afterText}
+      </div>
+      <div
+        class={buttonWraperCls}
+        onclick={onButtonsClick}
+      >
+        {footer}
+      </div>
+    </div>
+  )
 
   return (
     <div key={wraperKey} class={wraperClass}>
@@ -62,37 +99,7 @@ const Dialog = (props) => {
           enter={enterClass}
           exit={exitClass}
         >
-          <div
-            class="modal"
-            oncreate={(el) => {
-              sizeEl(el, true)
-              onOpen && onOpen(el)
-            }}
-            ondestroy={onClose}
-          >
-            <div class="modal-inner">
-              <div class="modal-title">{title}</div>
-              <div class="modal-text">{text}</div>
-              {afterText}
-            </div>
-            <div
-              class={buttonWraperCls}
-              onclick={onButtonsClick}
-            >
-              {
-                buttons.map(button => {
-                  return (
-                    <span
-                      class={cc('modal-button', { 'modal-button-bold': button.bold })}
-                      onclick={button.onclick}
-                    >
-                      {button.text}
-                    </span>
-                  )
-                })
-              }
-            </div>
-          </div>
+          {modal}
         </Transition>
       ]}
     </div>

@@ -1,6 +1,6 @@
 import Panel from './Panel'
-import plugin from './plugin'
-import { install, apiMixin } from '../_util'
+import methods from './method'
+import { apiMixin } from '../_util'
 
-const _Panel = apiMixin(Panel, install(plugin))
+const _Panel = apiMixin(Panel, methods)
 export default _Panel

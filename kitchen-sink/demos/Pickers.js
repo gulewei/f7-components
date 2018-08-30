@@ -103,7 +103,6 @@ export default {
   noLayout: true,
   view: (state, actions) => {
     window.$_picker = { state, actions }
-    window.$_internal_picker = Picker.internalState
 
     return (
       <Layout
@@ -243,6 +242,23 @@ export default {
         </List>
         <ContentBlock title="Content Picker">
           <a class="link" onclick={() => actions.contentAction(true)}>open content</a>
+          <p>
+            <a
+              class="link"
+              onclick={() => {
+                Picker.modal({
+                  content: (
+                    <ContentBlock>
+                      <h4>Info 1</h4>
+                      <p>Lorem ipsum dolor...</p>
+                    </ContentBlock>
+                  )
+                })
+              }}
+            >
+              open content by method
+            </a>
+          </p>
         </ContentBlock>
         {/* <ContentBlock title="Inline toolbar" />
         <List>

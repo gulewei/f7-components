@@ -7,23 +7,17 @@ export default Dialog
  */
 declare const Dialog: DialogComponent<DialogProperties>
 
-type CloseDialog = () => void
+type CloseActions = { close: () => void }
 
 export interface DialogComponent<P> extends Component<P> {
   config: (options: { title?: string, okText?: string, cancelText?: string }) => void
-  alert: (text: string, title?: string, onOk?: () => void) => CloseDialog
-  confirm: (text: string, title?: string, onOk?: () => void, onCancel?: () => void) => CloseDialog
-  action: (text: string, title?: string, buttons?: DialogButtonModel[]) => CloseDialog
-  custom: (props: CustomOptions) => CloseDialog
-}
-
-type ActionAccessor = (_, { close: CloseDialog }) => any
-
-interface CustomOptions extends DialogProperties {
-  onButtonsClick?: (e: Event) => ActionAccessor
-  onOverlayClick?: (e: Event) => ActionAccessor
-  onOpen?: (el: HTMLElement) => ActionAccessor
-  onClose?: (el: HTMLElement) => ActionAccessor
+  alert: (text: string, title?: string, onOk?: () => void) => CloseActions
+  // alert: (text: string, onOk?: () => void) => CloseActions
+  confirm: (text: string, title?: string, onOk?: () => void, onCancel?: () => void) => CloseActions
+  // confirm: (text: string, onOk?: () => void, onCancel?: () => void) => CloseActions
+  action: (text: string, title?: string, buttons?: DialogButtonModel[]) => CloseActions
+  // action: (text: string, buttons?: DialogButtonModel[]) => CloseActions
+  custom: (props: DialogProperties) => CloseActions
 }
 
 export interface DialogProperties extends WraperProperties, TransitionProperties {

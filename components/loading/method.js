@@ -1,50 +1,36 @@
 // eslint-disable-next-line
-import { h } from 'hyperapp'
+import { h, app } from 'hyperapp'
 // eslint-disable-next-line
 import Loading from './Loading'
-import { createApp } from '../_util'
-
-const state = { show: true }
-
-const view = (state, _) => {
-  return (
-    <Loading show={state.show}></Loading>
-  )
-}
-
-function showIndicator () {
-  return createApp(
-    (destroy) => {
-      return [
-        state,
-        { close: destroy },
-        view
-      ]
-    }
-  ).close
-}
+import { createElement } from '../_util'
 
 function create () {
-  return createApp(
-    (destroy) => {
-      return [
-        state,
-        {
-          show: () => {
-            return { show: true }
-          },
-          hide: () => {
-            return { show: false }
-          },
-          destroy
-        },
-        view
-      ]
-    }
+  const { div, remove: close } = createElement()
+  return app(
+    {},
+    { close },
+    () => {
+      return (
+        <Loading show></Loading>
+      )
+    },
+    div
   )
 }
 
+let _action
+
 export default {
-  showIndicator,
-  create
+  create,
+  show: () => {
+    if (!_action) {
+      _action = create().close
+    }
+  },
+  hide: () => {
+    if (_action) {
+      _action()
+    }
+    _action = null
+  }
 }

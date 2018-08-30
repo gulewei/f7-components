@@ -20,6 +20,18 @@ export default {
         }}>
           <a>Toast with 2s duration</a>
         </p>
+
+        <p onclick={e => {
+          Toast.text(`It's a toast with transparent mask`, 1500, () => { }, true)
+        }}>
+          <a>Toast with mask</a>
+        </p>
+
+        <p onclick={e => {
+          Toast.text(`click me`, 0, () => { }, true, Toast.hide)
+        }}>
+          <a>Click to close</a>
+        </p>
       </ContentBlock>
     )
   }

@@ -68,7 +68,7 @@ export default {
           <p
             onclick={() => {
               Panel.open({
-                children: PanelContent(Panel.close)
+                content: PanelContent(Panel.close)
               })
             }}
           >
@@ -78,7 +78,7 @@ export default {
             onclick={() => {
               Panel.open({
                 position: 'right',
-                children: PanelContent(Panel.close)
+                content: PanelContent(Panel.close)
               })
             }}
           >

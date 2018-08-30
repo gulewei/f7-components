@@ -1,109 +1,125 @@
 /* eslint-disable no-unused-vars */
 import { Picker, ModalPicker } from './Picker'
 import PickerToolbar from './Toolbar'
-import { h } from 'hyperapp'
-/* eslint-enable no-unused-vars */
-import { createApp } from '../_util'
+import { h, app } from 'hyperapp'
+import { createElement } from '../_util'
 
-let CONFIG = {
-  okText: 'Done',
-  cancelText: '',
-  title: ''
-}
+const OK_TEXT = 'Done'
 
-function config (config) {
-  CONFIG = {
-    ...CONFIG,
-    ...config
+const ACTIONS = {
+  close: () => {
+    return { show: false }
+  },
+  setValues: (values) => {
+    return { values }
   }
 }
 
-const getView = (Container, content, toolbar) => (state, actions) => {
+const renderToolbar = ({ toolbarClass, title, okText = OK_TEXT, cancelText, onOk, onCancel }, close, values) => {
   return (
-    <Container
-      {...state}
-      onChange={(values) => {
-        actions.updateValues(values)
-        actions.onChange(values)
+    <PickerToolbar
+      toolbarClass={toolbarClass}
+      title={title}
+      okText={okText}
+      cancelText={cancelText}
+      onCancel={() => {
+        onCancel && onCancel(values)
+        cancelText && close()
       }}
-      onOverlayClick={actions.onOverlayClick || actions.close}
-      toolbar={toolbar || (
-        <PickerToolbar
-          {...state.toolbar}
-          onCancel={() => {
-            actions.close()
-            actions.onCancel(state.values)
-          }}
-          onOk={() => {
-            actions.close()
-            actions.onOk(state.values)
-          }}
-        >
-        </PickerToolbar>
-      )}
-      onOpen={actions.onOpen}
-      onClose={(el) => {
-        actions.onClose(el)
-        actions.destroy()
+      onOk={() => {
+        onOk && onOk(values)
+        close()
       }}
-    >
-      {content}
-    </Container>
+    />
   )
 }
 
-const createPicker = (Container) => (props) => {
+const getProps = ({ onOverlayClick, modalClass, onOpen, onClose }, remove, close) => {
+  return {
+    onOverlayClick: onOverlayClick || close,
+    modalClass,
+    onOpen,
+    onClose: (el) => {
+      onClose && onClose(el)
+      remove()
+    }
+  }
+}
+
+function open (props) {
+  const {
+    // column
+    items,
+    cascade,
+    columns,
+    values,
+    onChange,
+    toolbar,
+    ...rests
+  } = props
+  const { div, remove } = createElement()
+  return app(
+    {
+      show: true,
+      values
+    },
+    ACTIONS,
+    (state, actions) => {
+      const {
+        show,
+        values
+      } = state
+      const {
+        setValues,
+        close
+      } = actions
+      return (
+        <Picker
+          show={show}
+          items={items}
+          cascade={cascade}
+          columns={columns}
+          values={values}
+          onChange={(newValue) => {
+            onChange && onChange(newValue)
+            setValues(newValue)
+          }}
+          toolbar={toolbar || renderToolbar(rests, close, values)}
+          {...getProps(rests, remove, close)}
+        >
+        </Picker>
+      )
+    },
+    div
+  )
+}
+
+function modal (props) {
   const {
     content,
     toolbar,
-    title,
-    okText,
-    cancelText,
-    toolbarClass,
-    onOk,
-    onCancel,
-    onOverlayClick,
-    onChange,
-    onOpen,
-    onClose,
-    ...state
+    ...rests
   } = props
-  return createApp(
-    (destroy) => {
-      return [
-        {
-          ...state,
-          toolbar: {
-            title,
-            okText,
-            cancelText,
-            toolbarClass
-          },
-          show: true
-        },
-        {
-          close: () => {
-            return { show: false }
-          },
-          updateValues: (values) => {
-            return { values }
-          },
-          destroy,
-          onOk,
-          onCancel,
-          onOverlayClick,
-          onChange,
-          onOpen,
-          onClose
-        },
-        getView(Container, content, toolbar)
-      ]
-    }
-  ).close
+  const { div, remove } = createElement()
+  return app(
+    { show: true },
+    { close: ACTIONS.close },
+    (state, actions) => {
+      return (
+        <ModalPicker
+          show={state.show}
+          toolbar={toolbar || renderToolbar(rests, actions.close)}
+          {...getProps(rests, remove, actions.close)}
+        >
+          {content}
+        </ModalPicker>
+      )
+    },
+    div
+  )
 }
 
 export default {
-  config,
-  open: createPicker(Picker),
-  modal: createPicker(ModalPicker)
+  open,
+  modal
 }
