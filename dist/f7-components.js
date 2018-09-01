@@ -157,35 +157,35 @@
 	 * @prop {boolean} [fill=false]
 	 * @prop {boolean} [big=false]
 	 * @prop {boolean} [round=false]
-	 * @prop {boolean} [disabled=false]
 	 * @prop {string | JSX.Element} [text]
-	 * @prop {(e) => void} [onclick]
-	 * @prop {string} [class]
-	 * @prop {string} [key]
+	 * @prop {(e) => void} [onClick]
 	 *
 	 * @param {ButtonProps} props
 	 * @param {JSX.Element[]} children
 	 */
-	var index = (function (props, children) {
+	var Button = function Button(props, children) {
 	  var fill = props.fill,
 	      big = props.big,
 	      round = props.round,
-	      text = props.text,
-	      restProps = objectWithoutProperties(props, ['fill', 'big', 'round', 'text']);
+	      _props$text = props.text,
+	      text = _props$text === undefined ? children : _props$text,
+	      onClick = props.onClick,
+	      rests = objectWithoutProperties(props, ['fill', 'big', 'round', 'text', 'onClick']);
 
 
 	  return hyperapp.h(
 	    'a',
-	    _extends({}, restProps, {
-	      'class': classnames(restProps.class, 'button', {
+	    _extends({}, rests, {
+	      'class': classnames(rests.class, 'button', {
 	        'button-big': big,
 	        'button-fill': fill,
 	        'button-round': round
-	      })
+	      }),
+	      onclick: onClick || rests.onclick
 	    }),
-	    text || children
+	    text
 	  );
-	});
+	};
 
 	// eslint-disable-next-line
 
@@ -196,9 +196,8 @@
 	  return hyperapp.h('i', _extends({}, r, { 'class': classnames('icon', 'icon-' + name, r.class) }));
 	};
 
-	var IconBack = hyperapp.h(Icon, { name: 'back' });
-
-	var IconForward = hyperapp.h(Icon, { name: 'forward' });
+	Icon.Back = hyperapp.h(Icon, { name: 'back' });
+	Icon.Forward = hyperapp.h(Icon, { name: 'forward' });
 
 	// eslint-disable-next-line
 
@@ -299,12 +298,12 @@
 	    contentStart,
 	    media && hyperapp.h(
 	      'div',
-	      { key: 'media', 'class': 'item-media' },
+	      { key: '_media', 'class': 'item-media' },
 	      media
 	    ),
 	    hyperapp.h(
 	      'div',
-	      { key: 'inner', 'class': 'item-inner' },
+	      { key: '_inner', 'class': 'item-inner' },
 	      isMedia ? [hyperapp.h(
 	        'div',
 	        { key: 'row', 'class': 'item-title-row' },
@@ -381,7 +380,7 @@
 	          return onChange(e.target.checked);
 	        },
 	        type: 'checkbox',
-	        key: 'content-start'
+	        key: '_content-start'
 	      }))
 	    }),
 	    children
@@ -860,7 +859,7 @@
 
 	var CONFIG = {
 	  title: 'Message',
-	  okText: 'OK',
+	  okText: 'Ok',
 	  cancleText: 'Cancle'
 	};
 
@@ -944,7 +943,7 @@
 
 	var Dialog$1 = apiMixin(Dialog, methods);
 
-	var index$1 = (function (props, children) {
+	var index = (function (props, children) {
 	  var _props$type = props.type,
 	      type = _props$type === undefined ? 'text' : _props$type,
 	      value = props.value,
@@ -968,12 +967,8 @@
 	        oninput: function oninput(e) {
 	          return onChange(e.target.value);
 	        },
-	        onfoucs: function onfoucs(e) {
-	          return onFocus(e.target.value);
-	        },
-	        onblur: function onblur(e) {
-	          return onBlur(e.target.value);
-	        }
+	        onfoucs: onFocus,
+	        onblur: onBlur
 	      }))
 	    }),
 	    children
@@ -1061,7 +1056,7 @@
 
 	// eslint-disable-next-line
 
-	var index$2 = (function (_ref, children) {
+	var index$1 = (function (_ref, children) {
 	  var left = _ref.left,
 	      right = _ref.right,
 	      center = _ref.center,
@@ -2582,14 +2577,13 @@
 	var RadioItem = function RadioItem(props, children) {
 	  var checked = props.checked,
 	      onChange = props.onChange,
-	      value = props.value,
 	      name = props.name,
 	      disabled = props.disabled,
 	      readonly = props.readonly,
 	      radioProps = props.radioProps,
 	      _props$radioMedia = props.radioMedia,
 	      radioMedia = _props$radioMedia === undefined ? radioIcon : _props$radioMedia,
-	      rests = objectWithoutProperties(props, ['checked', 'onChange', 'value', 'name', 'disabled', 'readonly', 'radioProps', 'radioMedia']);
+	      rests = objectWithoutProperties(props, ['checked', 'onChange', 'name', 'disabled', 'readonly', 'radioProps', 'radioMedia']);
 
 
 	  return hyperapp.h(
@@ -2598,8 +2592,10 @@
 	      useLabel: true,
 	      'class': classnames('label-radio', rests.class),
 	      media: radioMedia,
-	      contentStart: hyperapp.h('input', _extends({}, _extends({}, radioProps, { name: name, value: value, checked: checked, disabled: disabled, readonly: readonly }), {
-	        onchange: onChange,
+	      contentStart: hyperapp.h('input', _extends({}, _extends({}, radioProps, { name: name, checked: checked, disabled: disabled, readonly: readonly }), {
+	        onchange: function onchange(e) {
+	          return onChange(e.target.checked);
+	        },
 	        type: 'radio',
 	        key: 'content-start'
 	      }))
@@ -2655,7 +2651,7 @@
 	 * @prop {string} [name]
 	 *
 	 */
-	var index$3 = (function (props) {
+	var index$2 = (function (props) {
 	  var checked = props.checked,
 	      _props$onChange = props.onChange,
 	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
@@ -2904,15 +2900,15 @@
 	  );
 	};
 
-	exports.Button = index;
+	exports.Button = Button;
 	exports.CheckboxItem = CheckboxItem;
 	exports.ContentBlock = ContentBlock;
 	exports.Dialog = Dialog$1;
 	exports.ImgIcon = Icon;
-	exports.InputItem = index$1;
+	exports.InputItem = index;
 	exports.List = List;
 	exports.Loading = Loading$1;
-	exports.Navbar = index$2;
+	exports.Navbar = index$1;
 	exports.Overlay = Overlay;
 	exports.Page = Page;
 	exports.Panel = _Panel;
@@ -2921,7 +2917,7 @@
 	exports.PullToRefresh = PullToRefresh;
 	exports.RadioItem = RadioItem;
 	exports.Slider = RangeSlider;
-	exports.Switch = index$3;
+	exports.Switch = index$2;
 	exports.TextareaItem = TextareaItem;
 	exports.Toast = Toast$1;
 	exports.Toolbar = Toolbar;
