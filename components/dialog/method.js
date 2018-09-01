@@ -6,7 +6,7 @@ import { createElement } from '../_util'
 
 let CONFIG = {
   title: 'Message',
-  okText: 'OK',
+  okText: 'Ok',
   cancleText: 'Cancle'
 }
 

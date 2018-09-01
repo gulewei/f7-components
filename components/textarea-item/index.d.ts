@@ -1,7 +1,15 @@
 import { Component } from '../_util/interfaces'
-import { ListItemProperties } from '../list'
+import { ListItemProps } from '../list'
 
-export interface TextareaItemProperties extends ListItemProperties {
+export default TextareaItem
+
+declare const TextareaItem: TextareaItemComponent<TextareaItemProperties>
+
+interface TextareaItemComponent<P> extends Component<P> {
+  resizableTextarea: (el: HTMLElement) => void
+}
+
+export interface TextareaItemProperties extends ListItemProps {
   value?: string
   placeholder?: string
   rows?: number
@@ -15,10 +23,4 @@ export interface TextareaItemProperties extends ListItemProperties {
   onBlur?: (val: string) => void
 }
 
-interface TextareaItemComponent<P> extends Component<P> {
-  resizableTextarea: (el: HTMLElement) => void
-}
 
-declare const TextareaItem: TextareaItemComponent<TextareaItemProperties>
-
-export default TextareaItem

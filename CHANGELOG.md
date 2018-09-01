@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.8.7 - September 1, 2018
+  Mostly minor fixes, and doc contribute
+
+
 ## v0.8.6 - August 31, 2018
   * Toast:
     * add `mask` prop, whether to show a transparent mask to prevent touch event of the whole page.

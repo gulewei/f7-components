@@ -2,31 +2,19 @@
 
 Mobile UI for Hyperapp
 
+[![NPM version][npm-image]][npm-url]
+[![npm download][download-image]][download-url]
+
+[npm-image]: https://img.shields.io/npm/v/@gulw/components.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@gulw/components
+[download-image]: https://img.shields.io/npm/dm//@gulw/components.svg?style=flat-square
+[download-url]: https://www.npmjs.com/package/@gulw/components
+
 ## Updating
 
-### v0.8.6 - August 31, 2018
-  * Toast:
-    * add `mask` prop, whether to show a transparent mask to prevent touch event of the whole page.
-    * add `onOpen` `onClose` hook.
-    * `Toast.text`:
-      * add `onClose` `mask` `onClick` param.
-      * now `duration` can be `0`, which means you need close it by hand.
-    * add new method `Toast.hide` to close opened toast
+## v0.8.7 - September 1, 2018
+  Mostly minor fixes, and doc contribute
 
-  * Picker: 
-    * `Picker.openModal` rename to `Picker.modal`
-    * `Picker.open` `Picker.modal` now return actions to close or update it.
-    * `Picker.close` is removed.
-
-  * Panel:
-    * `Panel.update` is removed.
-  
-  * Loading:
-    * add new method `Loading.create`, create individual loading indicator closed by returned actions
-
-  * Dialog:
-    * dialog methods now return actions to let you close it outside.
-    * `Dialog.setDefault` rename to `Dialog.config`
 
 #### check [Change Log](https://github.com/venecy/f7c/blob/master/CHANGELOG.md) for more.
 

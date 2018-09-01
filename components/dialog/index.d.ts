@@ -1,70 +1,75 @@
-import { TransitionProperties, WraperProperties, Component } from '../_util/interfaces'
+import { TransitionProperties, WraperProperties, Component, Slot } from '../_util/interfaces'
 
 export default Dialog
 
 /**
- * Dialog message
+ * `Dialog` is a small content pane that pops up over App's main content. Dialogs are usualy used to ask something from user, or to notify or warn user.
  */
-declare const Dialog: DialogComponent<DialogProperties>
+declare const Dialog: DialogComponent<DialogProps>
 
 type CloseActions = { close: () => void }
 
 export interface DialogComponent<P> extends Component<P> {
-  config: (options: { title?: string, okText?: string, cancelText?: string }) => void
   alert: (text: string, title?: string, onOk?: () => void) => CloseActions
   // alert: (text: string, onOk?: () => void) => CloseActions
   confirm: (text: string, title?: string, onOk?: () => void, onCancel?: () => void) => CloseActions
   // confirm: (text: string, onOk?: () => void, onCancel?: () => void) => CloseActions
-  action: (text: string, title?: string, buttons?: DialogButtonModel[]) => CloseActions
+  action: (text: string, title?: string, buttons?: ButtonOption[]) => CloseActions
   // action: (text: string, buttons?: DialogButtonModel[]) => CloseActions
-  custom: (props: DialogProperties) => CloseActions
+  custom: (props: DialogProps) => CloseActions
+  config: (options: { title?: string, okText?: string, cancelText?: string }) => void
 }
 
-export interface DialogProperties extends WraperProperties, TransitionProperties {
+export interface DialogProps extends WraperProperties, TransitionProperties {
   /**
-   * Title content
+   * title
    */
-  title: string | JSX.Element
+  title: Slot
   /**
-   * Main content
+   * text content
    */
-  text: string | JSX.Element
+  text: Slot
   /**
-   * Button properties
+   * text that will be placed after `text`
    */
-  buttons: Array<DialogButtonModel>
+  afterText?: Slot
   /**
-   * Sub-main content
+   * array of buttons, each button should be presented as Object with button options
    */
-  afterText?: string | JSX.Element
+  buttons: Array<ButtonOption>
   /**
-   * Display buttons vertially
+   * vertical buttons layout
    */
   verticalButtons?: boolean
   /**
-   * Event handler when any button is clicked
+   * callback when user clicks any of Dialog's button
    */
-  onButtonsClick?: (e: Event) => void
+  onButtonsClick?: (e: Object) => void
   /**
-   * Event handler when mask is clicked
+   * callback when user clicks overlay
    */
-  onOverlayClick?: (e: Event) => void
-
+  onOverlayClick?: (e: Object) => void
+  /**
+   * create hook
+   */
   onOpen?: (el: HTMLElement) => void
+  /**
+   * destroy hook
+   */
   onClose?: (el: HTMLElement) => void
 }
 
-export interface DialogButtonModel {
+export interface ButtonOption {
   /**
-   * Button content
+   * button's text
    */
-  text: string | JSX.Element
+  text: Slot
   /**
-   * Click handler
+   * callback when user click this button
    */
-  onclick?: (e: Event) => void
+  onclick?: (e: Object) => void
   /**
-   * bold font
+   * set to true for bold button text
    */
   bold?: boolean
 }

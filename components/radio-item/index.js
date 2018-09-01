@@ -27,7 +27,6 @@ const RadioItem = (props, children) => {
   const {
     checked,
     onChange,
-    value,
     name,
     disabled,
     readonly,
@@ -44,8 +43,8 @@ const RadioItem = (props, children) => {
       media={radioMedia}
       contentStart={
         <input
-          {...{ ...radioProps, name, value, checked, disabled, readonly }}
-          onchange={onChange}
+          {...{ ...radioProps, name, checked, disabled, readonly }}
+          onchange={e => onChange(e.target.checked)}
           type="radio"
           key="content-start"
         />

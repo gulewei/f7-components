@@ -23,8 +23,8 @@ export default (props, children) => {
         <input
           {...{ ...inputProps, type, value, placeholder, disabled, readonly, name }}
           oninput={e => onChange(e.target.value)}
-          onfoucs={e => onFocus(e.target.value)}
-          onblur={e => onBlur(e.target.value)}
+          onfoucs={onFocus}
+          onblur={onBlur}
         />
       }
     >

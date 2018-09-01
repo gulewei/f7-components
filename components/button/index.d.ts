@@ -1,31 +1,36 @@
-import { ElementProperties, Component } from '../_util/interfaces';
+import { ElementProperties, Component, Slot } from '../_util/interfaces'
 
-export interface ButtonProperties extends ElementProperties {
+export default Button
+
+/**
+ * Button
+ */
+declare const Button: Component<ButtonProps>
+
+export interface ButtonProps extends ElementProperties {
   /**
-   * Makes button filled color
+   * filled style
    */
   fill?: boolean
   /**
-   * Makes big button
+   * big size
    */
   big?: boolean
   /**
-   * Makes button round
+   * round style
    */
   round?: boolean
   /**
-   * Button content
+   * button content 
    */
-  text?: string | JSX.Element
-
+  text?: Slot
+  /**
+   * click event handler
+   */
+  onClick?: (e: Object) => void
+  /**
+   * whether disabled
+   */
   disabled?: boolean
-  
 }
-
-/**
- * Buttons ready to use
- */
-declare const Button: Component<ButtonProperties>
-
-export default Button
 

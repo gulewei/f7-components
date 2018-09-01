@@ -46,8 +46,8 @@ export default (props, children) => {
       class={wraperCls}
     >
       {contentStart}
-      {media && <div key="media" class="item-media">{media}</div>}
-      <div key="inner" class="item-inner">
+      {media && <div key="_media" class="item-media">{media}</div>}
+      <div key="_inner" class="item-inner">
         {isMedia
           ? [
             <div key="row" class="item-title-row">

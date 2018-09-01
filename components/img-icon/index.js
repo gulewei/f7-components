@@ -8,12 +8,7 @@ const Icon = ({ name, ...r }) => {
   )
 }
 
-const IconBack = <Icon name='back' />
-
-const IconForward = <Icon name='forward' />
+Icon.Back = <Icon name='back' />
+Icon.Forward = <Icon name='forward' />
 
 export default Icon
-export {
-  IconBack,
-  IconForward
-}

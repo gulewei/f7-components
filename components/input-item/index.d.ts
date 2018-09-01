@@ -1,7 +1,14 @@
 import { Component } from '../_util/interfaces'
-import { ListItemProperties } from '../list'
+import { ListItemProps } from '../list'
 
-export interface InputItemProperties extends ListItemProperties {
+export default InputItem
+
+/**
+ * InputItem must wrapped by a `List`
+ */
+declare const InputItem: Component<InputItemProps>
+
+export interface InputItemProps extends ListItemProps {
   type?: 'text'
   | 'email'
   | 'password'
@@ -13,11 +20,10 @@ export interface InputItemProperties extends ListItemProperties {
   placeholder?: string
   disabled?: boolean
   readonly?: boolean
-  onChange?: (val: string) => Object
-  onFoucs?: (val: string) => Object
-  onBlur?: (val: string) => Object
+  onChange?: (val: string) => any
+  onFoucs?: (e: Object) => any
+  onBlur?: (e: Object) => any
   inputProps?: Object
 }
 
-declare const InputItem: Component<InputItemProperties>
-export default InputItem
+

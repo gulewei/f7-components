@@ -44,7 +44,7 @@ const CheckboxItem = (props, children) => {
           {...{ ...checkboxProps, checked, name, disabled, readonly }}
           onchange={e => onChange(e.target.checked)}
           type="checkbox"
-          key="content-start"
+          key="_content-start"
         />
       }
     >
