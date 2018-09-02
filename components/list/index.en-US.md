@@ -4,7 +4,7 @@ type: Data Display
 title: List
 ---
 
-<iframe src="https://venecy.github.io/f7c/kitchen-sink/#/list"></iframe>
+<iframe src="https://venecy.github.io/f7c/kitchen-sink/#/list" width="360" height="720" frameborder="0" ></iframe>
 
 List views are versatile and powerful user interface compontents frequently found in iOS apps. A list view presents data in a scrollable list of multiple rows that may be divided into sections/groups.
 
