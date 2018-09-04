@@ -27,7 +27,7 @@ Mobile UI for Hyperapp
 [Kitchen Sink](https://venecy.github.io/f7c/kitchen-sink/)
 
 Docs are not ready yet, 
-you can learn about `Components` and their `Apis` in *[typing files](https://github.com/venecy/f7c/blob/master/components/index.d.ts)* for now.
+you can learn about `Components` and their `Apis` in *[typing files](hhttps://github.com/venecy/f7c/tree/master/components)* for now.
 
 
 ## Install
