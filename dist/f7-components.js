@@ -213,13 +213,14 @@
 	 * @param {ListProps} props
 	 * @param {JSX.Element[]} children
 	 */
-	var List = (function (props, children) {
+	var List = function List(props, children) {
 	  var inset = props.inset,
 	      label = props.label,
 	      noHairlines = props.noHairlines,
 	      noHairlinesBetween = props.noHairlinesBetween,
 	      useForm = props.useForm,
-	      rests = objectWithoutProperties(props, ['inset', 'label', 'noHairlines', 'noHairlinesBetween', 'useForm']);
+	      isGroup = props.isGroup,
+	      rests = objectWithoutProperties(props, ['inset', 'label', 'noHairlines', 'noHairlinesBetween', 'useForm', 'isGroup']);
 
 
 	  var wraperCls = classnames(rests.class, 'list-block', {
@@ -228,20 +229,13 @@
 	    'no-hairlines-between': noHairlinesBetween
 	  });
 	  var WraperEl = useForm ? 'form' : 'div'; // eslint-disable-line
-
 	  return hyperapp.h(
 	    WraperEl,
 	    _extends({}, rests, { 'class': wraperCls }),
-	    hyperapp.h(
+	    isGroup ? children : hyperapp.h(
 	      'ul',
 	      null,
-	      children.map(function (child) {
-	        return hyperapp.h(
-	          'li',
-	          { key: child.key },
-	          child
-	        );
-	      })
+	      renderListChildren(children)
 	    ),
 	    label && hyperapp.h(
 	      'div',
@@ -249,7 +243,43 @@
 	      label
 	    )
 	  );
-	});
+	};
+	var Group = function Group(props, children) {
+	  var title = props.title,
+	      rests = objectWithoutProperties(props, ['title']);
+
+	  return hyperapp.h(
+	    'div',
+	    _extends({}, rests, { 'class': classnames('list-group', rests.class) }),
+	    hyperapp.h(
+	      'ul',
+	      null,
+	      title && hyperapp.h(
+	        'li',
+	        { key: '_group-title', 'class': 'list-group-title' },
+	        title
+	      ),
+	      renderListChildren(children)
+	    )
+	  );
+	};
+	var renderListChildren = function renderListChildren(children) {
+	  return children.map(function (child) {
+	    return hyperapp.h(
+	      'li',
+	      { key: child.key },
+	      child
+	    );
+	  });
+	};
+
+	var Divider = function Divider(props, children) {
+	  return hyperapp.h(
+	    'div',
+	    _extends({}, props, { 'class': classnames('item-divider', props.class) }),
+	    children
+	  );
+	};
 
 	/**
 	 * @typedef {Object} ItemWraperProps
@@ -267,7 +297,7 @@
 	 * @param {ItemWraperProps} props
 	 * @param {JSX.Element[]} children
 	 */
-	var Item = (function (props, children) {
+	var Item = function Item(props, children) {
 	  var isLink = props.isLink,
 	      alignTop = props.alignTop,
 	      useLabel = props.useLabel,
@@ -319,7 +349,7 @@
 	      )] : renderTitle(title, input, after)
 	    )
 	  );
-	});
+	};
 
 	var renderTitle = function renderTitle(title, input, after) {
 	  return [title && hyperapp.h(
@@ -338,6 +368,8 @@
 	};
 
 	List.Item = Item;
+	List.Group = Group;
+	List.Divider = Divider;
 
 	// eslint-disable-next-line
 
@@ -860,7 +892,7 @@
 	var CONFIG = {
 	  title: 'Message',
 	  okText: 'Ok',
-	  cancleText: 'Cancle'
+	  cancelText: 'Cancle'
 	};
 
 	function config(config) {
@@ -921,7 +953,7 @@
 	  return custom({
 	    text: text,
 	    title: title,
-	    buttons: [{ text: CONFIG.cancleText, onclick: onCancel }, { text: CONFIG.okText, onclick: onOk }]
+	    buttons: [{ text: CONFIG.cancelText, onclick: onCancel }, { text: CONFIG.okText, onclick: onOk }]
 	  });
 	}
 

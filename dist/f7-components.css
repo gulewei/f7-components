@@ -896,6 +896,61 @@ html.ios-gt-8 .list-block .media-item .item-title {
   margin-right: 15px;
   margin-left: 15px;
 }
+.list-block .list-group ul:after,
+.list-block .list-group ul:before {
+  z-index: 25;
+}
+.list-block .list-group + .list-group ul:before {
+  display: none;
+}
+.list-block .item-divider,
+.list-block .list-group-title {
+  background: #F7F7F7;
+  margin-top: -1px;
+  padding: 4px 15px;
+  white-space: nowrap;
+  position: relative;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: #8e8e93;
+  z-index: 15;
+}
+.list-block .item-divider:before,
+.list-block .list-group-title:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: auto;
+  right: auto;
+  height: 1px;
+  width: 100%;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+html.pixel-ratio-3 .list-block .item-divider:before,
+html.pixel-ratio-3 .list-block .list-group-title:before {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.list-block .list-group-title {
+  position: relative;
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: sticky;
+  top: 0px;
+  z-index: 20;
+  margin-top: 0;
+}
+.list-block .list-group-title:before {
+  display: none;
+}
 .list-block li:last-child .list-button:after {
   display: none;
 }
@@ -1803,7 +1858,7 @@ html.pixel-ratio-3 .picker-center-highlight:after {
 }
 .pull-to-refresh-wraper {
   overflow: hidden;
-  min-height: 25px;
+  min-height: 100%;
 }
 .pull-to-refresh-content {
   -webkit-transform-origin: left top 0px;
