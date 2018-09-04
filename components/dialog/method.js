@@ -7,7 +7,7 @@ import { createElement } from '../_util'
 let CONFIG = {
   title: 'Message',
   okText: 'Ok',
-  cancleText: 'Cancle'
+  cancelText: 'Cancle'
 }
 
 function config (config) {
@@ -77,7 +77,7 @@ function confirm (text, title, onOk, onCancel) {
     text,
     title,
     buttons: [
-      { text: CONFIG.cancleText, onclick: onCancel },
+      { text: CONFIG.cancelText, onclick: onCancel },
       { text: CONFIG.okText, onclick: onOk }
     ]
   })
