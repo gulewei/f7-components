@@ -11,7 +11,7 @@ function create () {
     { close },
     () => {
       return (
-        <Loading show></Loading>
+        <Loading show={true} ></Loading>
       )
     },
     div

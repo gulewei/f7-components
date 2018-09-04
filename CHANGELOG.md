@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.8.8 -September 4, 2018
+  * List:
+      * add `List.Group`, `List.Divider` component
+      * add `isGrop` prop to enable List.Group
+  * Minor fixes
+  
+
 ## v0.8.7 - September 1, 2018
   Mostly minor fixes, and doc contribute
 

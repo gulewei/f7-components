@@ -16,6 +16,7 @@ import Overlay from '../overlay'
 const Loading = props => {
   const {
     show,
+    // text,
     wraperClass = 'loading-wraper',
     wraperKey
   } = props
@@ -29,6 +30,7 @@ const Loading = props => {
         />,
         <div class="preloader-indicator-modal">
           <Preloader white />
+          {/* <span>{text}</span> */}
         </div>
       ]}
     </div>

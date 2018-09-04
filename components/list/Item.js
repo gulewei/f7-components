@@ -17,7 +17,7 @@ import cc from 'classnames'
  * @param {ItemWraperProps} props
  * @param {JSX.Element[]} children
  */
-export default (props, children) => {
+const Item = (props, children) => {
   const {
     isLink,
     alignTop,
@@ -70,3 +70,5 @@ const renderTitle = (title, input, after) => {
     after && <div key="after" class="item-after">{after}</div>
   ]
 }
+
+export default Item

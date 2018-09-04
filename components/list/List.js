@@ -14,13 +14,14 @@ import cc from 'classnames'
  * @param {ListProps} props
  * @param {JSX.Element[]} children
  */
-export default (props, children) => {
+export const List = (props, children) => {
   const {
     inset,
     label,
     noHairlines,
     noHairlinesBetween,
     useForm,
+    isGroup,
     ...rests
   } = props
 
@@ -30,15 +31,36 @@ export default (props, children) => {
     'no-hairlines-between': noHairlinesBetween
   })
   const WraperEl = useForm ? 'form' : 'div' // eslint-disable-line
-
   return (
     <WraperEl {...rests} class={wraperCls}>
-      <ul>
-        {children.map(child => (
-          <li key={child.key}>{child}</li>
-        ))}
-      </ul>
+      {isGroup
+        ? children
+        : <ul>{renderListChildren(children)}</ul>
+      }
       {label && <div class="list-block-label">{label}</div>}
     </WraperEl>
+  )
+}
+
+export const Group = (props, children) => {
+  const {
+    title,
+    ...rests
+  } = props
+  return (
+    <div {...rests} class={cc('list-group', rests.class)}>
+      <ul>
+        {title && <li key="_group-title" class="list-group-title">{title}</li>}
+        {renderListChildren(children)}
+      </ul>
+    </div>
+  )
+}
+
+const renderListChildren = children => children.map(child => <li key={child.key}>{child}</li>)
+
+export const Divider = (props, children) => {
+  return (
+    <div {...props} class={cc('item-divider', props.class)}>{children}</div>
   )
 }

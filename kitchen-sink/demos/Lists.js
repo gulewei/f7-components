@@ -62,6 +62,48 @@ export default {
           ))}
         </List>
 
+        <ContentBlock title="With Divider" />
+        <List
+          label={state.label}
+        >
+          {
+            state.links.map(({ title, after, icon, isLink }, i) => (
+              <List.Item key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
+            ))
+          }
+          <List.Divider>Divider title here</List.Divider>
+          {
+            state.links.map(({ title, after, icon, isLink }, i) => (
+              <List.Item key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
+            ))
+          }
+        </List>
+
+        {/* <ContentBlock title="" /> */}
+        <List
+          label={state.label}
+          isGroup={true}
+        >
+          <List.Group
+            title="First group"
+          >
+            {
+              state.links.concat(state.links.slice(0)).map(({ title, after, icon, isLink }, i) => (
+                <List.Item key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
+              ))
+            }
+          </List.Group>
+          <List.Group
+            title="Second group"
+          >
+            {
+              state.links.concat(state.links.slice(0)).map(({ title, after, icon, isLink }, i) => (
+                <List.Item key={i} media={<ImgIcon name={icon} />} {...{ title, after, isLink }} />
+              ))
+            }
+          </List.Group>
+        </List>
+
         <ContentBlock title="Inset List Block" />
         <List label={state.label} inset>
           {state.basic.map(({ title, after, icon, isLink }, i) => (

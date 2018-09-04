@@ -14,6 +14,7 @@ export interface Component<P extends ElementProperties = {}, C = any> {
 export interface ElementProperties {
   key?: string
   class?: string
+  style?: Object,
   onclick?: (e: Event) => void
   oncreate?: (el: HTMLElement) => void
   onupdate?: (el: HTMLElement, oldAttr: any) => void

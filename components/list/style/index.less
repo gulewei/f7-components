@@ -1,9 +1,6 @@
 @import url("../../_style/_mixins.less");
 @import url("../../_style/_theme.less");
 
-@listBlockBorderColor: #c8c7cc;
-@listBlockBg: #fff;
-
 .list-block {
     margin: 35px 0;
     font-size: 17px;
@@ -219,6 +216,40 @@
             margin-right: 15px;
             margin-left: 15px;
         }
+    }
+
+    .list-group {
+        ul {
+            &:after, &:before {
+                z-index: 25;
+            }
+        }
+        + .list-group ul {
+            .hairline-remove(top);
+        }
+    }
+    .item-divider, .list-group-title {
+        background: @dividerBg;
+        .hairline(top, @listBlockBorderColor);
+        margin-top: -1px;
+        padding: 4px 15px;
+        white-space: nowrap;
+        position: relative;
+        max-width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: @dividerColor;
+        z-index: 15;
+    }
+    .list-group-title {
+        position: relative;
+        position: -webkit-sticky;
+        position: -moz-sticky;
+        position: sticky;
+        top: 0px;
+        z-index: 20;
+        margin-top: 0;
+        .hairline-remove(top);
     }
 
     // Last-childs

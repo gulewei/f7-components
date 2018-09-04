@@ -12,6 +12,14 @@ interface ListComponent<P> extends Component<P> {
    * Single list element has pretty complex but flexible layout.
    */
   Item: Component<ListItemProps>
+  /**
+   * List divider is a simple list element with title to visually divide one list items from another
+   */
+  Divider: Component<ElementProperties>
+  /**
+   * Sometimes we need to group list view elements inside of single list block. In this case we need to additional group elements
+   */
+  Group: Component<ListGroupProps>
 }
 
 export interface ListProps extends ElementProperties, OuterHairlines, InnerHairlines {
@@ -26,7 +34,11 @@ export interface ListProps extends ElementProperties, OuterHairlines, InnerHairl
   /**
    * Enables `<form>` tag on list block instead of `<div>`
    */
-  useForm?: boolean
+  useForm?: boolean,
+  /**
+   * Enables `List.Group`s as children
+   */
+  isGroup?: boolean
 }
 
 export interface ListItemProps extends ElementProperties {
@@ -70,4 +82,11 @@ export interface ListItemProps extends ElementProperties {
    *  Change alignment to flex-start
    */
   alignTop?: boolean
+}
+
+export interface ListGroupProps extends ElementProperties {
+  /**
+   * With list groups, group titles have sticky position during scroll within single group
+   */
+  title: Slot
 }
