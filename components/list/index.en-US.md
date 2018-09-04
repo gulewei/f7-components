@@ -28,6 +28,7 @@ Properties | Descrition | Type | Default
 | inset | Makes list block inset | Boolean | false |
 | label | Add list block label at the end of list block | String | - |
 | useForm | Enables `<form>` tag on list block instead of `<div>` | Boolean | false |
+| isGroup | Enables `List.Group`s as children | Boolean | false |
 | noHairlines | removes outer hairlines | Boolean | false |
 | noHairlinesBetween | removes inner hairlines | Boolean | false |
 
@@ -48,3 +49,21 @@ Properties | Descrition | Type | Default
 | useLabel | Use `<label>` as wraper element | Boolean | false |
 | contentStart | Element will be inserted in the beginning of `<div class="item-content">` element | Slot | - |
 | alignTop | Change alignment to flex-start | Boolean | false |
+
+
+### List.Group
+
+Sometimes we need to group list view elements inside of single list block. In this case we need to additional group elements
+
+Properties | Descrition | Type | Default
+-----------|------------|------|--------
+| title | With list groups, group titles have sticky position during scroll within single group | Slot | - |
+
+### List.Divider
+
+List divider is a simple list element with title to visually divide one list items from another
+
+Properties | Descrition | Type | Default
+-----------|------------|------|--------
+| - | - | - | - |
+
