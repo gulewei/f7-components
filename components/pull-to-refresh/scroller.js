@@ -1,6 +1,6 @@
 import BaseScroller from '../_util/scroller'
+import { runAndCleanUp, raf } from '../_util/run-and-clean'
 import { css, on } from '../_util'
-import { runAndCleanUp } from '../transition/run-transition'
 import { enumRefreshStatus, transitionCls } from './constant'
 
 export default class PullToRefreshScroller extends BaseScroller {
@@ -108,7 +108,7 @@ export default class PullToRefreshScroller extends BaseScroller {
         contentEl,
         () => {
           props.onRefreshChange(enumRefreshStatus.finish)
-          window.requestAnimationFrame(() => {
+          raf(() => {
             render(contentEl, 0)
           })
         },

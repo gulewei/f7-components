@@ -1,49 +1,7 @@
-/**
- * https://github.com/dojo/widget-core/blob/master/src/animations/cssTransitions.ts
- */
+import { runAndCleanUp, raf } from '../_util/run-and-clean'
 
-let transitionEndName = ''
-let animationEndName = ''
-
-const requestAnimationFrame = window.requestAnimationFrame
-
-function determineNames (element) {
-  if ('WebkitTransition' in element.style) {
-    transitionEndName = 'webkitTransitionEnd'
-    animationEndName = 'webkitAnimationEnd'
-  } else if ('transition' in element.style || 'MozTransition' in element.style) {
-    transitionEndName = 'transitionend'
-    animationEndName = 'animationend'
-  } else {
-    throw new Error('Your browser is not supported')
-  }
-}
-
-function initialize (element) {
-  if (animationEndName === '') {
-    determineNames(element)
-  }
-}
-
-export function runAndCleanUp (element, startAnimation, finishAnimation) {
-  initialize(element)
-
-  let finished = false
-
-  let transitionEnd = function () {
-    if (!finished) {
-      finished = true
-      element.removeEventListener(transitionEndName, transitionEnd)
-      element.removeEventListener(animationEndName, transitionEnd)
-
-      finishAnimation()
-    }
-  }
-
-  startAnimation()
-
-  element.addEventListener(animationEndName, transitionEnd)
-  element.addEventListener(transitionEndName, transitionEnd)
+export {
+  runAndCleanUp
 }
 
 export function runExit (node, exitAnimationActive, exitAnimation, removeNode) {
@@ -54,7 +12,7 @@ export function runExit (node, exitAnimationActive, exitAnimation, removeNode) {
     () => {
       node.classList.add(exitAnimation)
 
-      requestAnimationFrame(function () {
+      raf(function () {
         node.classList.add(activeClass)
       })
     },
@@ -72,7 +30,7 @@ export function runEnter (node, enterAnimationActive, enterAnimation, onEntered)
     () => {
       node.classList.add(enterAnimation)
 
-      requestAnimationFrame(function () {
+      raf(function () {
         /**
          * bug: add enter-animation-active classname in this frame won't perform transition as expected, but add in next frame will.
          *
@@ -80,7 +38,7 @@ export function runEnter (node, enterAnimationActive, enterAnimation, onEntered)
          * add enter-animation classname may perform an frame immediately,
          * and add enter-animation-active classname here may merge into repaint in this same frame.
          */
-        requestAnimationFrame(function () {
+        raf(function () {
           node.classList.add(activeClass)
         })
       })

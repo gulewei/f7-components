@@ -1,6 +1,6 @@
 import { h } from 'hyperapp'
 import cc from 'classnames'
-import { runAndCleanUp } from '../transition/run-transition'
+import { runAndCleanUp, raf } from '../_util/run-and-clean'
 
 function runIf (fn) {
   if (fn) {
@@ -11,7 +11,6 @@ function runIf (fn) {
 const body = document.body
 const addBodyClass = cls => body.classList.add(cls)
 const removeBodyClass = cls => body.classList.remove(cls)
-const raf = window.requestAnimationFrame
 
 /**
  * @typedef {Object} PanelProps

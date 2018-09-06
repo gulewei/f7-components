@@ -48,23 +48,6 @@ export function on (el, type, fn, options) {
   }
 }
 
-export const requestAnimationFrame = window.requestAnimationFrame
-
-/**
- * @param {HTMLElement} el
- * @param {Function} callback
- */
-export function transitionEnd (el, callback) {
-  const run = (e) => {
-    callback && callback(e)
-    offs.map(off => off())
-  }
-
-  const offs = ['webkitTransitionEnd', 'transitionend'].map(type => {
-    return on(el, type, run)
-  })
-}
-
 /**
  * Animation names
  */

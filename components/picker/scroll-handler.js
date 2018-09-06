@@ -1,5 +1,6 @@
-import { on, transitionEnd } from '../_util'
 import BaseScroller from '../_util/scroller'
+import { runAndCleanUp } from '../_util/run-and-clean'
+import { on } from '../_util'
 
 class ScrollerHandler extends BaseScroller {
   /**
@@ -11,7 +12,7 @@ class ScrollerHandler extends BaseScroller {
    * @param {HTMLElement} wraper
    * @param {PickerScrollerOptions} props
    */
-  constructor(wraper, props) { // eslint-disable-line
+  constructor (wraper, props) { // eslint-disable-line
     super()
 
     this.wraper = wraper
@@ -83,9 +84,7 @@ class ScrollerHandler extends BaseScroller {
     // emit value
     if (emitValue) {
       animate
-        ? transitionEnd(this.wraper, () => {
-          this._emitValue()
-        })
+        ? runAndCleanUp(this.wraper, () => { }, () => this._emitValue())
         : this._emitValue()
     }
   }
