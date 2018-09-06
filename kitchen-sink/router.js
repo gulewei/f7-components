@@ -11,7 +11,7 @@ import { Switch } from 'hyperapp-hoa-router'
 // })
 
 import createHashHistory from 'history/createHashHistory'
-export const history = createHashHistory()
+export const history = createHashHistory({ hashType: 'hashbang' })
 
 const sessionStorage = window.sessionStorage
 
@@ -30,7 +30,7 @@ const store = {
     store.save(pathes.concat(pathname))
   },
   replace (pathes, pathname) {
-    store.save(pathes.slice(0, -1).cancat(pathname))
+    store.save(pathes.slice(0, -1).concat(pathname))
   },
   pop (pathes) {
     store.save(pathes.slice(0, -1))
@@ -43,6 +43,8 @@ const store = {
  */
 const subscribe = (appActions) => {
   const { setForward, setBackward, setNone } = appActions[direction.key]
+  const prevPathes = store.get()
+  store.replace(prevPathes, history.location.pathname)
   history.listen((location, action) => {
     const pathes = store.get()
     switch (action) {
