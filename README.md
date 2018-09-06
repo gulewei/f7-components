@@ -12,6 +12,9 @@ Mobile UI for Hyperapp
 
 ## Updating
 
+### v0.8.9 - September 6, 2018
+  * Minor fixes, remove a few lines of duplicated code
+
 ### v0.8.8 -September 4, 2018
   * List:
       * add `List.Group`, `List.Divider` component
