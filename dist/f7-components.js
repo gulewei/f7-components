@@ -468,8 +468,6 @@
 	var transitionEndName = '';
 	var animationEndName = '';
 
-	var requestAnimationFrame = window.requestAnimationFrame;
-
 	function determineNames(element) {
 	  if ('WebkitTransition' in element.style) {
 	    transitionEndName = 'webkitTransitionEnd';
@@ -488,26 +486,28 @@
 	  }
 	}
 
+	/**
+	 * @param {HTMLElement} element
+	 * @param {() => void} startAnimation
+	 * @param {() => void} finishAnimation
+	 */
 	function runAndCleanUp(element, startAnimation, finishAnimation) {
 	  initialize(element);
-
 	  var finished = false;
-
 	  var transitionEnd = function transitionEnd() {
 	    if (!finished) {
 	      finished = true;
 	      element.removeEventListener(transitionEndName, transitionEnd);
 	      element.removeEventListener(animationEndName, transitionEnd);
-
 	      finishAnimation();
 	    }
 	  };
-
 	  startAnimation();
-
 	  element.addEventListener(animationEndName, transitionEnd);
 	  element.addEventListener(transitionEndName, transitionEnd);
 	}
+
+	var raf = window.requestAnimationFrame;
 
 	function runExit(node, exitAnimationActive, exitAnimation, removeNode) {
 	  var activeClass = exitAnimationActive || exitAnimation + '-active';
@@ -515,7 +515,7 @@
 	  runAndCleanUp(node, function () {
 	    node.classList.add(exitAnimation);
 
-	    requestAnimationFrame(function () {
+	    raf(function () {
 	      node.classList.add(activeClass);
 	    });
 	  }, function () {
@@ -529,7 +529,7 @@
 	  runAndCleanUp(node, function () {
 	    node.classList.add(enterAnimation);
 
-	    requestAnimationFrame(function () {
+	    raf(function () {
 	      /**
 	       * bug: add enter-animation-active classname in this frame won't perform transition as expected, but add in next frame will.
 	       *
@@ -537,7 +537,7 @@
 	       * add enter-animation classname may perform an frame immediately,
 	       * and add enter-animation-active classname here may merge into repaint in this same frame.
 	       */
-	      requestAnimationFrame(function () {
+	      raf(function () {
 	        node.classList.add(activeClass);
 	      });
 	    });
@@ -673,25 +673,6 @@
 	      return off();
 	    });
 	  };
-	}
-
-	var requestAnimationFrame$1 = window.requestAnimationFrame;
-
-	/**
-	 * @param {HTMLElement} el
-	 * @param {Function} callback
-	 */
-	function transitionEnd(el, callback) {
-	  var run = function run(e) {
-	    callback && callback(e);
-	    offs.map(function (off) {
-	      return off();
-	    });
-	  };
-
-	  var offs = ['webkitTransitionEnd', 'transitionend'].map(function (type) {
-	    return on(el, type, run);
-	  });
 	}
 
 	/**
@@ -1169,7 +1150,6 @@
 	var removeBodyClass = function removeBodyClass(cls) {
 	  return body.classList.remove(cls);
 	};
-	var raf = window.requestAnimationFrame;
 
 	/**
 	 * @typedef {Object} PanelProps
@@ -1681,8 +1661,8 @@
 
 	      // emit value
 	      if (emitValue) {
-	        animate ? transitionEnd(this.wraper, function () {
-	          _this2._emitValue();
+	        animate ? runAndCleanUp(this.wraper, function () {}, function () {
+	          return _this2._emitValue();
 	        }) : this._emitValue();
 	      }
 	    }
@@ -2467,7 +2447,7 @@
 	      var finish = function finish() {
 	        runAndCleanUp(contentEl, function () {
 	          props.onRefreshChange(enumRefreshStatus.finish);
-	          window.requestAnimationFrame(function () {
+	          raf(function () {
 	            render(contentEl, 0);
 	          });
 	        }, function () {
