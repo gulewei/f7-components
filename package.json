@@ -66,7 +66,7 @@
     "gulp-less": "^4.0.1",
     "history": "^4.7.2",
     "hyperapp": "^1.2.9",
-    "hyperapp-hoa-router": "^0.2.4",
+    "hyperapp-hoa-router": "^0.2.7",
     "less": "^3.8.1",
     "parcel-bundler": "^1.9.7",
     "postcss-import": "^11.1.0",

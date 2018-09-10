@@ -1,9 +1,9 @@
 // eslint-disable-next-line
 import { h, app } from 'hyperapp'
 // eslint-disable-next-line
-import { withSession, Route } from 'hyperapp-hoa-router'
+import { withRouter, Route } from 'hyperapp-hoa-router'
 // eslint-disable-next-line
-import { history, RouterView } from './router'
+import { factories, RouterView } from './router'
 // eslint-disable-next-line
 import Layout from './Layout'
 import modules from './demos'
@@ -63,4 +63,4 @@ function register (modules) {
 }
 
 const { state, actions, view } = register(modules)
-withSession(app, { history })(state, actions, view, document.body)
+withRouter(app, { factories })(state, actions, view, document.body)
