@@ -12,10 +12,9 @@ import { runEnter, runExit } from './run-transition'
  * @prop {(el: HTMLElement) => void} [onExited]
  *
  * @param {TransitionProps} props
- * @param {JSX.Element[]} children
+ * @param {JSX.Element} children
  */
-function makeTransition (props, children) {
-  const child = children[0]
+function makeTransition (props, child) {
   if (!child.attributes) {
     return child
   }
@@ -58,11 +57,13 @@ function transitionExit (el, props, attributes, removeNode) {
 }
 
 export default (props, children) => {
-  if (typeof children === 'function') {
-    return (state, actions) => {
-      return makeTransition(props, children(state, actions))
+  return children.map(child => {
+    if (typeof child === 'function') {
+      return (state, actions) => {
+        return makeTransition(props, child(state, actions))
+      }
+    } else {
+      return makeTransition(props, child)
     }
-  } else {
-    return makeTransition(props, children)
-  }
+  })
 }

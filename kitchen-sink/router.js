@@ -3,71 +3,10 @@ import { h } from 'hyperapp'
 // eslint-disable-next-line
 import { Transition, View } from './components'
 // eslint-disable-next-line
-import { Switch } from 'hyperapp-hoa-router'
-// import createBrowserHistory from 'history/createBrowserHistory'
-
-// export const history = createBrowserHistory({
-// basename: '/#/'
-// })
-
+import { Switch, pathOf } from 'hyperapp-hoa-router'
 import createHashHistory from 'history/createHashHistory'
+
 export const history = createHashHistory({ hashType: 'hashbang' })
-
-const sessionStorage = window.sessionStorage
-
-/**
- * 历史记录
- */
-const store = {
-  key: '_hoa_router_session_',
-  get () {
-    return JSON.parse(sessionStorage.getItem(store.key)) || []
-  },
-  save (pathes) {
-    sessionStorage.setItem(store.key, JSON.stringify(pathes))
-  },
-  push (pathes, pathname) {
-    store.save(pathes.concat(pathname))
-  },
-  replace (pathes, pathname) {
-    store.save(pathes.slice(0, -1).concat(pathname))
-  },
-  pop (pathes) {
-    store.save(pathes.slice(0, -1))
-  }
-}
-
-/**
- * 判断动画放向
- * @param {Object} appActions
- */
-const subscribe = (appActions) => {
-  const { setForward, setBackward, setNone } = appActions[direction.key]
-  const prevPathes = store.get()
-  store.replace(prevPathes, history.location.pathname)
-  history.listen((location, action) => {
-    const pathes = store.get()
-    switch (action) {
-      case 'PUSH':
-        store.push(pathes, location.pathname)
-        setForward()
-        break
-      case 'REPLACE':
-        store.replace(pathes, location.pathname)
-        setNone()
-        break
-      case 'POP':
-        if (pathes.indexOf(location.pathname) > -1) {
-          store.pop(pathes, location.pathname)
-          setBackward()
-        } else {
-          store.push(pathes, location.pathname)
-          setForward()
-        }
-        break
-    }
-  })
-}
 
 /**
  * 动画方向
@@ -78,62 +17,41 @@ const enumDirection = {
   backward: 2
 }
 
-/**
- * 进场动画
- * @param {HTMLElement} el
- */
-const performEnter = (el) => ({ direction }) => {
-  if (direction === enumDirection.none) {
-    return
+const findIndex = (path, stack) => stack.map(loc => loc.pathname).indexOf(path)
+const animProps = ({ pathname, previous, stack }) => {
+  const i = findIndex(pathname, stack)
+  const j = findIndex(previous, stack)
+  let direction
+  if (j < 0 || i === j) {
+    direction = enumDirection.none
+  } else if (i > j) {
+    direction = enumDirection.forward
+  } else {
+    direction = enumDirection.backward
   }
-  direction === enumDirection.forward
-    ? Transition.runEnter(el, 'page-from-right-to-center', 'page-on-right', () => { })
-    : Transition.runEnter(el, 'page-from-left-to-center', 'page-on-left', () => { })
-}
-
-/**
- * 出场动画
- * @param {{el: HTMLElement, done: () => {}}} param0
- */
-const performExit = ({ el, done }) => ({ direction }) => {
-  if (direction === enumDirection.none) {
-    return
-  }
-  direction === enumDirection.forward
-    ? Transition.runExit(el, 'page-from-center-to-left', 'page-on-center', done)
-    : Transition.runExit(el, 'page-from-center-to-right', 'page-on-center', done)
-}
-
-export const direction = {
-  key: 'direction',
-  view: false,
-  state: { direction: enumDirection.none },
-  actions: {
-    performEnter,
-    performExit,
-    setForward: () => ({ direction: enumDirection.forward }),
-    setBackward: () => ({ direction: enumDirection.backward }),
-    setNone: () => ({ direction: enumDirection.none })
-  },
-  subscribe
-}
-
-// eslint-disable-next-line no-unused-vars
-const TransitionDecarator = ({ performEnter, performExit }, children) => {
-  const child = children[0]
-  if (!child) {
-    return child
-  }
-  const { oncreate, onremove } = child.attributes
-  child.attributes.oncreate = (el) => {
-    performEnter(el)
-    oncreate && oncreate(el)
-  }
-  child.attributes.onremove = (el, done) => {
-    performExit({ el, done })
-    onremove && onremove(el, () => { })
-  }
-  return child
+  return [
+    // none
+    {
+      enter: '',
+      enterActive: '',
+      exit: '',
+      exitActive: ''
+    },
+    // forward
+    {
+      enter: 'page-on-right',
+      enterActive: 'page-from-right-to-center',
+      exit: 'page-on-center',
+      exitActive: 'page-from-center-to-left'
+    },
+    // backward
+    {
+      enter: 'page-on-left',
+      enterActive: 'page-from-left-to-center',
+      exit: 'page-on-center',
+      exitActive: 'page-from-center-to-right'
+    }
+  ][direction]
 }
 
 /**
@@ -141,15 +59,12 @@ const TransitionDecarator = ({ performEnter, performExit }, children) => {
  * @param {*} _
  * @param {*} children
  */
-export const RouterView = (_, children) => (_, appActions) => {
+export const RouterView = (_, children) => (state) => {
   return (
     <View>
-      <TransitionDecarator
-        performEnter={appActions[direction.key].performEnter}
-        performExit={appActions[direction.key].performExit}
-      >
+      <Transition {...animProps(pathOf(state))}>
         <Switch>{children}</Switch>
-      </TransitionDecarator>
+      </Transition>
     </View>
   )
 }
