@@ -562,10 +562,9 @@
 	 * @prop {(el: HTMLElement) => void} [onExited]
 	 *
 	 * @param {TransitionProps} props
-	 * @param {JSX.Element[]} children
+	 * @param {JSX.Element} children
 	 */
-	function makeTransition(props, children) {
-	  var child = children[0];
+	function makeTransition(props, child) {
 	  if (!child.attributes) {
 	    return child;
 	  }
@@ -608,13 +607,15 @@
 	}
 
 	var Transition = (function (props, children) {
-	  if (typeof children === 'function') {
-	    return function (state, actions) {
-	      return makeTransition(props, children(state, actions));
-	    };
-	  } else {
-	    return makeTransition(props, children);
-	  }
+	  return children.map(function (child) {
+	    if (typeof child === 'function') {
+	      return function (state, actions) {
+	        return makeTransition(props, child(state, actions));
+	      };
+	    } else {
+	      return makeTransition(props, child);
+	    }
+	  });
 	});
 
 	Transition.runAndCleanUp = runAndCleanUp;

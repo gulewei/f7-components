@@ -1865,10 +1865,10 @@ html.pixel-ratio-3 .picker-center-highlight:after {
           transform-origin: left top 0px;
 }
 .pull-to-refresh-transition {
-  -webkit-transition: -webkit-transform .4s ease;
-  transition: -webkit-transform .4s ease;
-  transition: transform .4s ease;
-  transition: transform .4s ease, -webkit-transform .4s ease;
+  -webkit-transition: -webkit-transform 0.4s ease;
+  transition: -webkit-transform 0.4s ease;
+  transition: transform 0.4s ease;
+  transition: transform 0.4s ease, -webkit-transform 0.4s ease;
 }
 .pull-to-refresh-indicator {
   margin-top: -25px;
@@ -2178,8 +2178,8 @@ html.android .label-switch input[type="checkbox"] + .checkbox:before {
   font-family: 'Helvetica-Neue', 'HelveticaNeue', arial, sans-serif;
   text-align: center;
   font-weight: normal;
-  -webkit-transition: opacity .8s;
-  transition: opacity .8s;
+  -webkit-transition: opacity 0.8s;
+  transition: opacity 0.8s;
 }
 .navbar-inner,
 .toolbar-inner {
