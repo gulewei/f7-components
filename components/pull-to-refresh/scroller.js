@@ -17,11 +17,13 @@ export default class PullToRefreshScroller extends BaseScroller {
     const touchstart = (e) => {
       if (isOnEdge) {
         this.onTouchStart(e.touches, Date.now())
-        contentEl.classList.remove(transitionCls)
+        // contentEl.classList.remove(transitionCls)
       }
     }
     const touchmove = (e) => {
       if (isOnEdge) {
+        // prevent unexpect browser behavier
+        e.preventDefault()
         if (this._checkDirection(e.touches[0].pageY)) {
           this.onTouchMove(e.touches, Date.now())
         } else {
@@ -32,7 +34,7 @@ export default class PullToRefreshScroller extends BaseScroller {
     const touchend = (e) => {
       if (isOnEdge) {
         this.onTouchEnd(e.touches, Date.now())
-        contentEl.classList.add(transitionCls)
+        // contentEl.classList.add(transitionCls)
       }
     }
     const events = {
@@ -88,7 +90,18 @@ export default class PullToRefreshScroller extends BaseScroller {
 
   _drop (contentEl, translate, props, isActivate) {
     const newTranslate = isActivate ? props.distance : 0
-    render(contentEl, newTranslate)
+    runAndCleanUp(
+      contentEl,
+      () => {
+        contentEl.classList.add(transitionCls)
+        raf(() => {
+          render(contentEl, newTranslate)
+        })
+      },
+      () => {
+        contentEl.classList.remove(transitionCls)
+      }
+    )
     if (newTranslate !== translate) {
       this.updateTranslate(newTranslate)
     }
@@ -107,16 +120,18 @@ export default class PullToRefreshScroller extends BaseScroller {
       runAndCleanUp(
         contentEl,
         () => {
+          contentEl.classList.add(transitionCls)
           props.onRefreshChange(enumRefreshStatus.finish)
           raf(() => {
             render(contentEl, 0)
           })
         },
         () => {
+          contentEl.classList.remove(transitionCls)
           props.onRefreshChange(enumRefreshStatus.deactivate)
-          this.updateTranslate(0)
         }
       )
+      this.updateTranslate(0)
     }
     props.onRefresh(finish)
   }

@@ -1,7 +1,10 @@
 # Change Log
 
-## v0.8.9 - September 6, 2018
+## v0.8.12 - September 21, 2018
   * Minor fixes, remove a few lines of duplicated code
+  * PullToRefresh:
+     * call e.preventDefault in touchmove event when use translate, to prevent some unexpected browser behavior.
+     * remove transition classname when not needed
 
 ## v0.8.8 - September 4, 2018
   * List:
