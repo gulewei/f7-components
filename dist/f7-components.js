@@ -2350,11 +2350,13 @@
 	      var touchstart = function touchstart(e) {
 	        if (isOnEdge) {
 	          _this2.onTouchStart(e.touches, Date.now());
-	          contentEl.classList.remove(transitionCls);
+	          // contentEl.classList.remove(transitionCls)
 	        }
 	      };
 	      var touchmove = function touchmove(e) {
 	        if (isOnEdge) {
+	          // prevent unexpect browser behavier
+	          e.preventDefault();
 	          if (_this2._checkDirection(e.touches[0].pageY)) {
 	            _this2.onTouchMove(e.touches, Date.now());
 	          } else {
@@ -2365,7 +2367,7 @@
 	      var touchend = function touchend(e) {
 	        if (isOnEdge) {
 	          _this2.onTouchEnd(e.touches, Date.now());
-	          contentEl.classList.add(transitionCls);
+	          // contentEl.classList.add(transitionCls)
 	        }
 	      };
 	      var events = {
@@ -2427,7 +2429,14 @@
 	    key: '_drop',
 	    value: function _drop(contentEl, translate, props, isActivate) {
 	      var newTranslate = isActivate ? props.distance : 0;
-	      render(contentEl, newTranslate);
+	      runAndCleanUp(contentEl, function () {
+	        contentEl.classList.add(transitionCls);
+	        raf(function () {
+	          render(contentEl, newTranslate);
+	        });
+	      }, function () {
+	        contentEl.classList.remove(transitionCls);
+	      });
 	      if (newTranslate !== translate) {
 	        this.updateTranslate(newTranslate);
 	      }
@@ -2447,14 +2456,16 @@
 
 	      var finish = function finish() {
 	        runAndCleanUp(contentEl, function () {
+	          contentEl.classList.add(transitionCls);
 	          props.onRefreshChange(enumRefreshStatus.finish);
 	          raf(function () {
 	            render(contentEl, 0);
 	          });
 	        }, function () {
+	          contentEl.classList.remove(transitionCls);
 	          props.onRefreshChange(enumRefreshStatus.deactivate);
-	          _this4.updateTranslate(0);
 	        });
+	        _this4.updateTranslate(0);
 	      };
 	      props.onRefresh(finish);
 	    }
