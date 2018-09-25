@@ -1496,6 +1496,8 @@
 	    value: function _setState(nextState) {
 	      var prevState = this.state;
 	      this.state = _extends({}, prevState, nextState);
+
+	      // console.log(`scroll: `, this.state)
 	    }
 	  }, {
 	    key: '_publish',
@@ -2343,35 +2345,32 @@
 	    value: function bindEvents(containerEl, contentEl) {
 	      var _this2 = this;
 
-	      var isOnEdge = true;
-	      var scroll = function scroll(e) {
-	        isOnEdge = containerEl.scrollTop === 0;
+	      var isOnEdge = function isOnEdge() {
+	        return containerEl.scrollTop === 0;
 	      };
 	      var touchstart = function touchstart(e) {
-	        if (isOnEdge) {
+	        if (isOnEdge()) {
 	          _this2.onTouchStart(e.touches, Date.now());
-	          // contentEl.classList.remove(transitionCls)
 	        }
 	      };
 	      var touchmove = function touchmove(e) {
-	        if (isOnEdge) {
-	          if (_this2._checkDirection(e.touches[0].pageY)) {
-	            // prevent unexpect browser behavier
-	            e.preventDefault();
-	            _this2.onTouchMove(e.touches, Date.now());
-	          } else {
-	            touchend({ touches: [] });
-	          }
+	        var onEdge = isOnEdge();
+	        if (onEdge && !_this2.state.isTouched) {
+	          touchstart(e);
+	          // console.log(`startY: ${e.touches[0].pageY}`)
+	        } else if (onEdge && e.touches[0].pageY > _this2.state.startY) {
+	          // prevent unexpect browser behavier
+	          e.preventDefault();
+	          _this2.onTouchMove(e.touches, Date.now());
+	        } else if (_this2.state.isMoved) {
+	          touchend({ touches: [] });
+	          // console.log(`endY: ${e.touches[0].pageY}`)
 	        }
 	      };
 	      var touchend = function touchend(e) {
-	        if (isOnEdge) {
-	          _this2.onTouchEnd(e.touches, Date.now());
-	          // contentEl.classList.add(transitionCls)
-	        }
+	        _this2.onTouchEnd(e.touches, Date.now());
 	      };
 	      var events = {
-	        scroll: scroll,
 	        touchstart: touchstart,
 	        touchmove: touchmove,
 	        touchend: touchend,
