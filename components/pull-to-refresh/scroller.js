@@ -22,9 +22,9 @@ export default class PullToRefreshScroller extends BaseScroller {
     }
     const touchmove = (e) => {
       if (isOnEdge) {
-        // prevent unexpect browser behavier
-        e.preventDefault()
         if (this._checkDirection(e.touches[0].pageY)) {
+          // prevent unexpect browser behavier
+          e.preventDefault()
           this.onTouchMove(e.touches, Date.now())
         } else {
           touchend({ touches: [] })
