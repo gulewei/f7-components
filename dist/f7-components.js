@@ -2355,9 +2355,9 @@
 	      };
 	      var touchmove = function touchmove(e) {
 	        if (isOnEdge) {
-	          // prevent unexpect browser behavier
-	          e.preventDefault();
 	          if (_this2._checkDirection(e.touches[0].pageY)) {
+	            // prevent unexpect browser behavier
+	            e.preventDefault();
 	            _this2.onTouchMove(e.touches, Date.now());
 	          } else {
 	            touchend({ touches: [] });
