@@ -143,6 +143,8 @@ export default class BaseScroller {
       ...prevState,
       ...nextState
     }
+
+    // console.log(`scroll: `, this.state)
   }
 
   _publish (translate, isMoved) {

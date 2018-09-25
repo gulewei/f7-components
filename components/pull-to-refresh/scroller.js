@@ -10,35 +10,30 @@ export default class PullToRefreshScroller extends BaseScroller {
    * @param {HTMLElement} contentEl
    */
   bindEvents (containerEl, contentEl) {
-    let isOnEdge = true
-    const scroll = (e) => {
-      isOnEdge = containerEl.scrollTop === 0
-    }
+    let isOnEdge = () => containerEl.scrollTop === 0
     const touchstart = (e) => {
-      if (isOnEdge) {
+      if (isOnEdge()) {
         this.onTouchStart(e.touches, Date.now())
-        // contentEl.classList.remove(transitionCls)
       }
     }
     const touchmove = (e) => {
-      if (isOnEdge) {
-        if (this._checkDirection(e.touches[0].pageY)) {
-          // prevent unexpect browser behavier
-          e.preventDefault()
-          this.onTouchMove(e.touches, Date.now())
-        } else {
-          touchend({ touches: [] })
-        }
+      const onEdge = isOnEdge()
+      if (onEdge && !this.state.isTouched) {
+        touchstart(e)
+        // console.log(`startY: ${e.touches[0].pageY}`)
+      } else if (onEdge && e.touches[0].pageY > this.state.startY) {
+        // prevent unexpect browser behavier
+        e.preventDefault()
+        this.onTouchMove(e.touches, Date.now())
+      } else if (this.state.isMoved) {
+        touchend({ touches: [] })
+        // console.log(`endY: ${e.touches[0].pageY}`)
       }
     }
     const touchend = (e) => {
-      if (isOnEdge) {
-        this.onTouchEnd(e.touches, Date.now())
-        // contentEl.classList.add(transitionCls)
-      }
+      this.onTouchEnd(e.touches, Date.now())
     }
     const events = {
-      scroll,
       touchstart,
       touchmove,
       touchend,
