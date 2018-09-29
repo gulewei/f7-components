@@ -61,6 +61,7 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
+    "fastclick": "^1.0.6",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
     "gulp-less": "^4.0.1",
@@ -78,7 +79,9 @@
   },
   "peerDependencies": {
     "hyperapp": "^1.2.6",
-    "babel-runtime": "^6.26.0",
+    "babel-runtime": "^6.26.0"
+  },
+  "dependencies": {
     "classnames": "^2.2.6"
   }
 }

@@ -96,7 +96,8 @@ export default class BaseScroller {
 
     const isMoved = true
     const currentY = touches[0].pageY
-    const newTranslate = this.state.startTranslate + currentY - this.state.startY
+    // const newTranslate = this.state.startTranslate + currentY - this.state.startY
+    const newTranslate = this.state.startTranslate + Math.round(currentY - this.state.startY)
     const currentTranslate = this._normalize(newTranslate)
 
     this._setState({

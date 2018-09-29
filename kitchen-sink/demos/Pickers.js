@@ -164,7 +164,8 @@ export default {
               <input
                 type="text"
                 value={state.single.join('')}
-                onclick={() => {
+                onclick={(e) => {
+                  e.preventDefault()
                   Picker.open({
                     items: singelData,
                     values: state.single,

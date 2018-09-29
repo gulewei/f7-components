@@ -108,6 +108,7 @@ class ScrollerHandler extends BaseScroller {
         this.onTouchStart(e.targetTouches, Date.now())
       },
       touchmove: (e) => {
+        e.preventDefault()
         this.onTouchMove(e.targetTouches, Date.now())
       },
       touchend: (e) => {

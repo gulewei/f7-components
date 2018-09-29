@@ -3,6 +3,19 @@ import { runAndCleanUp, raf } from '../_util/run-and-clean'
 import { css, on } from '../_util'
 import { enumRefreshStatus, transitionCls } from './constant'
 
+let supportsPassive = false
+try {
+  const opts = Object.defineProperty({}, 'passive', {
+    get () {
+      supportsPassive = true
+    }
+  })
+  window.addEventListener('test', null, opts)
+} catch (e) {
+  // empty
+}
+const willPreventDefault = supportsPassive ? { passive: false } : false
+
 export default class PullToRefreshScroller extends BaseScroller {
   /**
    * run on create
@@ -41,7 +54,7 @@ export default class PullToRefreshScroller extends BaseScroller {
     }
 
     for (let eventName in events) {
-      on(containerEl, eventName, events[eventName])
+      on(containerEl, eventName, events[eventName], willPreventDefault)
     }
 
     return this
