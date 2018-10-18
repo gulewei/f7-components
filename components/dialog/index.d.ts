@@ -24,11 +24,11 @@ export interface DialogProps extends WraperProperties, TransitionProperties {
   /**
    * title
    */
-  title: Slot
+  title?: Slot
   /**
    * text content
    */
-  text: Slot
+  text?: Slot
   /**
    * text that will be placed after `text`
    */
@@ -36,7 +36,7 @@ export interface DialogProps extends WraperProperties, TransitionProperties {
   /**
    * array of buttons, each button should be presented as Object with button options
    */
-  buttons: Array<ButtonOption>
+  buttons?: Array<ButtonOption>
   /**
    * vertical buttons layout
    */

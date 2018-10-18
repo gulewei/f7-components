@@ -1,8 +1,5 @@
-// eslint-disable-next-line
 import { h } from 'hyperapp'
-// eslint-disable-next-line
 import Overlay from '../overlay'
-// eslint-disable-next-line
 import Transition from '../transition'
 import { sizeEl, ANIM_NAMES } from '../_util'
 import cc from 'classnames'
@@ -37,7 +34,7 @@ const Dialog = (props, children) => {
     title,
     text = children,
     afterText,
-    buttons = [],
+    buttons,
     onButtonsClick,
     onOverlayClick,
     verticalButtons,
@@ -50,27 +47,9 @@ const Dialog = (props, children) => {
     exitClass = ANIM_NAMES.bounceOut
   } = props
 
-  const buttonWraperCls = cc(
-    'modal-buttons',
-    {
-      'modal-buttons-vertical': verticalButtons
-    }
-  )
-
-  const footer = buttons.map(button => {
-    return (
-      <span
-        class={cc('modal-button', { 'modal-button-bold': button.bold })}
-        onclick={button.onclick}
-      >
-        {button.text}
-      </span>
-    )
-  })
-
   const modal = (
     <div
-      class="modal"
+      class={cc('modal', { 'modal-no-buttons': !buttons })}
       oncreate={(el) => {
         sizeEl(el, true)
         onOpen && onOpen(el)
@@ -78,16 +57,26 @@ const Dialog = (props, children) => {
       ondestroy={onClose}
     >
       <div class="modal-inner">
-        <div class="modal-title">{title}</div>
-        <div class="modal-text">{text}</div>
+        {title && <div key="title" class="modal-title">{title}</div>}
+        {text && <div key="text" class="modal-text">{text}</div>}
         {afterText}
       </div>
-      <div
-        class={buttonWraperCls}
-        onclick={onButtonsClick}
-      >
-        {footer}
-      </div>
+      {buttons &&
+        <div class={cc('modal-buttons', { 'modal-buttons-vertical': verticalButtons })} onclick={onButtonsClick}>
+          {
+            buttons.map(button => {
+              return (
+                <span
+                  class={cc('modal-button', { 'modal-button-bold': button.bold })}
+                  onclick={button.onclick}
+                >
+                  {button.text}
+                </span>
+              )
+            })
+          }
+        </div>
+      }
     </div>
   )
 
