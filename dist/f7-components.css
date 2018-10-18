@@ -1833,6 +1833,7 @@ html.pixel-ratio-3 .picker-center-highlight:after {
 .pull-to-refresh-wraper {
   overflow: hidden;
   min-height: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 .pull-to-refresh-content {
   -webkit-transform-origin: left top 0px;

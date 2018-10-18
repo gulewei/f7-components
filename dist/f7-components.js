@@ -756,8 +756,6 @@
 
 	Overlay.TYPES = TYPES;
 
-	// eslint-disable-next-line
-
 	/**
 	 * 按钮
 	 * @typedef {Object} DialogButtonProps
@@ -788,8 +786,7 @@
 	      _props$text = props.text,
 	      text = _props$text === undefined ? children : _props$text,
 	      afterText = props.afterText,
-	      _props$buttons = props.buttons,
-	      buttons = _props$buttons === undefined ? [] : _props$buttons,
+	      buttons = props.buttons,
 	      onButtonsClick = props.onButtonsClick,
 	      onOverlayClick = props.onOverlayClick,
 	      verticalButtons = props.verticalButtons,
@@ -805,25 +802,10 @@
 	      exitClass = _props$exitClass === undefined ? ANIM_NAMES.bounceOut : _props$exitClass;
 
 
-	  var buttonWraperCls = classnames('modal-buttons', {
-	    'modal-buttons-vertical': verticalButtons
-	  });
-
-	  var footer = buttons.map(function (button) {
-	    return hyperapp.h(
-	      'span',
-	      {
-	        'class': classnames('modal-button', { 'modal-button-bold': button.bold }),
-	        onclick: button.onclick
-	      },
-	      button.text
-	    );
-	  });
-
 	  var modal = hyperapp.h(
 	    'div',
 	    {
-	      'class': 'modal',
+	      'class': classnames('modal', { 'modal-no-buttons': !buttons }),
 	      oncreate: function oncreate(el) {
 	        sizeEl(el, true);
 	        onOpen && onOpen(el);
@@ -833,25 +815,31 @@
 	    hyperapp.h(
 	      'div',
 	      { 'class': 'modal-inner' },
-	      hyperapp.h(
+	      title && hyperapp.h(
 	        'div',
-	        { 'class': 'modal-title' },
+	        { key: 'title', 'class': 'modal-title' },
 	        title
 	      ),
-	      hyperapp.h(
+	      text && hyperapp.h(
 	        'div',
-	        { 'class': 'modal-text' },
+	        { key: 'text', 'class': 'modal-text' },
 	        text
 	      ),
 	      afterText
 	    ),
-	    hyperapp.h(
+	    buttons && hyperapp.h(
 	      'div',
-	      {
-	        'class': buttonWraperCls,
-	        onclick: onButtonsClick
-	      },
-	      footer
+	      { 'class': classnames('modal-buttons', { 'modal-buttons-vertical': verticalButtons }), onclick: onButtonsClick },
+	      buttons.map(function (button) {
+	        return hyperapp.h(
+	          'span',
+	          {
+	            'class': classnames('modal-button', { 'modal-button-bold': button.bold }),
+	            onclick: button.onclick
+	          },
+	          button.text
+	        );
+	      })
 	    )
 	  );
 
@@ -1446,7 +1434,8 @@
 
 	      var isMoved = true;
 	      var currentY = touches[0].pageY;
-	      var newTranslate = this.state.startTranslate + currentY - this.state.startY;
+	      // const newTranslate = this.state.startTranslate + currentY - this.state.startY
+	      var newTranslate = this.state.startTranslate + Math.round(currentY - this.state.startY);
 	      var currentTranslate = this._normalize(newTranslate);
 
 	      this._setState({
@@ -1695,6 +1684,7 @@
 	          _this3.onTouchStart(e.targetTouches, Date.now());
 	        },
 	        touchmove: function touchmove(e) {
+	          e.preventDefault();
 	          _this3.onTouchMove(e.targetTouches, Date.now());
 	        },
 	        touchend: function touchend(e) {
@@ -2326,6 +2316,19 @@
 	  finish: 'finish'
 	};
 
+	var supportsPassive = false;
+	try {
+	  var opts = Object.defineProperty({}, 'passive', {
+	    get: function get$$1() {
+	      supportsPassive = true;
+	    }
+	  });
+	  window.addEventListener('test', null, opts);
+	} catch (e) {
+	  // empty
+	}
+	var willPreventDefault = supportsPassive ? { passive: false } : false;
+
 	var PullToRefreshScroller = function (_BaseScroller) {
 	  inherits(PullToRefreshScroller, _BaseScroller);
 
@@ -2378,7 +2381,7 @@
 	      };
 
 	      for (var eventName in events) {
-	        on(containerEl, eventName, events[eventName]);
+	        on(containerEl, eventName, events[eventName], willPreventDefault);
 	      }
 
 	      return this;
