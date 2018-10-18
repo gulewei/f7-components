@@ -1,5 +1,8 @@
 # Change Log
 
+## v0.8.16 - October 18, 2018
+  * Dialog: support not button layout
+
 ## v0.8.12 - September 21, 2018
   * Minor fixes, remove a few lines of duplicated code
   * PullToRefresh:
