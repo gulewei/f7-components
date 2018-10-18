@@ -13,10 +13,10 @@
   "scripts": {
     "start": "parcel kitchen-sink/app.html --out-dir .ksdist --no-autoinstall --no-cache",
     "pub": "npm version patch && npm publish --access=public && git push",
-    "build:ks": "git rm docs/kitchen-sink -r && parcel build kitchen-sink/app.html -d docs/kitchen-sink --public-url ./ --out-file index",
+    "build:ks": "git rm site/kitchen-sink -r && parcel build kitchen-sink/app.html -d site/kitchen-sink --public-url ./ --out-file index",
     "build:prod": "git rm dist/ -r && rollup -c && parcel build components/index.less --no-minify --no-source-maps --out-file f7-components.css && gulp lib && gulp es",
     "build:custom": "rollup --config scripts/custom.config.js && parcel build scripts/custom.less --no-minify --no-source-maps --out-file f7c.custom.css",
-    "release:ks": "npm run build:ks && git add docs/kitchen-sink/ && git commit -m \"ks build\" && git push",
+    "release:ks": "npm run build:ks && git add site/kitchen-sink/ && git commit -m \"ks build\" && git push && node scripts/gh-pages",
     "release:prod": "npm run build:prod && git add dist/ && git commit -m \"prod build\" && npm run pub"
   },
   "repository": {
@@ -62,6 +62,7 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "fastclick": "^1.0.6",
+    "gh-pages": "^2.0.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
     "gulp-less": "^4.0.1",
