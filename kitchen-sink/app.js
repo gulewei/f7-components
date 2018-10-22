@@ -1,10 +1,6 @@
-// eslint-disable-next-line
 import { h, app } from 'hyperapp'
-// eslint-disable-next-line
 import { withRouter, Route } from 'hyperapp-hoa-router'
-// eslint-disable-next-line
 import { factories, RouterView } from './router'
-// eslint-disable-next-line
 import Layout from './Layout'
 import modules from './demos'
 import '../components/index.less'
