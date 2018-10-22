@@ -8,7 +8,7 @@ import { factories, RouterView } from './router'
 import Layout from './Layout'
 import modules from './demos'
 import '../components/index.less'
-import fastclick from 'fastclick'
+// import fastclick from 'fastclick'
 
 /**
  * @typedef {Object} ModuleModel
@@ -66,4 +66,4 @@ function register (modules) {
 const { state, actions, view } = register(modules)
 withRouter(app, { factories })(state, actions, view, document.body)
 
-fastclick(document.body)
+// fastclick(document.body)
