@@ -1,3 +1,6 @@
 var ghpages = require('gh-pages')
 
-ghpages.publish('site', function (err) { })
+console.log('gh-pages start')
+ghpages.publish('site', function (err) { 
+  console.log('gh-pages published')
+})
