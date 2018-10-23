@@ -34,7 +34,7 @@ export default {
   title: 'Pull To Refresh',
   // state
   state: {
-    refreshStatus: PullToRefresh.STATUS.release,
+    refreshStatus: PullToRefresh.STATUS.deactivate,
     mocks: []
   },
   // actions
