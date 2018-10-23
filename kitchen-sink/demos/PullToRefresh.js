@@ -35,7 +35,7 @@ export default {
   // state
   state: {
     refreshStatus: PullToRefresh.STATUS.deactivate,
-    mocks: []
+    mocks: mocker.next()
   },
   // actions
   actions: {

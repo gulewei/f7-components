@@ -7,31 +7,40 @@ const inputAction = (value) => {
   return value
 }
 
-// eslint-disable-next-line no-unused-vars
+const fileds = {
+  full: [
+    { placeholder: 'Your name', type: 'text', label: 'Name', key: 'name' },
+    { placeholder: 'E-mail', type: 'email', label: 'E-mail', key: 'email' },
+    { placeholder: 'URL', type: 'url', label: 'URL', key: 'url' },
+    { placeholder: 'Password', type: 'password', label: 'Password', key: 'password' },
+    { placeholder: 'Phone', type: 'tel', label: 'Phone', key: 'tel' },
+    { placeholder: '', type: 'date', label: 'Birth date', key: 'date' },
+    { placeholder: '', type: 'datetime-local', label: 'Date time', key: 'dateTime' }
+  ],
+  just: [
+    { placeholder: 'Your name', type: 'text', label: 'Name', key: 'name' },
+    { placeholder: 'E-mail', type: 'email', label: 'E-mail', key: 'email' },
+    { placeholder: '', type: 'date', label: 'Birth date', key: 'date' }
+  ]
+}
+
 const Layouts = {
-  Full: ({ full, onInput }) => {
-    const inputs = [
-      { placeholder: 'Your name', type: 'text', label: 'Name', key: 'name' },
-      { placeholder: 'E-mail', type: 'email', label: 'E-mail', key: 'email' },
-      { placeholder: 'URL', type: 'url', label: 'URL', key: 'url' },
-      { placeholder: 'Password', type: 'password', label: 'Password', key: 'password' },
-      { placeholder: 'Phone', type: 'tel', label: 'Phone', key: 'tel' },
-      { placeholder: '', type: 'date', label: 'Birth date', key: 'date' },
-      { placeholder: '', type: 'datetime-local', label: 'Date time', key: 'dateTime' }
-    ]
+  Full: ({ key, title, data, onInput }) => {
     return ([
-      <ContentBlock title="Full Layout" />,
-      <List>
+      <ContentBlock title={title} key={`${key}_title`} />,
+      <List key={`${key}_list`}>
         {
-          inputs.map(({ placeholder, type, label, key }) => {
+          fileds.full.map(({ placeholder, type, label, key }) => {
             return (
               <InputItem
                 media={F7Icon}
                 key={key}
                 type={type}
                 placeholder={placeholder}
-                value={full[key]}
-                onChange={val => onInput({ [key]: val })}
+                value={data[key]}
+                onChange={val => {
+                  onInput({ [key]: val })
+                }}
               >
                 {label}
               </InputItem>
@@ -43,8 +52,8 @@ const Layouts = {
           media={F7Icon}
           input={
             <select onchange={e => onInput({ gender: e.target.value })}>
-              <option selected={full.gender === 'Male'}>Male</option>
-              <option selected={full.gender === 'Female'}>Female</option>
+              <option selected={data.gender === 'Male'}>Male</option>
+              <option selected={data.gender === 'Female'}>Female</option>
             </select>
           }
         >
@@ -53,17 +62,12 @@ const Layouts = {
       </List>
     ])
   },
-  Just: ({ title, data, onInput, hasIcon, hasLabel, inset }) => {
-    const inputs = [
-      { placeholder: 'Your name', type: 'text', label: 'Name', key: 'name' },
-      { placeholder: 'E-mail', type: 'email', label: 'E-mail', key: 'email' },
-      { placeholder: '', type: 'date', label: 'Birth date', key: 'date' }
-    ]
+  Just: ({ key, title, data, onInput, hasIcon, hasLabel, inset }) => {
     return ([
-      <ContentBlock title={title} />,
-      <List inset={inset}>
+      <ContentBlock title={title} key={`${key}_title`} />,
+      <List inset={inset} key={`${key}_list`}>
         {
-          inputs.map(({ placeholder, type, key, label }) => {
+          fileds.just.map(({ placeholder, type, key, label }) => {
             return (
               <InputItem
                 key={key}
@@ -72,7 +76,9 @@ const Layouts = {
                 type={type}
                 placeholder={placeholder}
                 value={data[key]}
-                onChange={val => onInput({ [key]: val })}
+                onChange={val => {
+                  onInput({ [key]: val })
+                }}
               />
             )
           })
@@ -152,11 +158,38 @@ export default {
   view: (state, actions) => {
     return (
       <div>
-        <Layouts.Full full={state.full} onInput={actions.full.input} />
-        <Layouts.Just title="Icons and inputs" data={state.icon} onInput={actions.icon.input} hasIcon />
-        <Layouts.Just title="Labels and inputs" data={state.label} onInput={actions.icon.input} hasLabel />
-        <Layouts.Just title="Just inputs" data={state.just} onInput={actions.icon.input} />
-        <Layouts.Just title="Inset list" data={state.inset} onInput={actions.icon.input} inset={true} />
+        <Layouts.Full
+          key="full"
+          title="Full Layout"
+          data={state.full}
+          onInput={actions.full.input}
+        />
+        <Layouts.Just
+          key="icon"
+          title="Icons and inputs"
+          data={state.icon}
+          onInput={actions.icon.input} hasIcon
+        />
+        <Layouts.Just
+          key="label"
+          title="Labels and inputs"
+          data={state.label}
+          onInput={actions.label.input}
+          hasLabel
+        />
+        <Layouts.Just
+          key="just"
+          title="Just inputs"
+          data={state.just}
+          onInput={actions.just.input}
+        />
+        <Layouts.Just
+          key="inset"
+          title="Inset list"
+          data={state.inset}
+          onInput={actions.inset.input}
+          inset={true}
+        />
       </div>
     )
   }
