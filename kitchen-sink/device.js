@@ -1,5 +1,5 @@
 /**
- * https://github.com/framework7io/framework7/blob/master/src/core/utils/device.js
+ * this device detect is from Framework7 v1.6.5 as well as all the components
  */
 
 var device = {}
