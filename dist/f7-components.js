@@ -150,8 +150,6 @@
 	  return Array.isArray(arr) ? arr : Array.from(arr);
 	};
 
-	// eslint-disable-next-line no-unused-vars
-
 	/**
 	 * @typedef {Object} ButtonProps
 	 * @prop {boolean} [fill=false]
@@ -705,7 +703,9 @@
 	  css(el, size);
 	}
 
-	// eslint-disable-next-line
+	function preventScrolling(e) {
+	  e.preventDefault();
+	}
 
 	var TYPES = {
 	  modal: 'modal',
@@ -750,6 +750,9 @@
 	      key: key,
 	      'class': classnames(type + '-overlay', overlayClass),
 	      onclick: onOverlayClick
+	      // TODO: prevent default when touch start or touch move
+	      , touchmove: preventScrolling,
+	      touststart: preventScrolling
 	    })
 	  );
 	};
@@ -757,39 +760,40 @@
 	Overlay.TYPES = TYPES;
 
 	/**
-	 * 按钮
+	 * Button
 	 * @typedef {Object} DialogButtonProps
+	 * @prop {string} [key]
 	 * @prop {string} text
-	 * @prop {(e) => void} onclick
+	 * @prop {(e) => void} [onclick]
 	 * @prop {boolean} [bold=false]
-	 * 弹框
+	 * Dialog
 	 * @typedef {Object} DialogProps
-	 * @prop {boolean} show
-	 * @prop {string} [wraperClass]
-	 * @prop {string} title
-	 * @prop {string} text
+	 * @prop {string} [title]
+	 * @prop {string} [text]
 	 * @prop {string} [afterText]
-	 * @prop {DialogButtonProps[]} [buttons=[]]
+	 * @prop {DialogButtonProps[]} [buttons]
+	 * @prop {boolean} [verticalButtons=false]
 	 * @prop {() => void} [onButtonsClick]
 	 * @prop {() => void} [onOverlayClick]
 	 * @prop {(el: HTMLElement) => void} [onOpen]
 	 * @prop {(el: HTMLElement) => void} [onClose]
-	 * @prop {boolean} [verticalButtons=false]
+	 * @prop {boolean} show
+	 * @prop {string} [wraperClass]
+	 * @prop {string} [wraperKey]
 	 * @prop {string} [enterClass='anim-bouncein']
 	 * @prop {string} [exitClass='anim-bouncout]
-	 * @prop {string} [wraperKey]
 	 *
 	 * @param {DialogProps} props
 	 */
 	var Dialog = function Dialog(props, children) {
 	  var title = props.title,
 	      _props$text = props.text,
-	      text = _props$text === undefined ? children : _props$text,
+	      text = _props$text === undefined ? children.length && children : _props$text,
 	      afterText = props.afterText,
 	      buttons = props.buttons,
+	      verticalButtons = props.verticalButtons,
 	      onButtonsClick = props.onButtonsClick,
 	      onOverlayClick = props.onOverlayClick,
-	      verticalButtons = props.verticalButtons,
 	      onOpen = props.onOpen,
 	      onClose = props.onClose,
 	      show = props.show,
@@ -805,6 +809,7 @@
 	  var modal = hyperapp.h(
 	    'div',
 	    {
+	      key: '_dialog_modal',
 	      'class': classnames('modal', { 'modal-no-buttons': !buttons }),
 	      oncreate: function oncreate(el) {
 	        sizeEl(el, true);
@@ -829,11 +834,15 @@
 	    ),
 	    buttons && hyperapp.h(
 	      'div',
-	      { 'class': classnames('modal-buttons', { 'modal-buttons-vertical': verticalButtons }), onclick: onButtonsClick },
+	      {
+	        'class': classnames('modal-buttons', { 'modal-buttons-vertical': verticalButtons }),
+	        onclick: onButtonsClick
+	      },
 	      buttons.map(function (button) {
 	        return hyperapp.h(
 	          'span',
 	          {
+	            key: button.key,
 	            'class': classnames('modal-button', { 'modal-button-bold': button.bold }),
 	            onclick: button.onclick
 	          },
@@ -846,12 +855,11 @@
 	  return hyperapp.h(
 	    'div',
 	    { key: wraperKey, 'class': wraperClass },
-	    show && [hyperapp.h(Overlay, { onOverlayClick: onOverlayClick }), hyperapp.h(
+	    show && [hyperapp.h(Overlay, { onOverlayClick: onOverlayClick, key: '_dialog_overlay' }),
+	    // eslint-disable-next-line react/jsx-key
+	    hyperapp.h(
 	      Transition,
-	      {
-	        enter: enterClass,
-	        exit: exitClass
-	      },
+	      { enter: enterClass, exit: exitClass },
 	      modal
 	    )]
 	  );
@@ -953,12 +961,9 @@
 	      disabled = props.disabled,
 	      readonly = props.readonly,
 	      name = props.name,
-	      _props$onChange = props.onChange,
-	      onChange = _props$onChange === undefined ? function () {} : _props$onChange,
-	      _props$onFocus = props.onFocus,
-	      onFocus = _props$onFocus === undefined ? function () {} : _props$onFocus,
-	      _props$onBlur = props.onBlur,
-	      onBlur = _props$onBlur === undefined ? function () {} : _props$onBlur,
+	      onChange = props.onChange,
+	      onFocus = props.onFocus,
+	      onBlur = props.onBlur,
 	      inputProps = props.inputProps,
 	      rest = objectWithoutProperties(props, ['type', 'value', 'placeholder', 'disabled', 'readonly', 'name', 'onChange', 'onFocus', 'onBlur', 'inputProps']);
 
@@ -966,8 +971,8 @@
 	    List.Item,
 	    _extends({}, rest, {
 	      input: hyperapp.h('input', _extends({}, _extends({}, inputProps, { type: type, value: value, placeholder: placeholder, disabled: disabled, readonly: readonly, name: name }), {
-	        oninput: function oninput(e) {
-	          return onChange(e.target.value);
+	        oninput: onChange && function (e) {
+	          onChange(e.target.value);
 	        },
 	        onfoucs: onFocus,
 	        onblur: onBlur
