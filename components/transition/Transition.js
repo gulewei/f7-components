@@ -4,12 +4,10 @@ import { runEnter, runExit } from './run-transition'
  * @typedef {Object} TransitionProps
  * @prop {string} [enter]
  * @prop {string} [enterActive]
- * @prop {(el: HTMLElement) => void} [onEnter]
- * @prop {(el: HTMLElement) => void} [onEntered]
  * @prop {string} [exit]
  * @prop {string} [exitActive]
- * @prop {(el: HTMLElement) => void} [onExit]
- * @prop {(el: HTMLElement) => void} [onExited]
+ * @prop {(el: HTMLElement) => void} [onEntered]
+ * @prop {() => { exit: string, exitActive?: string }} [getExitClasses]
  *
  * @param {TransitionProps} props
  * @param {JSX.Element} children
@@ -44,9 +42,10 @@ function transitionEnter (el, props, attributes) {
 }
 
 function transitionExit (el, props, attributes, removeNode) {
-  const notAnimated = !props.exit
-  if (props.exit) {
-    runExit(el, props.exitActive, props.exit, removeNode)
+  const { exit, exitActive } = (props.getExitClasses ? props.getExitClasses() : props)
+  const notAnimated = !exit
+  if (exit) {
+    runExit(el, exitActive, exit, removeNode)
   }
   if (attributes.onremove) {
     attributes.onremove(el, () => { })

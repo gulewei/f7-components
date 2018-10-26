@@ -32,6 +32,17 @@ export interface CSSTransitionProperties {
    * Element will be removed when exit-animation completed, not by yourself.
    */
   onEntered?: (el: HTMLElement) => void
+  /**
+   * Compute dynamic classnames for exit animation.
+   * There is a `onremove` hook fired before a node is removed, but it fired from the old node. 
+   * So if you need decide classnames from lastest state, you might need this.
+   */
+  getExitClasses?: () => ExitClasses
+}
+
+export type ExitClasses = {
+  exit: string
+  exitActive?: string
 }
 
 interface TransitionComponent<P> extends Component<P> {
