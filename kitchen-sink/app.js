@@ -1,6 +1,7 @@
 import { h, app } from 'hyperapp'
-import { withRouter, Route } from 'hyperapp-hoa-router'
-import { factories, RouterView } from './router'
+import { withRouter, Switch, Route } from 'hyperapp-hoa-router'
+import { Transition, View } from './components'
+import { factories, getClasses } from './router'
 import Layout from './Layout'
 import modules from './demos'
 import fastclick from 'fastclick'
@@ -37,25 +38,29 @@ function register (modules) {
     view: (state, actions) => {
       window.$app = { state, actions }
       return (
-        <RouterView>
-          {
-            modules.map(({ view, path, key, title, noLayout }) => {
-              return (
-                view && <Route
-                  path={path}
-                  render={(match) => {
-                    const viewNode = view(state[key], actions[key], match)
-                    return (
-                      noLayout
-                        ? viewNode
-                        : <Layout title={title} key={path}>{viewNode}</Layout>
-                    )
-                  }}
-                />
-              )
-            })
-          }
-        </RouterView>
+        <View>
+          <Transition getClasses={getClasses}>
+            <Switch>
+              {
+                modules.map(({ view, path, key, title, noLayout }) => {
+                  return (
+                    view && <Route
+                      path={path}
+                      render={(match) => {
+                        const viewNode = view(state[key], actions[key], match)
+                        return (
+                          noLayout
+                            ? viewNode
+                            : <Layout title={title} key={path}>{viewNode}</Layout>
+                        )
+                      }}
+                    />
+                  )
+                })
+              }
+            </Switch>
+          </Transition>
+        </View>
       )
     }
   }

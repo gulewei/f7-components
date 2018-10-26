@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
 import { Page, Navbar, ImgIcon } from './components'
 
