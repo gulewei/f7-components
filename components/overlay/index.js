@@ -1,9 +1,11 @@
-// eslint-disable-next-line
 import { h } from 'hyperapp'
 import cc from 'classnames'
-// eslint-disable-next-line
 import Transition from '../transition'
 import { ANIM_NAMES } from '../_util'
+
+function preventScrolling (e) {
+  e.preventDefault()
+}
 
 const TYPES = {
   modal: 'modal',
@@ -46,6 +48,9 @@ const Overlay = (props) => {
         key={key}
         class={cc(`${type}-overlay`, overlayClass)}
         onclick={onOverlayClick}
+        // TODO: prevent default when touch start or touch move
+        touchmove={preventScrolling}
+        touststart={preventScrolling}
       />
     </Transition>
   )

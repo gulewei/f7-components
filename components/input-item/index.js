@@ -1,5 +1,4 @@
 import { h } from 'hyperapp'
-import cc from 'classnames'
 import List from '../list'
 
 export default (props, children) => {
@@ -10,9 +9,9 @@ export default (props, children) => {
     disabled,
     readonly,
     name,
-    onChange = () => { },
-    onFocus = () => { },
-    onBlur = () => { },
+    onChange,
+    onFocus,
+    onBlur,
     inputProps,
     ...rest
   } = props
@@ -22,7 +21,11 @@ export default (props, children) => {
       input={
         <input
           {...{ ...inputProps, type, value, placeholder, disabled, readonly, name }}
-          oninput={e => onChange(e.target.value)}
+          oninput={onChange && (
+            e => {
+              onChange(e.target.value)
+            }
+          )}
           onfoucs={onFocus}
           onblur={onBlur}
         />

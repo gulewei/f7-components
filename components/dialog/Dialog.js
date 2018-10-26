@@ -5,39 +5,40 @@ import { sizeEl, ANIM_NAMES } from '../_util'
 import cc from 'classnames'
 
 /**
- * 按钮
+ * Button
  * @typedef {Object} DialogButtonProps
+ * @prop {string} [key]
  * @prop {string} text
- * @prop {(e) => void} onclick
+ * @prop {(e) => void} [onclick]
  * @prop {boolean} [bold=false]
- * 弹框
+ * Dialog
  * @typedef {Object} DialogProps
- * @prop {boolean} show
- * @prop {string} [wraperClass]
- * @prop {string} title
- * @prop {string} text
+ * @prop {string} [title]
+ * @prop {string} [text]
  * @prop {string} [afterText]
- * @prop {DialogButtonProps[]} [buttons=[]]
+ * @prop {DialogButtonProps[]} [buttons]
+ * @prop {boolean} [verticalButtons=false]
  * @prop {() => void} [onButtonsClick]
  * @prop {() => void} [onOverlayClick]
  * @prop {(el: HTMLElement) => void} [onOpen]
  * @prop {(el: HTMLElement) => void} [onClose]
- * @prop {boolean} [verticalButtons=false]
+ * @prop {boolean} show
+ * @prop {string} [wraperClass]
+ * @prop {string} [wraperKey]
  * @prop {string} [enterClass='anim-bouncein']
  * @prop {string} [exitClass='anim-bouncout]
- * @prop {string} [wraperKey]
  *
  * @param {DialogProps} props
  */
 const Dialog = (props, children) => {
   const {
     title,
-    text = children,
+    text = children.length && children,
     afterText,
     buttons,
+    verticalButtons,
     onButtonsClick,
     onOverlayClick,
-    verticalButtons,
     onOpen,
     onClose,
     show,
@@ -49,6 +50,7 @@ const Dialog = (props, children) => {
 
   const modal = (
     <div
+      key="_dialog_modal"
       class={cc('modal', { 'modal-no-buttons': !buttons })}
       oncreate={(el) => {
         sizeEl(el, true)
@@ -62,11 +64,15 @@ const Dialog = (props, children) => {
         {afterText}
       </div>
       {buttons &&
-        <div class={cc('modal-buttons', { 'modal-buttons-vertical': verticalButtons })} onclick={onButtonsClick}>
+        <div
+          class={cc('modal-buttons', { 'modal-buttons-vertical': verticalButtons })}
+          onclick={onButtonsClick}
+        >
           {
             buttons.map(button => {
               return (
                 <span
+                  key={button.key}
                   class={cc('modal-button', { 'modal-button-bold': button.bold })}
                   onclick={button.onclick}
                 >
@@ -83,11 +89,9 @@ const Dialog = (props, children) => {
   return (
     <div key={wraperKey} class={wraperClass}>
       {show && [
-        <Overlay onOverlayClick={onOverlayClick} />,
-        <Transition
-          enter={enterClass}
-          exit={exitClass}
-        >
+        <Overlay onOverlayClick={onOverlayClick} key="_dialog_overlay" />,
+        // eslint-disable-next-line react/jsx-key
+        <Transition enter={enterClass} exit={exitClass}>
           {modal}
         </Transition>
       ]}

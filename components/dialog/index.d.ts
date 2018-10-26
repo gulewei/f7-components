@@ -61,6 +61,10 @@ export interface DialogProps extends WraperProperties, TransitionProperties {
 
 export interface ButtonOption {
   /**
+   * key
+   */
+  key?: string
+  /**
    * button's text
    */
   text: Slot
