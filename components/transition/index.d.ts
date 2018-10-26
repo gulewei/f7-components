@@ -31,7 +31,7 @@ export interface CSSTransitionProperties {
    * the second param used be a method to remove element when we done our stuff, now it bacome a method of noop, do nothing.
    * Element will be removed when exit-animation completed, not by yourself.
    */
-  onEntered: (el: HTMLElement) => void
+  onEntered?: (el: HTMLElement) => void
 }
 
 interface TransitionComponent<P> extends Component<P> {
