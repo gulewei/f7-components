@@ -7,7 +7,7 @@ import { runEnter, runExit } from './run-transition'
  * @prop {string} [exit]
  * @prop {string} [exitActive]
  * @prop {(el: HTMLElement) => void} [onEntered]
- * @prop {() => { exit: string, exitActive?: string }} [getExitClasses]
+ * @prop {() => { enter: string, enterActive?: string, exit: string, exitActive?: string }} [getClasses]
  *
  * @param {TransitionProps} props
  * @param {JSX.Element} children
@@ -33,8 +33,9 @@ function makeTransition (props, child) {
 }
 
 function transitionEnter (el, props, attributes) {
-  if (props.enter) {
-    runEnter(el, props.enterActive, props.enter, props.onEntered)
+  const { enter, enterActive } = (props.getClasses ? props.getClasses() : props)
+  if (enter) {
+    runEnter(el, enterActive, enter, props.onEntered)
   }
   if (attributes.oncreate) {
     attributes.oncreate(el)
@@ -42,7 +43,7 @@ function transitionEnter (el, props, attributes) {
 }
 
 function transitionExit (el, props, attributes, removeNode) {
-  const { exit, exitActive } = (props.getExitClasses ? props.getExitClasses() : props)
+  const { exit, exitActive } = (props.getClasses ? props.getClasses() : props)
   const notAnimated = !exit
   if (exit) {
     runExit(el, exitActive, exit, removeNode)
