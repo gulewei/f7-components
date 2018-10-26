@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.8.17 - October 26, 2018
+  * Dialog: support `key` perporty in `ButtonOptions`
+  * Overlay: prevent scrolling on overlays
+
 ## v0.8.16 - October 18, 2018
   * Dialog: support not button layout
 
