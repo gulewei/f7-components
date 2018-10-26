@@ -22,6 +22,7 @@ function makeTransition (props, child) {
     ...rest,
     attributes: {
       ...attributes,
+      key: props.key,
       oncreate: (el) => {
         transitionEnter(el, props, attributes)
       },

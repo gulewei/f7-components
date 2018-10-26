@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { h } from 'hyperapp'
 import { Overlay, ContentBlock } from '../components'
 import Layout from '../Layout'
@@ -10,7 +9,9 @@ export default {
     show: false
   },
   actions: {
-    show: show => ({ show })
+    show: show => {
+      return { show }
+    }
   },
   noLayout: true,
   view: (state, actions) => {
@@ -21,13 +22,19 @@ export default {
         outside={
           state.show &&
           <Overlay
-            key='overlay'
-            onOverlayClick={e => actions.show(false)}
+            key='overlay_node'
+            onOverlayClick={() => {
+              actions.show(false)
+            }}
           />
         }
       >
         <ContentBlock title="Overlay">
-          <p onclick={e => { actions.show(true) }}>
+          <p
+            onclick={() => {
+              actions.show(true)
+            }}
+          >
             <a>Overlay</a>
           </p>
         </ContentBlock>

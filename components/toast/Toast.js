@@ -1,8 +1,5 @@
-// eslint-disable-next-line
 import { h } from 'hyperapp'
-// eslint-disable-next-line
 import Overlay from '../overlay'
-// eslint-disable-next-line
 import Transition from '../transition'
 import { sizeEl, ANIM_NAMES } from '../_util'
 import cc from 'classnames'
@@ -38,17 +35,14 @@ const Toast = (props, children) => {
     onToastClick
   } = props
 
-  const overlay = mask && <Overlay type={Overlay.TYPES.preloader} notAnimated />
-
   return (
     <div key={wraperKey} class={wraperClass}>
       {show && [
-        overlay,
-        <Transition
-          enter={enterClass}
-          exit={exitClass}
-        >
+        mask && <Overlay key="_toast_overlay" type={Overlay.TYPES.preloader} notAnimated />,
+        // eslint-disable-next-line react/jsx-key
+        <Transition enter={enterClass} exit={exitClass}>
           <div
+            key="_toast_node"
             class={cc('toast', toastClass)}
             onclick={onToastClick}
             oncreate={(el) => {

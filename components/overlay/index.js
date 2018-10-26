@@ -39,21 +39,19 @@ const Overlay = (props) => {
 
   const noAnim = notAnimated || type === TYPES.preloader
 
-  return (
-    <Transition
-      enter={!noAnim && enterClass}
-      exit={!noAnim && exitClass}
-    >
-      <div
-        key={key}
-        class={cc(`${type}-overlay`, overlayClass)}
-        onclick={onOverlayClick}
-        // TODO: prevent default when touch start or touch move
-        touchmove={preventScrolling}
-        touststart={preventScrolling}
-      />
-    </Transition>
+  const node = (
+    <div
+      key={key}
+      class={cc(`${type}-overlay`, overlayClass)}
+      onclick={onOverlayClick}
+      // ontouchstart={preventScrolling}
+      ontouchmove={preventScrolling}
+    />
   )
+
+  return noAnim
+    ? node
+    : <Transition enter={enterClass} exit={exitClass}>{node}</Transition>
 }
 
 Overlay.TYPES = TYPES

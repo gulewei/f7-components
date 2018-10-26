@@ -89,7 +89,7 @@ const Dialog = (props, children) => {
   return (
     <div key={wraperKey} class={wraperClass}>
       {show && [
-        <Overlay onOverlayClick={onOverlayClick} key="_dialog_overlay" />,
+        <Overlay key="_dialog_overlay" onOverlayClick={onOverlayClick} />,
         // eslint-disable-next-line react/jsx-key
         <Transition enter={enterClass} exit={exitClass}>
           {modal}

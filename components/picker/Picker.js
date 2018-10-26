@@ -1,10 +1,6 @@
-// eslint-disable-next-line
 import { h } from 'hyperapp'
-// eslint-disable-next-line
 import Overlay from '../overlay'
-// eslint-disable-next-line
 import PickerModal from './Modal'
-// eslint-disable-next-line
 import PickerColumns from './Columns'
 import cc from 'classnames'
 
@@ -38,7 +34,7 @@ import cc from 'classnames'
  * @param {PickerProps} props
  * @param {JSX.Element} children
  */
-export const Picker = (props, children) => {
+export const Picker = (props) => {
   const {
     show,
     wraperClass,
