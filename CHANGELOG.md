@@ -1,5 +1,11 @@
 # Change Log
 
+## unreleased
+  * Transition: 
+    * remove extra raf call on enter trasition
+    * dynamic compute classnames support
+
+
 ## v0.8.17 - October 26, 2018
   * Dialog: support `key` perporty in `ButtonOptions`
   * Overlay: prevent scrolling on overlays
