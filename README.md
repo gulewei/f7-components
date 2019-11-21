@@ -7,7 +7,7 @@ Mobile UI for Hyperapp
 
 [npm-image]: https://img.shields.io/npm/v/@gulw/components.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/@gulw/components
-[download-image]: https://img.shields.io/npm/dm//@gulw/components.svg?style=flat-square
+[download-image]: https://img.shields.io/npm/dm/@gulw/components.svg?style=flat-square
 [download-url]: https://www.npmjs.com/package/@gulw/components
 
 ## Updating
